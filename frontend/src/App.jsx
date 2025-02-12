@@ -7,6 +7,7 @@ import SignUp from "./SignUp/SignUp";
 import AboutUs from "./components/AboutUs";
 import ContactUs from "./components/ContactUs";
 import Profile from './Profile/Profile';
+import Verify from './components/Verify';
 
 function App() {
   const router = createBrowserRouter([
@@ -48,6 +49,10 @@ function App() {
     {
       path:'/profile',
       element: <Profile />
+    },
+    {
+      path: '/verify/:email',
+      element: <Verify />
     }
   ]);
 

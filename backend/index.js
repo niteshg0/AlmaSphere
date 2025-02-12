@@ -1,5 +1,5 @@
 import express from "express";
-import router from "./routes/userRout.js"
+import router from "./routes/userRoute.js"
 import academicRouter from "./routes/academicRout.js";
 import mongoose from "mongoose";
 import dotenv from "dotenv"

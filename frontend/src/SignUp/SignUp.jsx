@@ -41,7 +41,14 @@ const SignUp = () => {
       batch: "",
       gender: "",
     });
-    navigate("/");
+
+    console.log("email", email);
+    
+    if(formData.email){
+      navigate(`/verify/${formData.email}`);
+    }else{
+      navigate("/")
+    }
   };
 
   return (
