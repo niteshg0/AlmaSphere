@@ -1,6 +1,60 @@
 import User from "../model/userModel.js";
 import bcrypt from "bcryptjs";
 import generateToken from "../utils/createToken.js";
+// const nodemailer = require("nodemailer");
+import nodemailer from "nodemailer"
+
+async function sendVerificationEmail(email, code){
+  
+console.log(email, code);
+
+  let transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+          user: 'alumniteam95@gmail.com',
+          pass: 'jdde essm exwg pptw'
+      }
+  });
+
+  // const transporter = nodemailer.createTransport({
+  //   host: 'smtp.ethereal.email',
+  //   port: 587,
+  //   auth: {
+  //       user: 'jayden.ritchie62@ethereal.email',
+  //       pass: 'RCRpx4kU4TZ59V438C'
+  //   }
+  // });
+
+
+  let mailOptions = {
+      // from: 'alumniteam95@gmail.com',
+      from : 'Alumni Association <alumniteam95@gmail.com>', 
+      to: email,
+      subject: 'Your OTP Code',
+      html: `
+          <div style="font-family: Arial, sans-serif; text-align: center;">
+              <h2>OTP Verification</h2>
+              <p>Your One-Time Password (OTP) for verification is:</p>
+              <div style="font-size: 24px; font-weight: bold; color: #007BFF; margin: 15px 0;
+                          padding: 10px 20px; border: 2px dashed #007BFF; display: inline-block;">
+                  ${code}
+              </div>
+              <p>This OTP is valid for 1 hour. Do not share it with anyone.</p>
+          </div>
+      `
+  };
+
+  transporter.sendMail(mailOptions, function(error, info){
+      if (error) {
+          console.log(error);
+      } else {
+          console.log('Email sent: ' + info.response);
+      }
+  });
+
+
+}
+
 
 const createUser = async (req, res) => {
   const { rollNumber, fullName, email, password, role,gender,batch } = req.body;
@@ -31,10 +85,15 @@ const createUser = async (req, res) => {
     batch
   });
 
+  newUser.verifyCode= Math.floor(Math.random()*9000 + 1000)
+  newUser.codeExpiry= new Date(Date.now() + 3600000)
+
   try {
     const savedUser = await newUser.save();
+
+    await sendVerificationEmail(savedUser.email, savedUser.verifyCode)
     // generating token
-    generateToken(res, savedUser._id);
+     await generateToken(res, savedUser._id);
     return res.status(201).json({
       _id: savedUser._id,
       rollNumber: savedUser.rollNumber,
@@ -119,4 +178,40 @@ const updateUserProfile = async (req, res) => {
   }
 };
 
-export { createUser, loginUser, getUserProfile, logoutUser, updateUserProfile };
+const verifyCode = async (req, res) => {
+  const {code}= req.body;
+  const {email}= req.params;
+  
+  try {
+    const foundUser= await User.findOne({email})
+  
+    if(!foundUser){
+      return res.status(404).json({ message: "User not found..." });
+    }
+  
+    const foundUserVerifyCode= foundUser.verifyCode;
+    const foundUserexpiry= foundUser.codeExpiry;
+  
+    const isnotExpired = foundUserexpiry > Date.now();
+
+    const codeVerification= code== foundUserVerifyCode;
+  
+    if(codeVerification && isnotExpired){
+      foundUser.isVerified= true
+      await foundUser.save();
+      return res.status(200).json({ message: "User verified successfully." });
+
+    }else{
+      if(!isnotExpired){
+        return res.status(400).json({message: "Code Expired"})
+      }else{
+        return res.status(400).json({message: "Incorrect Verification Code"})
+      }
+    }
+  } catch (error) {
+    return res.status(500).json({message: "could not run verify-code"})
+  }
+  
+}
+
+export { createUser, loginUser, getUserProfile, logoutUser, updateUserProfile, verifyCode };

@@ -42,6 +42,16 @@ const userSchema = mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+  verifyCode: {
+    type: String,
+  },
+  isVerified: {
+    type: Boolean,
+    default: false
+  },
+  codeExpiry: {
+    type: Date,
+  }
 });
 
 const User = mongoose.model("user", userSchema);
