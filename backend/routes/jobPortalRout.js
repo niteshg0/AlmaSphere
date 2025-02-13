@@ -6,9 +6,9 @@ import {
 } from "../controller/jobPortalController.js";
 import authentication from "../middleware/authentication.js";
 
-const router = Router();
+const jobPortalRouter = Router();
 
-router.route("/").get(getAllJobsDetails).post(authentication, createJobs);
-router.get("/:id", getOneJobDetails);
+jobPortalRouter.route("/").get(getAllJobsDetails).post(authentication, createJobs);
+jobPortalRouter.get("/:id", getOneJobDetails);
 
-export default router;
+export default jobPortalRouter;

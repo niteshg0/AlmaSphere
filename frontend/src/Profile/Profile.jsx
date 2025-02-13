@@ -2,7 +2,7 @@ import React from "react";
 import ProfileList from "../components/ProfileComponents/ProfileList.jsx";
 import UserDetails from "../components/ProfileComponents/UserDetails.jsx";
 import { useLogoutMutation } from "../redux/Api/userApiSlice.js";
-import { useNavigate } from "react-router";
+import { useNavigate,Link } from "react-router";
 import { useDispatch } from "react-redux";
 import { logout } from "../redux/features/authSlice.js";
 import { useSelector } from "react-redux";
@@ -38,12 +38,18 @@ const Profile = () => {
             <h2 className="text-xl font-semibold">{user.data.fullName}</h2>
             <p className="text-gray-400">{user.data.email}</p>
           </div>
+          <div className="ml-auto">
+          <Link to={"/createJob"}>
+          <button className="border px-5 py-2 rounded-3xl mr-3 cursor-pointer">
+              Create Job
+          </button></Link>
           <button
-            className="ml-auto border px-5 py-2 rounded-3xl mr-3 cursor-pointer "
+            className="border px-5 py-2 rounded-3xl mr-3 cursor-pointer "
             onClick={logoutHandler}
           >
             Logout
           </button>
+          </div>
         </div>
 
         {/* Content */}

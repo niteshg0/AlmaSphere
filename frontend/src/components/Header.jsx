@@ -16,7 +16,7 @@ const Header = () => {
   return (
     <>
       <nav>
-        <div className="bg-black text-white pt-7 pb-5 px-8 flex justify-between">
+        <div className="bg-black text-white pt-7 pb-5 px-8 flex justify-between ">
           <h2
             className="font-bold font-serif cursor-pointer text-xl"
             onClick={handleClick}

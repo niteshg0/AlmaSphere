@@ -1,4 +1,6 @@
 import React from "react";
+import {Link} from "react-router"
+
 
 const Home= () => {
   return (
@@ -30,6 +32,7 @@ const Home= () => {
           </div>
 
           {/* Jobs Card */}
+          <Link to={"/jobs"}>
           <div className="bg-gray-800 p-6 rounded-lg shadow-lg hover:shadow-xl transition transform hover:scale-105">
             <h3 className="text-xl font-semibold text-indigo-400 mb-2">Jobs</h3>
             <p className="text-gray-300">
@@ -37,6 +40,7 @@ const Home= () => {
               support.
             </p>
           </div>
+          </Link>
 
           {/* Donation Card */}
           <div className="bg-gray-800 p-6 rounded-lg shadow-lg hover:shadow-xl transition transform hover:scale-105">

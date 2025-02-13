@@ -1,4 +1,4 @@
-import React from 'react'
+import React from "react";
 import Header from "./components/Header";
 import Home from "./Home/Home";
 import Login from "./Login/Login";
@@ -6,7 +6,9 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import SignUp from "./SignUp/SignUp";
 import AboutUs from "./components/AboutUs";
 import ContactUs from "./components/ContactUs";
-import Profile from './Profile/Profile';
+import Profile from "./Profile/Profile";
+import JobPortal from "./JobPortal/JobPortal";
+import CreateJob from "./JobPortal/CreateJob";
 
 function App() {
   const router = createBrowserRouter([
@@ -17,6 +19,16 @@ function App() {
           {" "}
           <Header />
           <Home />{" "}
+        </>
+      ),
+    },
+    {
+      path: "/jobs",
+      element: (
+        <>
+          {" "}
+          <Header />
+          <JobPortal />{" "}
         </>
       ),
     },
@@ -38,6 +50,12 @@ function App() {
       ),
     },
     {
+      path:"/createJob",
+      element:<>
+      <CreateJob />
+      </>
+    },
+    {
       path: "/login",
       element: <Login />,
     },
@@ -46,9 +64,9 @@ function App() {
       element: <SignUp />,
     },
     {
-      path:'/profile',
-      element: <Profile />
-    }
+      path: "/profile",
+      element: <Profile />,
+    },
   ]);
 
   return (

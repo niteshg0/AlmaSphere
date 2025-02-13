@@ -1,8 +1,8 @@
 import JobPortal from "../model/jobPortalModel.js";
-import User from "../model/userModel.js.js";
+import User from "../model/userModel.js";
 
 const createJobs = async (req, res) => {
-  const userId = await req.user._id;
+  const userId = await req.user?._id;
   if (!userId) {
     return res.status(402).json({ message: "not authrize to create jobs.." });
   }
@@ -30,6 +30,7 @@ const createJobs = async (req, res) => {
     });
   } catch (error) {
     console.log(error);
+    return res.status(500).json({message:"server issue..."})
   }
 };
 

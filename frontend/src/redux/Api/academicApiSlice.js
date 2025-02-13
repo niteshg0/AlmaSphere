@@ -18,7 +18,7 @@ export const academicApiSlice = apiSlice.injectEndpoints({
       query: (data) => ({
         url: `${ACADMIC_URL}/addAchievement`,
         method: "POST",
-        body: data,s
+        body: data,
       }),
     }),
   }),
