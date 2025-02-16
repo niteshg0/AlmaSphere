@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 
 const Donation = () => {
   const {user}= useSelector(state=> state.auth)
-  console.log("user", user);
+  // console.log("user", user);
 
   const PORT= import.meta.env.VITE_BACKEND_PORT
 
@@ -59,7 +59,7 @@ const Donation = () => {
             currency: "INR",
             name: "Alumni Association",
             description: "Test Transaction",
-            image: "https://example.com/your_logo",
+            image: "/AA-logo.png",
             order_id: donate.data.donation.id, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
             callback_url: `http://localhost:${PORT}/api/donation/verify`,
             prefill: {
@@ -71,7 +71,7 @@ const Donation = () => {
                 "address": "Razorpay Corporate Office"
             },
             theme: {
-                "color": "#3399cc"
+                "color": "#1F1DBF"
             }
         };
 

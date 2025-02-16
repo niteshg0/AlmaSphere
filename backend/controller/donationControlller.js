@@ -52,8 +52,8 @@ export const create_donation = async (req, res) => {
       });
     }
 
-    console.log("Donation", userDonation);
-    console.log("donation", donation);
+    // console.log("Donation", userDonation);
+    // console.log("donation", donation);
 
     res.status(200).json({ donation });
   } catch (error) {
