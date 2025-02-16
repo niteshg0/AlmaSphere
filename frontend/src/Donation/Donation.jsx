@@ -6,6 +6,8 @@ const Donation = () => {
   const {user}= useSelector(state=> state.auth)
   console.log("user", user);
 
+  const PORT= import.meta.env.VITE_BACKEND_PORT
+
 //   const [amount, setAmount] = useState("");
 //   const [donationType, setDonationType] = useState("One-Time");
   const [formData, setFormData] = useState({
@@ -59,7 +61,7 @@ const Donation = () => {
             description: "Test Transaction",
             image: "https://example.com/your_logo",
             order_id: donate.data.donation.id, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
-            callback_url: "http://localhost:5500/api/donation/verify",
+            callback_url: `http://localhost:${PORT}/api/donation/verify`,
             prefill: {
                 "name": user?.data?.fullname || "",
                 "email": user.data.email || "",

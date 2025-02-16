@@ -13,7 +13,7 @@ import donationRouter from "./routes/doantionRoute.js";
 
 dotenv.config();
 connectDB();
-const PORT = process.env.PORT || 8000;
+const PORT = process.env.VITE_BACKEND_PORT || 8000;
 
 const app = express();
 

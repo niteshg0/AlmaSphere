@@ -96,7 +96,7 @@ export const verify_donation = async (req, res) => {
       // console.log("Payment verification successful");
 
       res.redirect(
-        `http://localhost:5500/donation/verify?reference=${razorpay_payment_id}`
+        `http://localhost:${process.env.VITE_PORT}/donation/verify?reference=${razorpay_payment_id}`
       );
     } else {
       res.status(400).json({ status: "verification_failed" });

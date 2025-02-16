@@ -9,6 +9,9 @@ export default defineConfig(({ mode }) => {
   return {
     plugins: [react(), tailwindcss()],
     server: {
+      proxy:{
+        "/api/":`http://localhost:${env.VITE_BACKEND_PORT}`
+      },
       port: parseInt(env.VITE_PORT)  // Read from .env, fallback to 5173
     },
   };
