@@ -43,6 +43,7 @@ const Home= () => {
           </Link>
 
           {/* Donation Card */}
+          <Link to={"/donation"}>
           <div className="bg-gray-800 p-6 rounded-lg shadow-lg hover:shadow-xl transition transform hover:scale-105">
             <h3 className="text-xl font-semibold text-indigo-400 mb-2">
               Donations
@@ -51,6 +52,7 @@ const Home= () => {
               Contribute and support the development of your alma mater.
             </p>
           </div>
+          </Link>
 
           {/* Galleries Card */}
           <div className="bg-gray-800 p-6 rounded-lg shadow-lg hover:shadow-xl transition transform hover:scale-105">

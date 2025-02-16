@@ -10,6 +10,8 @@ import Profile from "./Profile/Profile";
 import JobPortal from "./JobPortal/JobPortal";
 import CreateJob from "./JobPortal/CreateJob";
 import Verify from "./components/Verify";
+import Donation from "./Donation/Donation";
+import VerifyDonation from "./Donation/verifyDonation";
 
 function App() {
   const router = createBrowserRouter([
@@ -57,6 +59,26 @@ function App() {
           <CreateJob />
         </>
       ),
+    },
+    {
+      path: "/donation",
+      element: (
+        <>
+          {" "}
+          <Header />
+          <Donation />{" "}
+        </>
+      )
+    },
+    {
+      path: "/donation/verify",
+      element: (
+        <>
+          {" "}
+          <Header />
+          <VerifyDonation/>{" "}
+        </>
+      )
     },
     {
       path: "/login",
