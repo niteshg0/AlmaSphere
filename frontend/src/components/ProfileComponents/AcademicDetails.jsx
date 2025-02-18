@@ -115,16 +115,16 @@ const AcademicDetails = () => {
         </form>
       ) : (
         <ul className="space-y-2">
-          <li><strong>Degree: </strong> {data.degree}</li>
-          <li><strong>Department: </strong> {data.department}</li>
-          <li><strong>Year Of Graduation: </strong> {data.year_of_graduation}</li>
-          <li><strong>CGPA: </strong> {data.cgpa}</li>
+          <li><strong>Degree: </strong> {data?.degree}</li>
+          <li><strong>Department: </strong> {data?.department}</li>
+          <li><strong>Year Of Graduation: </strong> {data?.year_of_graduation}</li>
+          <li><strong>CGPA: </strong> {data?.cgpa}</li>
 
           <li className="flex">
             <strong>Achievements: </strong>
             <div className="w-3/5 mx-3 max-w-xl overflow-x-auto whitespace-nowrap rounded-lg scrollbar-hide">
               {data.achievements?.map((ach, index) => (
-                <span key={index} className="mr-2">{ach.title}</span>
+                <span key={index} className="mr-2">{ach?.title}</span>
               ))}
             </div>
             <button className="bg-blue-800 rounded-md px-1 shadow shadow-blue-500 cursor-pointer">Add</button>

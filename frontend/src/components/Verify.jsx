@@ -1,6 +1,8 @@
 import { useNavigate, useParams } from "react-router";
 import { useVerifyMutation } from "../redux/Api/userApiSlice";
 import { useState } from "react";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Verify = () => {
   const [code, setCode] = useState("");
@@ -17,16 +19,27 @@ const Verify = () => {
     try {
         if (code.trim() === "") return; // Prevent empty submission
         const res= await verify({ email, code });
-
         console.log(`verified ${email} successfuly`, res.data.message);
-        
-
-        navigate("/")
+        toast("SignUp successful! Redirecting...", {
+          style: {
+            background: "#1f2937", // Dark gray
+            color: "#e0e7ff", // Light indigo text
+            border: "1px solid #4f46e5", // Indigo border
+          },
+        });
+        setTimeout(() => {
+          navigate("/");
+        }, 1500);
     } catch (error) {
-        console.log("error in verify page otp", error);
-        
+      toast("Wrong OTP Re-enter please...", {
+        style: {
+          background: "#1f2937",
+          color: "#f87171", 
+          border: "1px solid #dc2626", 
+        },
+      });
+        console.log("error in verify page otp", error); 
     }
-
   };
 
   return (
@@ -76,6 +89,25 @@ const Verify = () => {
           </p>
         )}
       </div>
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="dark"
+        toastStyle={{
+          background: "linear-gradient(to right, #1f2937, #374151)", // Dark gray gradient
+          color: "#e0e7ff", // Light indigo text
+          borderRadius: "10px",
+          border: "1px solid #4f46e5", // Indigo border
+          boxShadow: "0px 4px 10px rgba(79, 70, 229, 0.2)",
+        }}
+      />
     </div>
   );
 };

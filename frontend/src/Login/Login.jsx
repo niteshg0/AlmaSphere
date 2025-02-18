@@ -1,32 +1,59 @@
-import { FormEvent, useState } from "react";
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import {useDispatch,useSelector} from "react-redux"
-import {useLoginMutation} from '../redux/Api/userApiSlice.js'
-import {setUserInfo} from '../redux/features/authSlice.js'
+import { useDispatch } from "react-redux";
+import { useLoginMutation } from "../redux/Api/userApiSlice.js";
+import { setUserInfo } from "../redux/features/authSlice.js";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Login = () => {
   const [rollNumber, setRollNumber] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const [login] = useLoginMutation();
 
-  // store and login work
-  const dispatch = useDispatch()
-  const [login,isLoading] = useLoginMutation()
-
-  const handleSubmit =async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await login({rollNumber,password})
-      dispatch(setUserInfo({...res})) 
+      const res = await login({ rollNumber, password });
+      console.log(res)
+      if (res.error) {
+        const errorMessage =
+          res.error.data?.message || "Login failed. Please try again.";
+        toast(errorMessage, {
+          style: {
+            background: "#1f2937", // Dark gray
+            color: "#f87171", // Light red text
+            border: "1px solid #dc2626", // Red border
+          },
+        });
+        return; // Exit early to prevent further execution
+      }
+  
+      dispatch(setUserInfo({ ...res }));
+      toast("Login successful! Redirecting...", {
+        style: {
+          background: "#1f2937", // Dark gray
+          color: "#e0e7ff", // Light indigo text
+          border: "1px solid #4f46e5", // Indigo border
+        },
+      });
+      setRollNumber("");
+      setPassword("");
     } catch (error) {
-      console.log(error?.data?.message || error.message)
+      toast("Login failed. Please try again.", {
+        style: {
+          background: "#1f2937",
+          color: "#f87171", 
+          border: "1px solid #dc2626", 
+        },
+      });
     }
-    console.log("Username : ", rollNumber);
-    console.log("Password : ", password);
+    setTimeout(() => {
+      navigate("/");
+    }, 1500);
 
-    setPassword("");
-    setRollNumber("");
-    navigate("/");
   };
 
   return (
@@ -39,25 +66,23 @@ const Login = () => {
           Log in to continue to your account
         </p>
         <form onSubmit={handleSubmit} method="POST">
-          {/* Username */}
           <div className="mb-6">
             <label
               htmlFor="rollNumber"
               className="block text-sm font-medium text-gray-300 mb-2"
             >
-              RollNumber
+              Roll Number
             </label>
             <input
               type="text"
               id="rollNumber"
               value={rollNumber}
               onChange={(e) => setRollNumber(e.target.value)}
-              placeholder="Enter your username"
+              placeholder="Enter your roll number"
               className="w-full px-4 py-3 bg-gray-900 border border-gray-600 rounded-lg text-gray-200 placeholder-gray-500 focus:outline-none focus:ring focus:ring-indigo-500"
               required
             />
           </div>
-          {/* Password */}
           <div className="mb-6">
             <label
               htmlFor="password"
@@ -75,7 +100,6 @@ const Login = () => {
               required
             />
           </div>
-          {/* Submit Button */}
           <button
             type="submit"
             className="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-lg shadow-md transition duration-300"
@@ -83,7 +107,6 @@ const Login = () => {
             Log In
           </button>
         </form>
-        {/* Additional Links */}
         <div className="mt-6 text-center">
           <p className="text-sm text-gray-400">
             Don't have an account?{" "}
@@ -93,6 +116,25 @@ const Login = () => {
           </p>
         </div>
       </div>
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="dark"
+        toastStyle={{
+          background: "linear-gradient(to right, #1f2937, #374151)", // Dark gray gradient
+          color: "#e0e7ff", // Light indigo text
+          borderRadius: "10px",
+          border: "1px solid #4f46e5", // Indigo border
+          boxShadow: "0px 4px 10px rgba(79, 70, 229, 0.2)",
+        }}
+      />
     </div>
   );
 };

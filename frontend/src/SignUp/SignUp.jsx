@@ -3,6 +3,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useSignupMutation } from "../redux/Api/userApiSlice";
 import { setUserInfo } from "../redux/features/authSlice";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const SignUp = () => {
   const [formData, setFormData] = useState({
@@ -28,11 +30,37 @@ const SignUp = () => {
     e.preventDefault();
     try {
       const res = await createUser(formData)
-      dispatch(setUserInfo({...res}))   
+      if(res.error){
+        console.log(res.error.data.message) 
+        const errorMessage =
+          res.error.data?.message || "SignUp failed. Please try again.";
+        toast(errorMessage, {
+          style: {
+            background: "#1f2937", // Dark gray
+            color: "#f87171", // Light red text
+            border: "1px solid #dc2626", // Red border
+          },
+        });
+        return
+      }
+      dispatch(setUserInfo({...res})) 
+      toast("Varify Email Redirecting...", {
+        style: {
+          background: "#1f2937", // Dark gray
+          color: "#e0e7ff", // Light indigo text
+          border: "1px solid #4f46e5", // Indigo border
+        },
+      });  
     } catch (error) {
       console.log(error?.data?.message || error.message)
+      toast("SignUp failed. Please try again.", {
+        style: {
+          background: "#1f2937",
+          color: "#f87171", 
+          border: "1px solid #dc2626", 
+        },
+      });
     }
-    console.log(formData);
     setFormData({
       fullName: "",
       rollNumber: 0,
@@ -41,13 +69,15 @@ const SignUp = () => {
       batch: "",
       gender: "",
     });
-
     console.log("email", email);
-    
     if(formData.email){
-      navigate(`/verify/${formData.email}`);
+      setTimeout(() => {
+        navigate(`/verify/${formData.email}`);
+      }, 1500);
     }else{
-      navigate("/")
+      setTimeout(() => {
+        navigate("/");
+      }, 1500);
     }
   };
 
@@ -165,6 +195,25 @@ const SignUp = () => {
           </div>
         </form>
       </div>
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="dark"
+        toastStyle={{
+          background: "linear-gradient(to right, #1f2937, #374151)", // Dark gray gradient
+          color: "#e0e7ff", // Light indigo text
+          borderRadius: "10px",
+          border: "1px solid #4f46e5", // Indigo border
+          boxShadow: "0px 4px 10px rgba(79, 70, 229, 0.2)",
+        }}
+      />
     </div>
   );
 };

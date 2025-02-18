@@ -2,26 +2,43 @@ import React from "react";
 import ProfileList from "../components/ProfileComponents/ProfileList.jsx";
 import UserDetails from "../components/ProfileComponents/UserDetails.jsx";
 import { useLogoutMutation } from "../redux/Api/userApiSlice.js";
-import { useNavigate,Link } from "react-router";
+import { useNavigate, Link } from "react-router";
 import { useDispatch } from "react-redux";
 import { logout } from "../redux/features/authSlice.js";
 import { useSelector } from "react-redux";
 import AcademicDetails from "../components/ProfileComponents/AcademicDetails.jsx";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Profile = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { user } = useSelector((state) => state.auth);
-  console.log(user)
+  console.log(user);
   const [logoutApiCall] = useLogoutMutation();
 
   const logoutHandler = async () => {
     try {
-      await logoutApiCall().unwrap();
+      console.log("Attempting to logout...");
+      await logoutApiCall().unwrap()
       dispatch(logout());
-      navigate("/");
+      toast("Logout successfull...", {
+        style: {
+          background: "#1f2937", // Dark gray
+          color: "#e0e7ff", // Light indigo text
+          border: "1px solid #4f46e5", // Indigo border
+        },
+      });
+        navigate("/");
     } catch (error) {
-      console.log(error?.data?.message || error.message);
+      console.log(error?.data?.message || error?.message);
+      toast("Logout failed. Please try again.", {
+        style: {
+          background: "#1f2937",
+          color: "#f87171", 
+          border: "1px solid #dc2626", 
+        },
+      });
     }
   };
   return (
@@ -35,23 +52,24 @@ const Profile = () => {
             className="w-20 h-20 rounded-full"
           />
           <div className="ml-4">
-            <h2 className="text-xl font-semibold">{user.data.fullName}</h2>
-            <p className="text-gray-400">{user.data.email}</p>
+            <h2 className="text-xl font-semibold">{user.data?.fullName}</h2>
+            <p className="text-gray-400">{user.data?.email}</p>
           </div>
           <div className="ml-auto">
-          <Link to={"/createJob"}>
-          <button className="border px-5 py-2 rounded-3xl mr-3 cursor-pointer">
-              Create Job
-          </button></Link>
-          <button
-            className="border px-5 py-2 rounded-3xl mr-3 cursor-pointer "
-            onClick={logoutHandler}
-          >
-            Logout
-          </button>
+            <Link to={"/createJob"}>
+              <button className="border px-5 py-2 rounded-3xl mr-3 cursor-pointer">
+                Create Job
+              </button>
+            </Link>
+            <button
+              className="border px-5 py-2 rounded-3xl mr-3 cursor-pointer "
+              onClick={logoutHandler}
+            >
+              Logout
+            </button>
           </div>
         </div>
-
+        
         {/* Content */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-6">
           {/* user details */}
@@ -87,7 +105,27 @@ const Profile = () => {
           </div>
         </div>
       </div>
+      <ToastContainer
+    position="top-right"
+    autoClose={3000}
+    hideProgressBar={false}
+    newestOnTop={false}
+    closeOnClick
+    rtl={false}
+    pauseOnFocusLoss
+    draggable
+    pauseOnHover
+    theme="dark"
+    toastStyle={{
+      background: "linear-gradient(to right, #1f2937, #374151)", // Dark gray gradient
+      color: "#e0e7ff", // Light indigo text
+      borderRadius: "10px",
+      border: "1px solid #4f46e5", // Indigo border
+      boxShadow: "0px 4px 10px rgba(79, 70, 229, 0.2)",
+    }}
+  />
     </div>
+    
   );
 };
 
