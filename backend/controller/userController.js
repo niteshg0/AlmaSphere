@@ -110,33 +110,44 @@ const createUser = async (req, res) => {
 };
 
 const loginUser = async (req, res) => {
-  const { rollNumber, password } = req.body;
-  const findUser = await User.findOne({ rollNumber });
-  if (findUser) {
-    const passwordValidation = await bcrypt.compare(
-      password,
-      findUser.password
-    );
-    if (passwordValidation) {
-      // generate tokens
-      generateToken(res, findUser._id);
-      return res.status(200).json({
-        rollNumber: findUser.rollNumber,
-        fullName: findUser.fullName,
-        email: findUser.email,
-        role: findUser.role,
-        gender:findUser.gender,
-        batch:findUser.batch
-      });
-    } else {
+  try {
+    const { rollNumber, password } = req.body;
+
+    // Find the user by roll number
+    const findUser = await User.findOne({ rollNumber });
+
+    // If user is not found
+    if (!findUser) {
+      return res.status(404).json({ message: "User not found..." });
+    }
+
+    // Compare entered password with hashed password
+    const passwordValidation = await bcrypt.compare(password, findUser.password);
+
+    if (!passwordValidation) {
       return res.status(401).json({ message: "Invalid password..." });
     }
-  } else {
-    return res.status(404).json({ message: "User not found..." });
+
+    // Generate token and return user data
+    generateToken(res, findUser._id);
+    return res.status(200).json({
+      rollNumber: findUser.rollNumber,
+      fullName: findUser.fullName,
+      email: findUser.email,
+      role: findUser.role,
+      gender: findUser.gender,
+      batch: findUser.batch,
+    });
+
+  } catch (error) {
+    console.error("Login error:", error);
+    return res.status(500).json({ message: "Internal server error." });
   }
 };
 
+
 const logoutUser = async (req, res) => {
+  console.log("Logout API Hit!"); 
   res.clearCookie("authToken", {
     httpOnly: true, // Ensures client-side JS cannot access it
     // secure: process.env.NODE_ENV === 'production', // Ensures it's only cleared over HTTPS in production
