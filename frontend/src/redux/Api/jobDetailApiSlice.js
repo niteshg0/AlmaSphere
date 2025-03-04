@@ -15,8 +15,8 @@ export const jobDetailApiSlice = apiSlice.injectEndpoints({
       })
     }),
     getOneJobDetail: builder.query({
-      query: (id) => ({
-        url: `${ACADMIC_URL}/${id}`,
+      query: (jobId) => ({
+        url: `${JOBDETAIL_URL}/${jobId}`,
         method: "GET",
       }),
     }),

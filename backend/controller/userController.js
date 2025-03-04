@@ -147,7 +147,6 @@ const loginUser = async (req, res) => {
 
 
 const logoutUser = async (req, res) => {
-  console.log("Logout API Hit!"); 
   res.clearCookie("authToken", {
     httpOnly: true, // Ensures client-side JS cannot access it
     // secure: process.env.NODE_ENV === 'production', // Ensures it's only cleared over HTTPS in production
@@ -157,7 +156,7 @@ const logoutUser = async (req, res) => {
 };
 
 const getUserProfile = async (req, res) => {
-  const id = await req.user._id;
+  const id = await req.params;
   if (!id) {
     return res.status(401).json({ message: "not login..." });
   }
@@ -222,7 +221,6 @@ const verifyCode = async (req, res) => {
   } catch (error) {
     return res.status(500).json({message: "could not run verify-code"})
   }
-  
 }
 
 export { createUser, loginUser, getUserProfile, logoutUser, updateUserProfile, verifyCode };
