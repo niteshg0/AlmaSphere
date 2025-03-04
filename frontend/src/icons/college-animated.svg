@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-24 h-24">
+  <style>
+    .building { fill: #4F46E5; }
+    .window { fill: #818CF8; }
+    .light { fill: #6366F1; }
+    @keyframes glow {
+      0% { opacity: 0.3; }
+      50% { opacity: 1; }
+      100% { opacity: 0.3; }
+    }
+    .animate-glow {
+      animation: glow 2s ease-in-out infinite;
+    }
+    @keyframes float {
+      0% { transform: translateY(0); }
+      50% { transform: translateY(-3px); }
+      100% { transform: translateY(0); }
+    }
+    .animate-float {
+      animation: float 3s ease-in-out infinite;
+    }
+  </style>
+  <g class="animate-float">
+    <path class="building" d="M12 3L1 9l4 2.18v6L12 21l7-3.82v-6l2-1.09v6.36L12 21 1 15.45V9l11-6z"/>
+    <g class="animate-glow">
+      <path class="window" d="M12 12l-2 1.09v2.18l2 1.09 2-1.09v-2.18L12 12z"/>
+      <path class="light" d="M12 8l-2 1.09v2.18l2 1.09 2-1.09V9.09L12 8z"/>
+    </g>
+  </g>
+</svg> 

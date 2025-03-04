@@ -21,7 +21,12 @@ const Profile = () => {
     try {
       console.log("Attempting to logout...");
       await logoutApiCall().unwrap()
-      dispatch(logout());
+      
+
+      setTimeout(() => {
+        dispatch(logout());
+      }, 2000);
+
       toast("Logout successfull...", {
         style: {
           background: "#1f2937", // Dark gray
@@ -29,7 +34,10 @@ const Profile = () => {
           border: "1px solid #4f46e5", // Indigo border
         },
       });
-        navigate("/");
+        // navigate("/");
+        setTimeout(() => {
+          navigate("/");
+        }, 2000);
     } catch (error) {
       console.log(error?.data?.message || error?.message);
       toast("Logout failed. Please try again.", {

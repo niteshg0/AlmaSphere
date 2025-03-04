@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Header from "./components/Header";
 import Home from "./Home/Home";
 import Login from "./Login/Login";
@@ -12,16 +12,25 @@ import CreateJob from "./JobPortal/CreateJob";
 import Verify from "./components/Verify";
 import Donation from "./Donation/Donation";
 import VerifyDonation from "./Donation/verifyDonation";
+import Footer from "./components/Footer";
 
 function App() {
+
+  const [isDarkTheme, setIsDarkTheme] = useState(false);
+
+  const toggleTheme = () => {
+    setIsDarkTheme(!isDarkTheme);
+  };
+
   const router = createBrowserRouter([
     {
       path: "/",
       element: (
         <>
-          {" "}
-          <Header />
-          <Home />{" "}
+        
+          <Header isDarkTheme={isDarkTheme} toggleTheme={toggleTheme} />
+      <Home isDarkTheme={isDarkTheme} />
+      <Footer isDarkTheme={isDarkTheme}/>
         </>
       ),
     },
@@ -29,9 +38,10 @@ function App() {
       path: "/jobs",
       element: (
         <>
-          {" "}
+          
           <Header />
-          <JobPortal />{" "}
+          <JobPortal />
+          <Footer isDarkTheme={isDarkTheme}/>
         </>
       ),
     },
@@ -41,6 +51,7 @@ function App() {
         <>
           {" "}
           <Header /> <AboutUs />{" "}
+          <Footer/>
         </>
       ),
     },
@@ -49,6 +60,7 @@ function App() {
       element: (
         <>
           <Header /> <ContactUs />{" "}
+          <Footer/>
         </>
       ),
     },
@@ -67,6 +79,7 @@ function App() {
           {" "}
           <Header />
           <Donation />{" "}
+          <Footer isDarkTheme={isDarkTheme}/>
         </>
       )
     },
@@ -75,7 +88,7 @@ function App() {
       element: (
         <>
           {" "}
-          <Header />
+          {/* <Header /> */}
           <VerifyDonation/>{" "}
         </>
       )
