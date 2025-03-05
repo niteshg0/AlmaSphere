@@ -232,9 +232,9 @@ const JobPortal = () => {
         <div className="space-y-4">
           {filteredData?.map((job) => (
             <Link key={job._id} to={`/jobDetail/${job._id}`}>
-            <div>
-              <JobComponent job={job} />
-            </div>
+              <div>
+                <JobComponent job={job} />
+              </div>
             </Link>
           ))}
         </div>
