@@ -12,8 +12,8 @@ import CreateJob from "./JobPortal/CreateJob";
 import Verify from "./components/Verify";
 import Donation from "./Donation/Donation";
 import VerifyDonation from "./Donation/verifyDonation";
+import JobDetails from "./components/JobDetails";
 import Footer from "./components/Footer";
-
 function App() {
 
   const [isDarkTheme, setIsDarkTheme] = useState(false);
@@ -96,6 +96,10 @@ function App() {
     {
       path: "/login",
       element: <Login />,
+    },
+    {
+      path:"/jobDetail/:jobId",
+      element:<JobDetails />
     },
     {
       path: "/verify/:email",

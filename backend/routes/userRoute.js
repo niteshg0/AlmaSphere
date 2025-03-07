@@ -36,9 +36,7 @@ router.post("/logout",logoutUser)
 router.post("/verify/:email", verifyCode)
 
 // alumni profile
-router.route("/profile")
-     .get(authentication, authrizeAlumni, getUserProfile)
-     .put(authentication,authrizeAlumni,updateUserProfile)
-
+router.route("/:id")
+     .get(authentication, getUserProfile)
 
 export default router;

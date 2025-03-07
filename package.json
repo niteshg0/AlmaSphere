@@ -23,7 +23,12 @@
     "nodemailer": "^6.10.0",
     "nodemon": "^3.1.9",
     "razorpay": "^2.9.5",
+<<<<<<< HEAD
     "react-toastify": "^11.0.3"
+=======
+    "react-icons": "^5.5.0",
+    "react-select": "^5.10.1"
+>>>>>>> 2e18b1a944658a43d64483ad1f0876fbf8b3a8de
   },
   "devDependencies": {
     "concurrently": "^9.1.2"

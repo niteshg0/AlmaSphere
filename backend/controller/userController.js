@@ -110,31 +110,41 @@ const createUser = async (req, res) => {
 };
 
 const loginUser = async (req, res) => {
-  const { rollNumber, password } = req.body;
-  const findUser = await User.findOne({ rollNumber });
-  if (findUser) {
-    const passwordValidation = await bcrypt.compare(
-      password,
-      findUser.password
-    );
-    if (passwordValidation) {
-      // generate tokens
-      generateToken(res, findUser._id);
-      return res.status(200).json({
-        rollNumber: findUser.rollNumber,
-        fullName: findUser.fullName,
-        email: findUser.email,
-        role: findUser.role,
-        gender:findUser.gender,
-        batch:findUser.batch
-      });
-    } else {
+  try {
+    const { rollNumber, password } = req.body;
+
+    // Find the user by roll number
+    const findUser = await User.findOne({ rollNumber });
+
+    // If user is not found
+    if (!findUser) {
+      return res.status(404).json({ message: "User not found..." });
+    }
+
+    // Compare entered password with hashed password
+    const passwordValidation = await bcrypt.compare(password, findUser.password);
+
+    if (!passwordValidation) {
       return res.status(401).json({ message: "Invalid password..." });
     }
-  } else {
-    return res.status(404).json({ message: "User not found..." });
+
+    // Generate token and return user data
+    generateToken(res, findUser._id);
+    return res.status(200).json({
+      rollNumber: findUser.rollNumber,
+      fullName: findUser.fullName,
+      email: findUser.email,
+      role: findUser.role,
+      gender: findUser.gender,
+      batch: findUser.batch,
+    });
+
+  } catch (error) {
+    console.error("Login error:", error);
+    return res.status(500).json({ message: "Internal server error." });
   }
 };
+
 
 const logoutUser = async (req, res) => {
   res.clearCookie("authToken", {
@@ -146,7 +156,7 @@ const logoutUser = async (req, res) => {
 };
 
 const getUserProfile = async (req, res) => {
-  const id = await req.user._id;
+  const id = await req.params;
   if (!id) {
     return res.status(401).json({ message: "not login..." });
   }
@@ -211,7 +221,6 @@ const verifyCode = async (req, res) => {
   } catch (error) {
     return res.status(500).json({message: "could not run verify-code"})
   }
-  
 }
 
 export { createUser, loginUser, getUserProfile, logoutUser, updateUserProfile, verifyCode };
