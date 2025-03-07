@@ -1,50 +1,26 @@
 import { Link } from "react-router-dom";
 
-const Footer = ({ isDarkTheme }) => {
+const Footer = () => {
   return (
-    <footer
-      className={`relative py-16 ${
-        isDarkTheme
-          ? "bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900"
-          : "bg-gradient-to-br from-blue-50 via-indigo-50 to-indigo-100"
-      }`}
-    >
+    <footer className="relative py-8 bg-gradient-to-br from-blue-50 via-indigo-50 to-indigo-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
       {/* Background decorative elements */}
       <div className="absolute inset-0 overflow-hidden">
-        <div
-          className={`absolute -top-40 -right-40 w-80 h-80 rounded-full ${
-            isDarkTheme ? "bg-indigo-500/10" : "bg-indigo-200/30"
-          } blur-3xl`}
-        />
-        <div
-          className={`absolute -bottom-40 -left-40 w-80 h-80 rounded-full ${
-            isDarkTheme ? "bg-purple-500/10" : "bg-purple-200/30"
-          } blur-3xl`}
-        />
+        <div className="absolute -top-20 -right-20 w-60 h-60 rounded-full bg-indigo-200/30 dark:bg-indigo-500/10 blur-3xl" />
+        <div className="absolute -bottom-20 -left-20 w-60 h-60 rounded-full bg-purple-200/30 dark:bg-purple-500/10 blur-3xl" />
       </div>
 
       <div className="container mx-auto px-6 relative">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {/* Quick Links Section */}
           <div className="group">
-            <h3
-              className={`text-2xl font-bold font-serif mb-6 bg-clip-text text-transparent ${
-                isDarkTheme
-                  ? "bg-gradient-to-r from-indigo-400 to-purple-400"
-                  : "bg-gradient-to-r from-indigo-600 to-purple-600"
-              }`}
-            >
+            <h3 className="text-xl font-bold font-serif mb-4 bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-purple-600 dark:from-indigo-400 dark:to-purple-400">
               Quick Links
             </h3>
-            <ul className="space-y-3">
+            <ul className="space-y-2">
               <li>
                 <Link
                   to="/about"
-                  className={`group/link flex items-center text-base transition-all duration-300 hover:translate-x-2 ${
-                    isDarkTheme
-                      ? "text-gray-300 hover:text-indigo-400"
-                      : "text-gray-700 hover:text-indigo-600"
-                  }`}
+                  className="group/link flex items-center text-base transition-all duration-300 hover:translate-x-2 text-gray-700 hover:text-indigo-600 dark:text-gray-300 dark:hover:text-indigo-400"
                 >
                   <span className="w-1.5 h-1.5 rounded-full bg-indigo-500 mr-2 opacity-0 group-hover/link:opacity-100 transition-opacity duration-300" />
                   About Us
@@ -53,11 +29,7 @@ const Footer = ({ isDarkTheme }) => {
               <li>
                 <Link
                   to="/contact"
-                  className={`group/link flex items-center text-base transition-all duration-300 hover:translate-x-2 ${
-                    isDarkTheme
-                      ? "text-gray-300 hover:text-indigo-400"
-                      : "text-gray-700 hover:text-indigo-600"
-                  }`}
+                  className="group/link flex items-center text-base transition-all duration-300 hover:translate-x-2 text-gray-700 hover:text-indigo-600 dark:text-gray-300 dark:hover:text-indigo-400"
                 >
                   <span className="w-1.5 h-1.5 rounded-full bg-indigo-500 mr-2 opacity-0 group-hover/link:opacity-100 transition-opacity duration-300" />
                   Contact Us
@@ -66,11 +38,7 @@ const Footer = ({ isDarkTheme }) => {
               <li>
                 <Link
                   to="/faq"
-                  className={`group/link flex items-center text-base transition-all duration-300 hover:translate-x-2 ${
-                    isDarkTheme
-                      ? "text-gray-300 hover:text-indigo-400"
-                      : "text-gray-700 hover:text-indigo-600"
-                  }`}
+                  className="group/link flex items-center text-base transition-all duration-300 hover:translate-x-2 text-gray-700 hover:text-indigo-600 dark:text-gray-300 dark:hover:text-indigo-400"
                 >
                   <span className="w-1.5 h-1.5 rounded-full bg-indigo-500 mr-2 opacity-0 group-hover/link:opacity-100 transition-opacity duration-300" />
                   FAQ
@@ -79,11 +47,7 @@ const Footer = ({ isDarkTheme }) => {
               <li>
                 <Link
                   to="/privacy-policy"
-                  className={`group/link flex items-center text-base transition-all duration-300 hover:translate-x-2 ${
-                    isDarkTheme
-                      ? "text-gray-300 hover:text-indigo-400"
-                      : "text-gray-700 hover:text-indigo-600"
-                  }`}
+                  className="group/link flex items-center text-base transition-all duration-300 hover:translate-x-2 text-gray-700 hover:text-indigo-600 dark:text-gray-300 dark:hover:text-indigo-400"
                 >
                   <span className="w-1.5 h-1.5 rounded-full bg-indigo-500 mr-2 opacity-0 group-hover/link:opacity-100 transition-opacity duration-300" />
                   Privacy Policy
@@ -94,24 +58,14 @@ const Footer = ({ isDarkTheme }) => {
 
           {/* Contact Information Section */}
           <div className="group">
-            <h3
-              className={`text-2xl font-bold font-serif mb-6 bg-clip-text text-transparent ${
-                isDarkTheme
-                  ? "bg-gradient-to-r from-indigo-400 to-purple-400"
-                  : "bg-gradient-to-r from-indigo-600 to-purple-600"
-              }`}
-            >
+            <h3 className="text-xl font-bold font-serif mb-4 bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-purple-600 dark:from-indigo-400 dark:to-purple-400">
               Contact Us
             </h3>
-            <ul className="space-y-3">
+            <ul className="space-y-2">
               <li>
                 <a
                   href="mailto:support@alumnihub.com"
-                  className={`group/link flex items-center text-base transition-all duration-300 hover:translate-x-2 ${
-                    isDarkTheme
-                      ? "text-gray-300 hover:text-indigo-400"
-                      : "text-gray-700 hover:text-indigo-600"
-                  }`}
+                  className="group/link flex items-center text-base transition-all duration-300 hover:translate-x-2 text-gray-700 hover:text-indigo-600 dark:text-gray-300 dark:hover:text-indigo-400"
                 >
                   <span className="w-1.5 h-1.5 rounded-full bg-indigo-500 mr-2 opacity-0 group-hover/link:opacity-100 transition-opacity duration-300" />
                   support@alumnihub.com
@@ -120,22 +74,14 @@ const Footer = ({ isDarkTheme }) => {
               <li>
                 <a
                   href="tel:+1234567890"
-                  className={`group/link flex items-center text-base transition-all duration-300 hover:translate-x-2 ${
-                    isDarkTheme
-                      ? "text-gray-300 hover:text-indigo-400"
-                      : "text-gray-700 hover:text-indigo-600"
-                  }`}
+                  className="group/link flex items-center text-base transition-all duration-300 hover:translate-x-2 text-gray-700 hover:text-indigo-600 dark:text-gray-300 dark:hover:text-indigo-400"
                 >
                   <span className="w-1.5 h-1.5 rounded-full bg-indigo-500 mr-2 opacity-0 group-hover/link:opacity-100 transition-opacity duration-300" />
                   +1 (234) 567-890
                 </a>
               </li>
               <li>
-                <p
-                  className={`group/link flex items-center text-base ${
-                    isDarkTheme ? "text-gray-300" : "text-gray-700"
-                  }`}
-                >
+                <p className="group/link flex items-center text-base text-gray-700 dark:text-gray-300">
                   <span className="w-1.5 h-1.5 rounded-full bg-indigo-500 mr-2 opacity-0 group-hover/link:opacity-100 transition-opacity duration-300" />
                   123 Alumni Street, College Town, USA
                 </p>
@@ -145,13 +91,7 @@ const Footer = ({ isDarkTheme }) => {
 
           {/* Social Media Section */}
           <div className="group">
-            <h3
-              className={`text-2xl font-bold font-serif mb-6 bg-clip-text text-transparent ${
-                isDarkTheme
-                  ? "bg-gradient-to-r from-indigo-400 to-purple-400"
-                  : "bg-gradient-to-r from-indigo-600 to-purple-600"
-              }`}
-            >
+            <h3 className="text-xl font-bold font-serif mb-4 bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-purple-600 dark:from-indigo-400 dark:to-purple-400">
               Follow Us
             </h3>
             <div className="flex space-x-6">
@@ -159,11 +99,7 @@ const Footer = ({ isDarkTheme }) => {
                 href="https://facebook.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className={`group/social p-2 rounded-full transition-all duration-300 hover:scale-110 ${
-                  isDarkTheme
-                    ? "bg-gray-800/50 text-gray-300 hover:text-indigo-400"
-                    : "bg-white/80 text-gray-700 hover:text-indigo-600"
-                }`}
+                className="group/social p-2 rounded-full transition-all duration-300 hover:scale-110 bg-white/80 text-gray-700 hover:text-indigo-600 dark:bg-gray-800/50 dark:text-gray-300 dark:hover:text-indigo-400"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -178,11 +114,7 @@ const Footer = ({ isDarkTheme }) => {
                 href="https://twitter.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className={`group/social p-2 rounded-full transition-all duration-300 hover:scale-110 ${
-                  isDarkTheme
-                    ? "bg-gray-800/50 text-gray-300 hover:text-indigo-400"
-                    : "bg-white/80 text-gray-700 hover:text-indigo-600"
-                }`}
+                className="group/social p-2 rounded-full transition-all duration-300 hover:scale-110 bg-white/80 text-gray-700 hover:text-indigo-600 dark:bg-gray-800/50 dark:text-gray-300 dark:hover:text-indigo-400"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -197,11 +129,7 @@ const Footer = ({ isDarkTheme }) => {
                 href="https://linkedin.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className={`group/social p-2 rounded-full transition-all duration-300 hover:scale-110 ${
-                  isDarkTheme
-                    ? "bg-gray-800/50 text-gray-300 hover:text-indigo-400"
-                    : "bg-white/80 text-gray-700 hover:text-indigo-600"
-                }`}
+                className="group/social p-2 rounded-full transition-all duration-300 hover:scale-110 bg-white/80 text-gray-700 hover:text-indigo-600 dark:bg-gray-800/50 dark:text-gray-300 dark:hover:text-indigo-400"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -217,16 +145,8 @@ const Footer = ({ isDarkTheme }) => {
         </div>
 
         {/* Copyright Section */}
-        <div
-          className={`mt-12 pt-8 border-t ${
-            isDarkTheme ? "border-gray-800" : "border-gray-200"
-          }`}
-        >
-          <p
-            className={`text-sm text-center ${
-              isDarkTheme ? "text-gray-400" : "text-gray-600"
-            }`}
-          >
+        <div className="mt-8 pt-6 border-t border-gray-200 dark:border-gray-800">
+          <p className="text-sm text-center text-gray-600 dark:text-gray-400">
             &copy; {new Date().getFullYear()} AlumniHub. All rights reserved.
           </p>
         </div>
