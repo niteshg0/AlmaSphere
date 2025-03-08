@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useDonationMutation } from "../redux/Api/donationApi";
 import { useSelector } from "react-redux";
+import { ToastContainer, toast } from "react-toastify";
 
 const Donation = () => {
   const {user}= useSelector(state=> state.auth)
@@ -32,18 +33,42 @@ const Donation = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    if(!user){
+      // alert("please Login")
+      toast("Please Login ...", {
+        style: {
+          background: "#1f2937", // Dark gray
+          color: "#f87171", // Light red text
+          border: "1px solid #dc2626", // Red border
+        },
+      })}
+
     if (!formData.amount) {
-        alert("Please enter a donation amount.");
+        // alert("Please enter a donation amount.");
+        toast("Please enter a donation amount", {
+          style: {
+            background: "#1f2937", // Dark gray
+            color: "#f87171", // Light red text
+            border: "1px solid #dc2626", // Red border
+          },
+        })
         return;
       }
 
     try {
         const donate= await donation(formData);
-        console.log(donate);
+        // console.log(donate);
         
 
         if(!donate.data.donation.id){
-            alert("Failed to create Donation Order");
+            // alert("Failed to create Donation Order");
+            toast("Failed to create Donation Order", {
+              style: {
+                background: "#1f2937", // Dark gray
+                color: "#f87171", // Light red text
+                border: "1px solid #dc2626", // Red border
+              },
+            })
             return;
         }
 
@@ -61,7 +86,8 @@ const Donation = () => {
             description: "Test Transaction",
             image: "/AA-logo.png",
             order_id: donate.data.donation.id, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
-            callback_url: `http://localhost:${PORT}/api/donation/verify`,
+            // callback_url: `http://localhost:${PORT}/api/donation/verify`,
+            callback_url: `${import.meta.env.VITE_BACKEND_URL}/donation/verify`,
             prefill: {
                 "name": user?.data?.fullname || "",
                 "email": user.data.email || "",
@@ -83,6 +109,13 @@ const Donation = () => {
         
     } catch (error) {
         // console.error(error?.data?.message || error.message);
+        toast("Internal Error", {
+          style: {
+            background: "#1f2937", // Dark gray
+            color: "#f87171", // Light red text
+            border: "1px solid #dc2626", // Red border
+          },
+        })
         console.log(error);
         
     }
@@ -155,11 +188,31 @@ const Donation = () => {
           <button
             type="submit"
             className="w-full bg-indigo-500 hover:bg-indigo-600 transition py-3 rounded-lg text-white font-semibold mt-4"
+            disabled= {isLoading}
           >
             Donate ₹{formData.amount || "Now"}
           </button>
         </form>
       </div>
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="dark"
+        toastStyle={{
+          background: "linear-gradient(to right, #1f2937, #374151)", // Dark gray gradient
+          color: "#e0e7ff", // Light indigo text
+          borderRadius: "10px",
+          border: "1px solid #4f46e5", // Indigo border
+          boxShadow: "0px 4px 10px rgba(79, 70, 229, 0.2)",
+        }}
+      />
     </div>
   );
 };

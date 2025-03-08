@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Header from "./components/Header";
 import Home from "./Home/Home";
 import Login from "./Login/Login";
@@ -13,16 +13,40 @@ import Verify from "./components/Verify";
 import Donation from "./Donation/Donation";
 import VerifyDonation from "./Donation/verifyDonation";
 import JobDetails from "./components/JobDetails";
+import Footer from "./components/Footer";
+import Layout from "./components/Layout";
+
 
 function App() {
+
+  const [isDarkTheme, setIsDarkTheme] = useState(() => {
+    const savedTheme = localStorage.getItem("theme");
+    return savedTheme === "dark";
+  });
+
+  useEffect(() => {
+    if (isDarkTheme) {
+      document.documentElement.classList.add("dark");
+      localStorage.setItem("theme", "dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+      localStorage.setItem("theme", "light");
+    }
+  }, [isDarkTheme]);
+
+  const toggleTheme = () => {
+    setIsDarkTheme(!isDarkTheme);
+  };
+
   const router = createBrowserRouter([
     {
       path: "/",
       element: (
         <>
-          {" "}
-          <Header />
-          <Home />{" "}
+        
+        <Layout isDarkTheme={isDarkTheme} toggleTheme={toggleTheme}>
+          <Home />
+        </Layout>
         </>
       ),
     },
@@ -30,9 +54,9 @@ function App() {
       path: "/jobs",
       element: (
         <>
-          {" "}
-          <Header />
-          <JobPortal />{" "}
+          <Layout isDarkTheme={isDarkTheme} toggleTheme={toggleTheme}>
+          <JobPortal />
+        </Layout>
         </>
       ),
     },
@@ -40,8 +64,9 @@ function App() {
       path: "/about",
       element: (
         <>
-          {" "}
-          <Header /> <AboutUs />{" "}
+          <Layout isDarkTheme={isDarkTheme} toggleTheme={toggleTheme}>
+          <AboutUs />
+        </Layout>
         </>
       ),
     },
@@ -49,7 +74,9 @@ function App() {
       path: "/contact",
       element: (
         <>
-          <Header /> <ContactUs />{" "}
+           <Layout isDarkTheme={isDarkTheme} toggleTheme={toggleTheme}>
+          <ContactUs />
+        </Layout>
         </>
       ),
     },
@@ -57,7 +84,9 @@ function App() {
       path: "/createJob",
       element: (
         <>
+          <Layout isDarkTheme={isDarkTheme} toggleTheme={toggleTheme}>
           <CreateJob />
+        </Layout>
         </>
       ),
     },
@@ -65,9 +94,9 @@ function App() {
       path: "/donation",
       element: (
         <>
-          {" "}
-          <Header />
-          <Donation />{" "}
+          <Layout isDarkTheme={isDarkTheme} toggleTheme={toggleTheme}>
+          <Donation />
+        </Layout>
         </>
       )
     },
@@ -75,31 +104,51 @@ function App() {
       path: "/donation/verify",
       element: (
         <>
-          {" "}
-          <Header />
-          <VerifyDonation/>{" "}
+           <Layout isDarkTheme={isDarkTheme} toggleTheme={toggleTheme}>
+          <VerifyDonation />
+        </Layout>
         </>
       )
     },
     {
       path: "/login",
-      element: <Login />,
+      element: (
+        <Layout isDarkTheme={isDarkTheme} toggleTheme={toggleTheme}>
+          <Login />
+        </Layout>
+      ),
     },
     {
       path:"/jobDetail/:jobId",
-      element:<JobDetails />
+      element:(
+        <Layout isDarkTheme={isDarkTheme} toggleTheme={toggleTheme}>
+          <JobDetails />
+        </Layout>
+      ),
     },
     {
       path: "/verify/:email",
-      element: <Verify />,
+      element:(
+        <Layout isDarkTheme={isDarkTheme} toggleTheme={toggleTheme}>
+          <Verify />
+        </Layout>
+      ),
     },
     {
       path: "/signup",
-      element: <SignUp />,
+      element: (
+        <Layout isDarkTheme={isDarkTheme} toggleTheme={toggleTheme}>
+          <SignUp />
+        </Layout>
+      ),
     },
     {
       path: "/profile",
-      element: <Profile />,
+      element: (
+        <Layout isDarkTheme={isDarkTheme} toggleTheme={toggleTheme}>
+          <Profile />
+        </Layout>
+      ),
     },
   ]);
 
