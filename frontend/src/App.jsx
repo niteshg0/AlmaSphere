@@ -1,7 +1,12 @@
 import React, { useState, useEffect } from "react";
 import Home from "./Home/Home";
 import Login from "./Login/Login";
-import { createBrowserRouter, createRoutesFromElements, Route, RouterProvider } from "react-router-dom";
+import {
+  createBrowserRouter,
+  createRoutesFromElements,
+  Route,
+  RouterProvider,
+} from "react-router-dom";
 import SignUp from "./SignUp/SignUp";
 import AboutUs from "./components/AboutUs";
 import ContactUs from "./components/ContactUs";
@@ -14,9 +19,7 @@ import VerifyDonation from "./Donation/verifyDonation";
 import JobDetails from "./components/JobDetails";
 import Layout from "./components/Layout";
 
-
 function App() {
-
   const [isDarkTheme, setIsDarkTheme] = useState(() => {
     const savedTheme = localStorage.getItem("theme");
     return savedTheme === "dark";
@@ -41,7 +44,7 @@ function App() {
   //     path: "/",
   //     element: (
   //       <>
-        
+
   //       <Layout isDarkTheme={isDarkTheme} toggleTheme={toggleTheme}>
   //         <Home />
   //       </Layout>
@@ -150,37 +153,64 @@ function App() {
   //   },
   // ]);
 
-  const router= createBrowserRouter(
+  const router = createBrowserRouter(
     createRoutesFromElements(
-    <>
-      <Route path="/" element={<Layout isDarkTheme={isDarkTheme} toggleTheme={toggleTheme} NavBar={"fixed"} />}> 
-        <Route index element={<Home />}></Route>
-      </Route>
+      <>
+        <Route
+          path="/"
+          element={
+            <Layout
+              isDarkTheme={isDarkTheme}
+              toggleTheme={toggleTheme}
+              NavBar={"fixed"}
+            />
+          }
+        >
+          <Route index element={<Home />}></Route>
+        </Route>
 
-      <Route path="/" element={<Layout isDarkTheme={isDarkTheme} toggleTheme={toggleTheme} NavBar={""} />}>
-    
-        <Route path="/about" element={<AboutUs />}></Route>
+        <Route
+          path="/"
+          element={
+            <Layout
+              isDarkTheme={isDarkTheme}
+              toggleTheme={toggleTheme}
+              NavBar={""}
+            />
+          }
+        >
+          <Route path="/about" element={<AboutUs />}></Route>
 
-        <Route path="/contact" element={<ContactUs />}></Route> 
-              
-        <Route path="/donation" element={<Donation />}></Route>
+          <Route path="/contact" element={<ContactUs />}></Route>
 
-        <Route path="/donation/verify" element={<VerifyDonation />}></Route>
+          <Route path="/donation/verify" element={<VerifyDonation isDarkTheme={isDarkTheme}  />}></Route>
 
-        <Route path="/login" element={<Login />}></Route>
+          <Route path="/login" element={<Login />}></Route>
 
-        <Route path="/verify/:email" element={<Verify />}></Route>
+          <Route path="/verify/:email" element={<Verify />}></Route>
 
-        <Route path="/signup" element={<SignUp />}></Route>
-      </Route>
+          <Route path="/signup" element={<SignUp />}></Route>
+        </Route>
 
-      <Route path="/profile" element={<Profile />}></Route>
-      <Route path="/jobs" element={<JobPortal  isDarkTheme={isDarkTheme} />}></Route>
-      <Route path="/createJob" element={<CreateJob  isDarkTheme={isDarkTheme} />}></Route>
-      <Route path="/jobDetail/:jobId" element={<JobDetails isDarkTheme={isDarkTheme} />}></Route>
-     
-    </>
-  ))
+        <Route path="/profile" element={<Profile />}></Route>
+
+        <Route path="/donation" element={<Donation isDarkTheme={isDarkTheme}  />}></Route>
+        
+        <Route
+          path="/jobs"
+          element={<JobPortal isDarkTheme={isDarkTheme} />}
+        ></Route>
+        <Route
+          path="/createJob"
+          element={<CreateJob isDarkTheme={isDarkTheme} />}
+        ></Route>
+        <Route
+          path="/jobDetail/:jobId"
+          element={<JobDetails isDarkTheme={isDarkTheme} />}
+        ></Route>
+      </>
+    )
+  );
 
   return (
     <>
