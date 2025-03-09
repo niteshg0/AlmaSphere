@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import Header from "./components/Header";
 import Home from "./Home/Home";
 import Login from "./Login/Login";
 import { createBrowserRouter, createRoutesFromElements, Route, RouterProvider } from "react-router-dom";
@@ -13,7 +12,6 @@ import Verify from "./components/Verify";
 import Donation from "./Donation/Donation";
 import VerifyDonation from "./Donation/verifyDonation";
 import JobDetails from "./components/JobDetails";
-import Footer from "./components/Footer";
 import Layout from "./components/Layout";
 
 
@@ -155,28 +153,32 @@ function App() {
   const router= createBrowserRouter(
     createRoutesFromElements(
     <>
-      <Route path="/" element={<Layout isDarkTheme={isDarkTheme} toggleTheme={toggleTheme} NavBar={"fixed"} />}>
-        
+      <Route path="/" element={<Layout isDarkTheme={isDarkTheme} toggleTheme={toggleTheme} NavBar={"fixed"} />}> 
         <Route index element={<Home />}></Route>
-        
-        <Route path="/about" element={<AboutUs />}></Route>
-
-        <Route path="/contact" element={<ContactUs />}></Route>
-
       </Route>
 
       <Route path="/" element={<Layout isDarkTheme={isDarkTheme} toggleTheme={toggleTheme} NavBar={""} />}>
+    
+        <Route path="/about" element={<AboutUs />}></Route>
+
+        <Route path="/contact" element={<ContactUs />}></Route> 
               
         <Route path="/donation" element={<Donation />}></Route>
 
         <Route path="/donation/verify" element={<VerifyDonation />}></Route>
 
-        <Route path="login" element={<Login />}></Route>
+        <Route path="/login" element={<Login />}></Route>
 
         <Route path="/verify/:email" element={<Verify />}></Route>
 
-        <Route path="signup" element={<SignUp />}></Route>
+        <Route path="/signup" element={<SignUp />}></Route>
       </Route>
+
+      <Route path="/profile" element={<Profile />}></Route>
+      <Route path="/jobs" element={<JobPortal />}></Route>
+      <Route path="/createJob" element={<CreateJob />}></Route>
+      <Route path="/jobDetail/:jobId" element={<JobDetails/>}></Route>
+     
     </>
   ))
 
