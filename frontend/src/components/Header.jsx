@@ -2,7 +2,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 
-const Header = ({ isDarkTheme, toggleTheme }) => {
+const Header = ({ isDarkTheme, toggleTheme, NavBar}) => {
   const navigate = useNavigate();
   const { user } = useSelector((state) => state.auth);
   const existUser = user?.data?.fullName;
@@ -37,12 +37,12 @@ const Header = ({ isDarkTheme, toggleTheme }) => {
 
   return (
     <div
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isNavbarVisible ? "translate-y-0" : "-translate-y-full"
+      className={`${NavBar} p-2 top-0 left-0 right-0 z-50 transition-all duration-300 ${
+        isNavbarVisible ? "translate-y-0" : "-translate-y-24"
       }`}
     >
       <div
-        className={`mx-4 mt-4 rounded-2xl backdrop-blur-lg transition-all duration-300 relative overflow-hidden group ${
+        className={`mx-4  rounded-2xl backdrop-blur-lg transition-all duration-300 relative overflow-hidden group ${
           scrolled
             ? "bg-white/95 dark:bg-gray-900/90"
             : "bg-white/95 dark:bg-gray-900/70"

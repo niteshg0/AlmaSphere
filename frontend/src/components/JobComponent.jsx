@@ -1,12 +1,20 @@
-import React, { useState } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 import { CiLocationOn } from "react-icons/ci";
 import { TbCalendarTime } from "react-icons/tb";
 import { LuBoomBox } from "react-icons/lu";
 import { LuTimerReset } from "react-icons/lu";
-import { FaBriefcase, FaHome, FaClock, FaBolt } from "react-icons/fa";
+import {
+  FaBriefcase,
+  FaHome,
+  FaClock,
+  FaBolt,
+  FaBuilding,
+  FaMoneyBillWave,
+  FaCalendarAlt,
+} from "react-icons/fa";
 
-const JobComponent = ({ job }) => {
+const JobComponent = ({ job, isDarkTheme }) => {
   const create = new Date(job.createdAt);
   const closed = new Date(job.application_deadline);
   const diff = closed - create;
@@ -34,90 +42,135 @@ const JobComponent = ({ job }) => {
     }
   };
 
+  // Format deadline date
+  const formatDeadline = (date) => {
+    return new Date(date).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+    });
+  };
+
+  // Format salary range with commas
+  const formatSalary = (range) => {
+    if (!range) return "";
+    const [min, max] = range.split("-").map(Number);
+    return `${min.toLocaleString()} - ${max.toLocaleString()}`;
+  };
+
+  // Determine if job is new (posted within last 48 hours)
+  const isNewJob = () => {
+    const now = new Date();
+    const difference = now - create;
+    const hours = Math.floor(difference / (1000 * 60 * 60));
+    return hours <= 48;
+  };
+
   return (
-    <>
-      {/* <div className="bg-white rounded-2xl shadow-md p-6 w-full max-w-2xl flex flex-col gap-4">
-      <div className="flex justify-between items-center">
-        <div>
-          <h2 className="text-lg font-semibold">JavaScript Developer</h2>
-          <p className="text-gray-500 text-sm">Adds99</p>
-        </div>
-        <div className="bg-gray-100 rounded-xl p-3">
-          <FaBriefcase className="text-gray-400" size={24} />
+    <div className="w-full bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden transition-all duration-300">
+      <div className="p-6">
+        <div className="flex justify-between items-start">
+          <div className="flex-1">
+            {/* Company and status */}
+            <div className="flex justify-between items-center mb-2">
+              <div className="flex items-center">
+                <div className="w-10 h-10 rounded-lg bg-indigo-100 dark:bg-indigo-900/30 flex items-center justify-center mr-3">
+                  <FaBuilding className="text-indigo-600 dark:text-indigo-400" />
+                </div>
+                <h3 className="font-semibold text-gray-900 dark:text-white">
+                  {job?.companyName}
+                </h3>
+              </div>
+              <div className="flex items-center">
+                {isNewJob() && (
+                  <span className="bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-400 text-xs font-medium px-2.5 py-0.5 rounded-full mr-2">
+                    New
+                  </span>
+                )}
+                <span
+                  className={`${
+                    diff >= 0
+                      ? "bg-indigo-100 dark:bg-indigo-900/30 text-indigo-800 dark:text-indigo-400"
+                      : "bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-400"
+                  } text-xs font-medium px-2.5 py-0.5 rounded-full`}
+                >
+                  {diff >= 0 ? "Active" : "Closed"}
+                </span>
+              </div>
+            </div>
+
+            {/* Job title */}
+            <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
+              {job?.title}
+            </h2>
+
+            {/* Job details */}
+            <div className="flex flex-wrap gap-3 mb-3 text-sm text-gray-600 dark:text-gray-300">
+              <div className="flex items-center">
+                {job?.location.toLowerCase().includes("home") ? (
+                  <FaHome className="mr-1.5 text-indigo-500 dark:text-indigo-400" />
+                ) : (
+                  <CiLocationOn className="mr-1.5 text-indigo-500 dark:text-indigo-400" />
+                )}
+                <span>{job?.location}</span>
+              </div>
+              <div className="flex items-center">
+                <FaBriefcase className="mr-1.5 text-indigo-500 dark:text-indigo-400" />
+                <span>{job?.yearOfExperience}</span>
+              </div>
+              <div className="flex items-center">
+                <FaMoneyBillWave className="mr-1.5 text-indigo-500 dark:text-indigo-400" />
+                <span>
+                  {formatSalary(job?.salary?.range)} {job?.salary?.currency}
+                </span>
+              </div>
+              <div className="flex items-center">
+                <FaClock className="mr-1.5 text-indigo-500 dark:text-indigo-400" />
+                <span>{job?.job_type}</span>
+              </div>
+            </div>
+
+            {/* Job description - truncated */}
+            {/* <p className="text-gray-600 dark:text-gray-400 text-sm line-clamp-2 mb-4">
+              {job?.description}
+            </p> */}
+
+            {/* Tags and timing */}
+            <div className="flex flex-wrap justify-between items-center">
+              <div className="flex flex-wrap gap-2">
+                {job?.requirements &&
+                  job.requirements.slice(0, 3).map((req, index) => (
+                    <span
+                      key={index}
+                      className="bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-300 text-xs px-2.5 py-1 rounded-full"
+                    >
+                      {req}
+                    </span>
+                  ))}
+                {job?.requirements && job.requirements.length > 3 && (
+                  <span className="bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-300 text-xs px-2.5 py-1 rounded-full">
+                    +{job.requirements.length - 3} more
+                  </span>
+                )}
+              </div>
+              <div className="flex items-center text-xs text-gray-500 dark:text-gray-400 mt-2 sm:mt-0">
+                <div className="flex items-center mr-3">
+                  <FaClock className="mr-1" />
+                  <span>Posted {compareDate()}</span>
+                </div>
+                <div className="flex items-center">
+                  <FaCalendarAlt className="mr-1" />
+                  <span>
+                    Deadline: {formatDeadline(job?.application_deadline)}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-      <div className="flex gap-4 text-gray-600 text-sm items-center">
-        <div className="flex items-center gap-2">
-          {job?.location.toLowerCase().includes("home") ?  <FaHome size={16} /> : <CiLocationOn size={16}/>}
-          {job?.location}
-        </div>
-        <div className="flex items-center gap-2">
-          <FaBriefcase size={16} />{job.yearOfExperience}
-        </div>
-        <div className="flex items-center gap-2">
-          ₹ 4,00,000 - 5,00,000
-        </div>
-      </div>
-        <div className="flex">
-          <button
-            className={`${
-              diff >= 0
-                ? " text-blue-500  border-blue-500"
-                : "text-red-500  border-red-500"
-            } flex mt-4 px-1 rounded-xl bg-gray-200 gap-2 align-middle justify-center`}
-          >
-            {diff >= 0 ? <p>active</p> : <p>closed</p>}
-          </button>
-          <button
-            className={`${
-              compareDate().includes("hour") || compareDate().includes("today")
-                ? "text-green-600 bg-green-100"
-                : `${
-                    compareDate().includes("week")
-                      ? "text-blue-600 bg-blue-200"
-                      : "text-gray-600 bg-gray-200"
-                  }`
-            } flex mt-4 mx-4 px-1 rounded-xl bg-gray-200 gap-2 align-middle justify-center`}
-          >
-            <LuTimerReset className="mt-1" />
-            <p>{compareDate()}</p>
-          </button>
-        </div>
-      </div> */}
-      <div className=" w-full bg-white rounded-2xl shadow-md p-6">
-        <div className="flex justify-between">
-          <h2 className="text-lg font-semibold">{job?.companyName}</h2>
-          <button
-            className={`${
-              diff >= 0
-                ? " text-blue-500  border-blue-500"
-                : "text-red-500  border-red-500"
-            } flex mt-2 mb-1 px-2 rounded-xl bg-gray-200 gap-2 align-middle justify-center`}
-          >
-            {diff >= 0 ? <p>active</p> : <p>closed</p>}
-          </button>
-        </div>
-        <p className="text-gray-500 text-sm">
-        <div className="flex items-center gap-2">
-          {job?.location.toLowerCase().includes("home") ?  <FaHome size={16} /> : <CiLocationOn size={16}/>}
-          {job?.location}
-        </div>
-        </p>
-        <h3 className="font-bold text-xl mt-2">{job?.title}</h3>
-        <p className="text-gray-600 text-sm mt-2">{job?.description}</p>
-        <div className="flex gap-5 mt-4">
-          <span className="bg-blue-100 text-blue-600 px-3 py-1 text-sm rounded-full font-semibold">
-            {job?.yearOfExperience}
-          </span>
-          <span className="bg-red-100 text-red-600 px-3 py-1 text-sm rounded-full font-semibold">
-            {job?.job_type}
-          </span>
-          <span className="bg-purple-100 text-purple-600 px-3 py-1 text-sm rounded-full font-semibold">
-            {job?.salary?.range} {job?.salary?.currency}
-          </span>
-        </div>
-      </div>
-    </>
+      <div className="h-1 w-full bg-gradient-to-r from-indigo-500 to-purple-500"></div>
+    </div>
   );
 };
 

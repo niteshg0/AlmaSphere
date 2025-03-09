@@ -27,7 +27,7 @@ const Home = () => {
 
         {/* Content */}
         <div className="relative z-10 max-w-4xl mx-auto">
-          <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold font-serif mb-8 bg-clip-text text-transparent leading-tight bg-gradient-to-r from-indigo-900 to-purple-900 dark:from-indigo-400 dark:to-purple-400">
+          <h1 className=" pb-2 text-4xl md:text-6xl lg:text-7xl font-bold font-serif mb-8 bg-clip-text text-transparent leading-tight bg-gradient-to-r from-indigo-900 to-purple-900 dark:from-indigo-400 dark:to-purple-400">
             Your Alumni Journey Begins Here
           </h1>
           <p className="text-lg md:text-xl lg:text-2xl font-serif mb-12 text-gray-700 dark:text-gray-300 font-light leading-relaxed">
