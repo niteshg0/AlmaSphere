@@ -175,9 +175,9 @@ function App() {
       </Route>
 
       <Route path="/profile" element={<Profile />}></Route>
-      <Route path="/jobs" element={<JobPortal />}></Route>
-      <Route path="/createJob" element={<CreateJob />}></Route>
-      <Route path="/jobDetail/:jobId" element={<JobDetails/>}></Route>
+      <Route path="/jobs" element={<JobPortal  isDarkTheme={isDarkTheme} />}></Route>
+      <Route path="/createJob" element={<CreateJob  isDarkTheme={isDarkTheme} />}></Route>
+      <Route path="/jobDetail/:jobId" element={<JobDetails isDarkTheme={isDarkTheme} />}></Route>
      
     </>
   ))
