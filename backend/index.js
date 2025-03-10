@@ -2,6 +2,7 @@ import express from "express";
 import router from "./routes/userRoute.js";
 import academicRouter from "./routes/academicRout.js";
 import jobPortalRouter from "./routes/jobPortalRout.js";
+import queryRouter from "./routes/queryRoute.js"
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
@@ -31,5 +32,6 @@ app.use("/api/users", router);
 app.use("/api/academics", academicRouter);
 app.use("/api/jobDetail", jobPortalRouter);
 app.use("/api/donation", donationRouter);
+app.use("/api/query", queryRouter);
 
 app.listen(PORT, () => console.log(`server started at PORT : ${PORT}...`));
