@@ -16,15 +16,15 @@ const answerSchema= new mongoose.Schema({
         require: true,
     },
 
-    upvotes: { 
-        type: Number, 
-        default: 0 
-    },
+    upvotes: [{ 
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "user" 
+    }],
 
-    downvotes: { 
-        type: Number, 
-        default: 0 
-    },
+    downvotes:[{ 
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "user" 
+    }],
 
     comments: [{
         type: mongoose.Schema.Types.ObjectId, 
@@ -37,5 +37,7 @@ const answerSchema= new mongoose.Schema({
         require: true,
     }
 })
+
+answerSchema.index({answer: "text"});
 
 export const Answer= mongoose.model("answer", answerSchema);

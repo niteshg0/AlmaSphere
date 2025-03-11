@@ -18,15 +18,15 @@ const Home = () => {
   return (
     <main className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-indigo-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 text-gray-900 dark:text-gray-200">
       {/* Welcome Section */}
-      <section className="relative text-center py-32 px-6 overflow-hidden bg-gradient-to-b from-white/80 to-blue-50/80 dark:from-gray-900/80 dark:to-gray-800/80">
+      <section className="relative text-center py-32 px-6 overflow-hidden ">
         {/* Background decorative elements */}
         <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute -top-40 -right-40 w-80 h-80 rounded-full bg-indigo-200/30 dark:bg-indigo-500/10 blur-3xl" />
-          <div className="absolute -bottom-40 -left-40 w-80 h-80 rounded-full bg-purple-200/30 dark:bg-purple-500/10 blur-3xl" />
+          <div className="absolute -top-40 -right-40 w-80 h-80 rounded-full blur-3xl" />
+          <div className="absolute -bottom-40 -left-40 w-80 h-80 rounded-full blur-3xl" />
         </div>
 
         {/* Content */}
-        <div className="relative z-10 max-w-4xl mx-auto">
+        <div className="relative z-10 max-w-4xl mx-auto ">
           <h1 className=" pb-2 text-4xl md:text-6xl lg:text-7xl font-bold font-serif mb-8 bg-clip-text text-transparent leading-tight bg-gradient-to-r from-indigo-900 to-purple-900 dark:from-indigo-400 dark:to-purple-400">
             Your Alumni Journey Begins Here
           </h1>
@@ -184,26 +184,28 @@ const Home = () => {
           </div>
 
           {/* Your Query Card */}
-          <div className="group relative p-8 rounded-3xl overflow-hidden transition-all duration-500 h-[280px] flex flex-col bg-gradient-to-br from-white/95 via-blue-50/95 to-indigo-50/95 dark:from-gray-800/90 dark:via-gray-800/90 dark:to-gray-900/90 shadow-lg dark:shadow-gray-900/20">
-            <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/5 to-purple-500/5 dark:from-indigo-500/20 dark:to-purple-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-            <div className="relative z-10 flex flex-col h-full">
-              <div className="flex items-center mb-6">
-                <div className="p-3 rounded-xl bg-indigo-100 dark:bg-indigo-500/20 transform transition-all duration-300 group-hover:scale-110">
-                  <img src={QueryIcon} alt="Queries" className="w-8 h-8" />
+          <Link to="/query" className="block h-[280px]">
+            <div className="group relative p-8 rounded-3xl overflow-hidden transition-all duration-500 h-[280px] flex flex-col bg-gradient-to-br from-white/95 via-blue-50/95 to-indigo-50/95 dark:from-gray-800/90 dark:via-gray-800/90 dark:to-gray-900/90 shadow-lg dark:shadow-gray-900/20">
+              <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/5 to-purple-500/5 dark:from-indigo-500/20 dark:to-purple-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+              <div className="relative z-10 flex flex-col h-full">
+                <div className="flex items-center mb-6">
+                  <div className="p-3 rounded-xl bg-indigo-100 dark:bg-indigo-500/20 transform transition-all duration-300 group-hover:scale-110">
+                    <img src={QueryIcon} alt="Queries" className="w-8 h-8" />
+                  </div>
+                  <h3 className="ml-4 text-2xl font-bold text-indigo-900 dark:text-indigo-400">
+                    Alumni Support Hub
+                  </h3>
                 </div>
-                <h3 className="ml-4 text-2xl font-bold text-indigo-900 dark:text-indigo-400">
-                  Alumni Support Hub
-                </h3>
+                <p className="text-base leading-relaxed flex-grow text-gray-600 dark:text-gray-300">
+                  Have questions? Need guidance? Our dedicated support team is
+                  here to help. From career advice to alumni benefits, we're
+                  committed to ensuring you get the most out of your alumni
+                  experience.
+                </p>
               </div>
-              <p className="text-base leading-relaxed flex-grow text-gray-600 dark:text-gray-300">
-                Have questions? Need guidance? Our dedicated support team is
-                here to help. From career advice to alumni benefits, we're
-                committed to ensuring you get the most out of your alumni
-                experience.
-              </p>
+              <div className="absolute bottom-0 left-0 w-full h-1 bg-indigo-600 dark:bg-indigo-500 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left" />
             </div>
-            <div className="absolute bottom-0 left-0 w-full h-1 bg-indigo-600 dark:bg-indigo-500 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left" />
-          </div>
+          </Link>
         </div>
       </section>
     </main>

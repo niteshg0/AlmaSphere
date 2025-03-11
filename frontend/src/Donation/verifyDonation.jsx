@@ -3,7 +3,7 @@ import { useNavigate, useSearchParams, Link } from "react-router-dom";
 import { CheckCircle, XCircle } from "lucide-react";
 import { FaHome } from "react-icons/fa";
 
-const VerifyDonation = ({ isDarkTheme }) => {
+const VerifyDonation = () => {
   const searchQuery = useSearchParams()[0];
   const navigate = useNavigate();
   const [countdown, setCountdown] = useState(5);

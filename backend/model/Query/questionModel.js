@@ -34,15 +34,15 @@ const questionSchema= new mongoose.Schema({
         default: 'Open' 
     },
 
-    upvotes: { 
-        type: Number, 
-        default: 0 
-    },
+    upvotes: [{ 
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "user" 
+    }],
 
-    downvotes: { 
-        type: Number, 
-        default: 0 
-    },
+    downvotes: [{ 
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "user"
+    }],
 
     createdAt: {
         type: Date,
@@ -50,5 +50,7 @@ const questionSchema= new mongoose.Schema({
         required: true
     }
 })
+// Add a text index for full-text search
+questionSchema.index({title: "text", content: "text"})
 
 export const Question= mongoose.model("question", questionSchema);
