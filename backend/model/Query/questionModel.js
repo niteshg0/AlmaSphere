@@ -24,7 +24,7 @@ const questionSchema= new mongoose.Schema({
 
     category: { 
         type: String, 
-        enum: ['Career', 'Technical', 'Benefits', 'General'], 
+        enum: ['Career', 'Technical', 'Academic', 'General'], 
         default: 'General' 
     },
 

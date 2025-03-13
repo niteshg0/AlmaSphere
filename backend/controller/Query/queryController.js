@@ -34,25 +34,25 @@ const postQuestion= async (req, res)=>{
             });
         }
 
-        // const checkTitle= title.toLowerCase().trim();
-        // const existingTitle= await Question.findOne({title: checkTitle});
+        const checkTitle= title.trim();
+        const existingTitle= await Question.findOne({title: checkTitle});
         
-        // if(!existingTitle){
-        //     return res.status(400).json({message: "Title already Exist"});
-        // }
+        if(existingTitle){
+            return res.status(400).json({message: "Title already Exist"});
+        }
 
         //check for similar question
-        const similarQuestion= await Question.find(
-            { $text: {$search: title}},        //search for similar title and content
-            {score: {$meta: "textScore"}}      //get match score
-        ).sort({score: {$meta: "textScore"}}).limit(3);  //to get top 3
+        // const similarQuestion= await Question.find(
+        //     { $text: {$search: title}},        //search for similar title and content
+        //     {score: {$meta: "textScore"}}      //get match score
+        // ).sort({score: {$meta: "textScore"}}).limit(3);  //to get top 3
 
-        if(similarQuestion.length>0){
-            return res.status(409).json({ 
-                message: "A similar question already exist",
-                similarQuestion
-            })
-        }
+        // if(similarQuestion.length>0){
+        //     return res.status(409).json({ 
+        //         message: "A similar question already exist",
+        //         similarQuestion
+        //     })
+        // }
 
         const newQuestion= new Question({
             askedBy: req.user._id,
@@ -154,9 +154,14 @@ const downvotes= async (req, res)=>{
 
 const showAllAnswer= async (req, res)=>{
     try {
+        const userId= req.user._id
+        // console.log(userId);
+        
         const {questionId}= req.params;
 
-        const question= await Question.findById(questionId).populate({
+        const question= await Question.findById(questionId)
+        .populate("askedBy", "fullName rollNumber")
+        .populate({
             path: "answers",
             populate:[ 
                 {path: "answeredBy", select: "fullName rollNumber"},
@@ -164,15 +169,18 @@ const showAllAnswer= async (req, res)=>{
                     populate: {path: "commentedBy", select: "fullName rollNumber"}
                 }
             ],
-        })
+        }).lean()
 
         if(!question){
             return res.status(404).json({ message: "Question not found" });
         }
 
-        console.log(question);
-        
-        res.status(200).json({question});
+        // console.log(question);
+//         Mongoose documents are not plain JavaScript objects. use .lean() to convert in plain
+//          They have special properties and behaviors that prevent direct modification.
+        question.userId= userId;
+    
+        res.status(200).json(question);
 
     } catch (error) {
         res.status(500).json({

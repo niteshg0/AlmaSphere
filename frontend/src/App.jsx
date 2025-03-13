@@ -19,6 +19,8 @@ import VerifyDonation from "./Donation/verifyDonation";
 import JobDetails from "./components/JobDetails";
 import Layout from "./components/Layout";
 import Query from "./Query/Query";
+import AskQuestion from "./Query/AskQuestion";
+import Question from "./Query/Question";
 
 function App() {
   const [isDarkTheme, setIsDarkTheme] = useState(() => {
@@ -194,7 +196,11 @@ function App() {
 
           <Route path="/signup" element={<SignUp />}/>
 
-          <Route path="/query" element= {<Query />}/>
+          <Route path="/query" element= {<Query />} />
+        
+          <Route path="/query/askQuestion" element={<AskQuestion />} />
+          <Route path="/query/:questionId" element={<Question />} />
+
         </Route>
 
         <Route path="/profile" element={<Profile />}/>

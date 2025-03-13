@@ -11,18 +11,17 @@ export const queryApiSlice= apiSlice.injectEndpoints({
         }),
 
         postQuestion: builder.mutation({
-            query: (data)=>({
+            query: (formData)=>({
                 url: `${QUERY_URL}/question`,
                 method: "POST",
-                body: data
+                body: formData
             })
         }),
 
         showAllAnswer: builder.query({
-            query: ({questionId, data})=>({
+            query: (questionId)=>({
                 url: `${QUERY_URL}/${questionId}`,
                 method: "GET",
-                body: data
             })
         }),
 

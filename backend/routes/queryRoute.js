@@ -9,7 +9,7 @@ router.get("/", showAllQuery)
 router.post("/question", authentication, postQuestion)
 
 // router.route("/question/:questionId")
-router.get("/:questionId", showAllAnswer)
+router.get("/:questionId", authentication, showAllAnswer)
 router.post("/:questionId/upvote", authentication, upvotes)
 router.post("/:questionId/downvote", authentication, downvotes)
 router.post("/:questionId/answer", authentication, postAnswer)
