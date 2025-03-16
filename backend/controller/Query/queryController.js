@@ -90,7 +90,7 @@ const upvotes= async (req, res)=>{
         question.downvotes= question.downvotes.filter(id=> id.toString() !== userId.toString());
     
         //check if already upvoted
-        const alreadyVoted= await question.upvotes.includes(userId);
+        const alreadyVoted= question.upvotes.includes(userId);
     
         if(alreadyVoted){
             question.upvotes= question.upvotes.filter(id=> id.toString()!== userId.toString())
@@ -179,6 +179,21 @@ const showAllAnswer= async (req, res)=>{
 //         Mongoose documents are not plain JavaScript objects. use .lean() to convert in plain
 //          They have special properties and behaviors that prevent direct modification.
         question.userId= userId;
+        question.answers.sort((a,b)=>{
+            return new Date(b.createdAt) - new Date(a.createdAt)
+        })
+        console.log(question);
+        
+        // question.answers.comments?.sort((a,b)=>{
+        //     return new Date(b.createdAt) - new Date(a.createdAt)
+        // })
+
+        question.answers.map((A)=>(
+            A.comments.sort((a,b)=>{
+                return new Date(b.createdAt) - new Date(a.createdAt)
+            })
+        )
+        )
     
         res.status(200).json(question);
 
@@ -191,7 +206,6 @@ const showAllAnswer= async (req, res)=>{
 
 }
 
-
 const postAnswer= async (req, res)=>{
     try {
         const {questionId}= req.params;
@@ -203,25 +217,27 @@ const postAnswer= async (req, res)=>{
             return res.status(400).json({ message: "Question not found" });
         }
 
-        let {answer}= req.body;
+        const {answer}= req.body;
+        // console.log(answer);
+        
 
-        answer= answer.trim();
+        // answer= answer.trim();
 
         if (!answer) {
             return res.status(400).json({ message: "Answer content is required" });
         }
 
-        const similarAnswer= await Answer.find(
-            {$text: {$search: answer}},
-            {score: {$meta: "textScore"}}
-        ).sort({score: {$meta: "textScore"}}).limit(3);
+        // const similarAnswer= await Answer.find(
+        //     {$text: {$search: answer}},
+        //     {score: {$meta: "textScore"}}
+        // ).sort({score: {$meta: "textScore"}}).limit(3);
 
-        if(similarAnswer.length>0){
-            return res.status(400).json({
-                message: "Similar Answer already Exist",
-                similarAnswer
-            })
-        }
+        // if(similarAnswer.length>0){
+        //     return res.status(400).json({
+        //         message: "Similar Answer already Exist",
+        //         similarAnswer
+        //     })
+        // }
 
         const newAnswer= new Answer({
             answeredBy: userId,
@@ -248,6 +264,8 @@ const postAnswer= async (req, res)=>{
             message: "Error in postAnswer",
             error: error.message
         })
+
+        // res.end(erro)
     }
 
 }
@@ -306,4 +324,86 @@ const postComment= async (req, res)=>{
 
 }
 
-export {showAllQuery, postQuestion, upvotes, downvotes, showAllAnswer, postComment, postAnswer};
+const answerUpvote= async (req, res)=>{
+    try {
+        const userId= req.user._id;
+        const {answerId}= req.params;
+
+        const answer= await Answer.findById(answerId);
+
+        if(!answer){
+            return res.status(400).json({
+                message: "Could not find Answer",
+            })
+        }
+
+        // const disliked= answer.downvotes.includes(userId);
+        // if(disliked){
+        //     answer.downvotes= answer.downvotes.filter((id)=> id.toString()!=userId.toString())
+        // }
+
+        answer.downvotes= answer.downvotes.filter((id)=> id.toString()!=userId.toString())
+
+        const alreadyUpvoted= answer.upvotes.includes(userId);
+
+        if(alreadyUpvoted){
+            answer.upvotes= answer.upvotes.filter((id)=> id.toString() !== userId.toString())
+        } else answer.upvotes.push(userId);
+
+        await answer.save();
+
+        res.status(200).json({
+            message: "Upvote updated Successfully",
+            upvotes: answer.upvotes.length,
+            downvotes: answer.downvotes.length
+        })
+
+
+    } catch (error) {
+        res.status(500).json({
+            message: "Error in upvotes of Answer",
+            error: error.message
+        })
+    }
+
+}
+
+const answerDownvote= async (req, res)=>{
+    try {
+        const userId= req.user._id;
+        const {answerId}= req.params;
+
+        const answer= await Answer.findById(answerId);
+
+        if(!answer){
+            return res.status(400).json({
+                message: "Could not find Answer",
+            })
+        }
+
+
+        answer.upvotes= answer.upvotes.filter((id)=> id.toString()!==userId.toString())
+
+        const alreadyDownvoted= answer.downvotes.includes(userId);
+
+        if(alreadyDownvoted){
+            answer.downvotes= answer.downvotes.filter((id)=> id.toString() !== userId.toString())
+        } else answer.downvotes.push(userId);
+
+        await answer.save();
+
+        res.status(200).json({
+            message: "Downvote updated Successfully",
+            upvotes: answer.upvotes.length,
+            downvotes: answer.downvotes.length
+        })
+
+    } catch (error) {
+        res.status(500).json({
+            message: "Error in downvotes of Answer",
+            error: error.message
+        })
+    }
+}
+
+export {showAllQuery, postQuestion, upvotes, downvotes, showAllAnswer, postComment, postAnswer, answerDownvote, answerUpvote};

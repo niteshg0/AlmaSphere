@@ -29,8 +29,11 @@ const AskQuestion = () => {
 
       if (response.error) {
         console.log(response);
+        //toast
         return;
       }
+      //toast
+
       navigate("/query");
     } catch (error) {
       console.log("error in submission", error);

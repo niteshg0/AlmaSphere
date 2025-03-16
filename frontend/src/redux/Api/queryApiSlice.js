@@ -40,18 +40,32 @@ export const queryApiSlice= apiSlice.injectEndpoints({
         }),
 
         postAnswer: builder.mutation({
-            query: ({questionId, data})=>({
-                url: `${QUERY_URL}/${questionId}/answer`,
+            query: (data)=>({
+                url: `${QUERY_URL}/${data.questionId}/answer`,
                 method: "POST",
                 body: data
             })
         }),
 
         postComment: builder.mutation({
-            query: ({answerId, data})=>({
-                url: `${QUERY_URL}/answer/${answerId}/comment`,
+            query: ( data)=>({
+                url: `${QUERY_URL}/answer/${data.answerId}/comment`,
                 method: "POST",
                 body: data
+            })
+        }),
+
+        answerUpvotes: builder.mutation({
+            query: ({answerId})=>({
+                url: `${QUERY_URL}/answer/${answerId}/upvote`,
+                method: "POST",
+            })
+        }),
+
+        answerDownvotes: builder.mutation({
+            query: ({answerId})=>({
+                url: `${QUERY_URL}/answer/${answerId}/downvote`,
+                method: "POST",
             })
         }),
     })
@@ -64,4 +78,7 @@ export const {
     useDownvotesMutation, 
     useUpvotesMutation, 
     useShowAllAnswerQuery, 
-    usePostQuestionMutation }= queryApiSlice
+    usePostQuestionMutation,
+    useAnswerUpvotesMutation,
+    useAnswerDownvotesMutation,
+    }= queryApiSlice

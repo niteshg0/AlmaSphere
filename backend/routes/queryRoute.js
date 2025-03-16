@@ -1,5 +1,5 @@
 import {Router} from "express"
-import { downvotes, postAnswer, postQuestion, showAllAnswer, postComment, showAllQuery, upvotes } from "../controller/Query/queryController.js";
+import { downvotes, postAnswer, postQuestion, showAllAnswer, postComment, showAllQuery, upvotes, answerDownvote, answerUpvote } from "../controller/Query/queryController.js";
 import authentication from "../middleware/authentication.js";
 
 const router= Router();
@@ -13,6 +13,8 @@ router.get("/:questionId", authentication, showAllAnswer)
 router.post("/:questionId/upvote", authentication, upvotes)
 router.post("/:questionId/downvote", authentication, downvotes)
 router.post("/:questionId/answer", authentication, postAnswer)
+router.post("/answer/:answerId/upvote", authentication, answerUpvote )
+router.post("/answer/:answerId/downvote", authentication, answerDownvote )
 router.post("/answer/:answerId/comment", authentication, postComment)
 // router.post("/:questionId/answer/:answerId/upvote", authentication, answerUpvote);
 // router.post("/:questionId/answer/:answerId/upvote", authentication, answerDownvote)

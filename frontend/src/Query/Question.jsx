@@ -17,6 +17,7 @@ import { format } from "date-fns";
 import AnswerCard from "./AnswerCard";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import PostAnswer from "./PostAnswer";
 
 const Question = () => {
   const { questionId } = useParams();
@@ -25,9 +26,13 @@ const Question = () => {
   const [downvotes] = useDownvotesMutation();
   const [voteStatus, setVoteStatus] = useState("");
   const [isVoting, setIsVoting]= useState(false);
+  const [postActive, setPostActive]= useState(false);
+
+
 
   useEffect(() => {
     if(question){
+    
       if(question.upvotes.includes(question.userId)){
         setVoteStatus("Liked")
       } else if(question.downvotes.includes(question.userId)){
@@ -190,9 +195,18 @@ const Question = () => {
                 </button>
                 <span className="ml-1">{question.downvotes?.length || 0}</span>
               </div>
+
+              <div className="ml-4">
+                <button className="text-lg font-medium  hover:translate-x-1 hover:text-indigo-900"
+                 onClick={()=>setPostActive(!postActive)}>
+                  {postActive? "Cancel post": "Post Your Answer"}
+                </button>
+              </div>
             </div>
           </div>
         </div>
+
+        {postActive? <PostAnswer setPostActive={setPostActive}/>: <></>}
 
         {/* Answers Section */}
         <div className="mb-8">
@@ -206,7 +220,7 @@ const Question = () => {
           {question.answers && question.answers.length > 0 ? (
             <div className="space-y-6">
               {question.answers.map((answer) => (
-                <AnswerCard key={answer._id} answer={answer} />
+                <AnswerCard key={answer._id} answer={answer} userId= {question.userId} />
               ))}
             </div>
           ) : (
