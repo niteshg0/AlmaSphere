@@ -1,4 +1,4 @@
-import React from "react";
+import React,{useState} from "react";
 import ProfileList from "../components/ProfileComponents/ProfileList.jsx";
 import UserDetails from "../components/ProfileComponents/UserDetails.jsx";
 import { useLogoutMutation } from "../redux/Api/userApiSlice.js";
@@ -6,26 +6,19 @@ import { useNavigate, Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../redux/features/authSlice.js";
 import AcademicDetails from "../components/ProfileComponents/AcademicDetails.jsx";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import ToastComp from "../components/ToastComp.jsx";
 
 const Profile = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { user } = useSelector((state) => state.auth);
   const [logoutApiCall] = useLogoutMutation();
+  const [toast,setToast] = useState(null)
 
   const logoutHandler = async () => {
     try {
       await logoutApiCall().unwrap();
-      toast("Logout successful...", {
-        style: {
-          background: "#1f2937",
-          color: "#e0e7ff",
-          border: "1px solid #4f46e5",
-          boxShadow: "0px 4px 10px rgba(79, 70, 229, 0.2)",
-        },
-      });
+      setToast({type : 'success',message:"Logout successful..."})
 
       setTimeout(() => {
         dispatch(logout());
@@ -33,16 +26,10 @@ const Profile = () => {
       }, 2000);
     } catch (error) {
       console.log(error?.data?.message || error?.message);
-      toast("Logout failed. Please try again.", {
-        style: {
-          background: "#1f2937",
-          color: "#f87171",
-          border: "1px solid #dc2626",
-          boxShadow: "0px 4px 10px rgba(220, 38, 38, 0.2)",
-        },
-      });
+      setToast({type: 'error',message:"unable to logout..."})
     }
   };
+
 
   return (
     <div className="bg-gray-900 text-white min-h-screen p-8">
@@ -108,25 +95,7 @@ const Profile = () => {
           </div>
         </div>
       </div>
-      <ToastContainer
-        position="top-right"
-        autoClose={3000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="dark"
-        toastStyle={{
-          background: "linear-gradient(to right, #1f2937, #374151)",
-          color: "#e0e7ff",
-          borderRadius: "10px",
-          border: "1px solid #4f46e5",
-          boxShadow: "0px 4px 10px rgba(79, 70, 229, 0.2)",
-        }}
-      />
+      {toast && <ToastComp toastType={toast.type} message={toast.message}/>}
     </div>
   );
 };
