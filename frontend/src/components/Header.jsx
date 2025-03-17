@@ -16,34 +16,33 @@ const Header = ({ isDarkTheme, toggleTheme, NavBar}) => {
   };
 
   const [isNavbarVisible, setIsNavbarVisible] = useState(true);
-  const [scrolled, setScrolled] = useState(false);
+  // const [scrolled, setScrolled] = useState(false);
 
   // Handle scroll event
-  useEffect(() => {
-    const handleScroll = () => {
-      const scrollPosition = window.scrollY;
-      setScrolled(scrollPosition > 50);
+  // useEffect(() => {
+  //   const handleScroll = () => {
+  //     const scrollPosition = window.scrollY;
+  //     setScrolled(scrollPosition > 50);
 
-      const cardSection = document.getElementById("card-section");
-      if (cardSection) {
-        const cardSectionTop = cardSection.getBoundingClientRect().top;
-        setIsNavbarVisible(cardSectionTop >= 100);
-      }
-    };
+  //     const cardSection = document.getElementById("card-section");
+  //     if (cardSection) {
+  //       const cardSectionTop = cardSection.getBoundingClientRect().top;
+  //       setIsNavbarVisible(cardSectionTop >= 100);
+  //     }
+  //   };
 
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  //   window.addEventListener("scroll", handleScroll);
+  //   return () => window.removeEventListener("scroll", handleScroll);
+  // }, []);
 
   return (
     <div
-      className={`${NavBar} p-2 top-0 left-0 right-0 z-50 transition-all duration-300 ${
+      className={` p-2 top-0 left-0 right-0 z-50 transition-all duration-300 ${
         isNavbarVisible ? "translate-y-0" : "-translate-y-24"
       }`}
     >
       <div
-        className={`mx-4  rounded-2xl backdrop-blur-lg transition-all duration-300 relative overflow-hidden group ${
-          scrolled
+        className={`mx-4  rounded-2xl backdrop-blur-lg transition-all duration-300 relative overflow-hidden group 
             ? "bg-white/95 dark:bg-gray-900/90"
             : "bg-white/95 dark:bg-gray-900/70"
         }`}

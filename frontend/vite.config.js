@@ -12,6 +12,7 @@ export default defineConfig(({ mode }) => {
     server: {
       proxy:{
         "/api/":`http://localhost:${env.VITE_BACKEND_PORT}`,
+        // "/api/":`http://localhost:8000`,
 
         // "/api/": {
         //   target: env.VITE_BACKEND_URL, // New backend URL
