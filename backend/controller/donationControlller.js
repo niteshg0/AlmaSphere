@@ -1,6 +1,6 @@
 import { instance } from "../index.js";
 import { Donation } from "../model/donation.js";
-import User from "../model/userModel.js";
+import User from "../model/User/userInfo.js";
 import pkg from "razorpay";
 const { validateWebhookSignature } = pkg;
 

@@ -1,5 +1,5 @@
 import JobPortal from "../model/jobPortalModel.js";
-import User from "../model/userModel.js";
+// import User from "../model/User/userInfo.js";
 
 const createJobs = async (req, res) => {
   const userId = await req.user?._id;
