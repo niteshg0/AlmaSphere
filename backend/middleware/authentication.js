@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-import User from "../model/userModel.js";
+import User from "../model/User/userInfo.js";
 
 const authentication = async (req, res, next) => {
   const token = req.cookies.authToken;
@@ -9,8 +9,12 @@ const authentication = async (req, res, next) => {
   try {
     const decodeToken = jwt.verify(token, process.env.SECRET_KEY);
     const user = await User.findById(decodeToken.userId).select("-password")
-    req.user = user;
-    return next();
+    if(user.isVerified) {
+      req.user = user;
+      return next();
+    }
+    else return res.status(400).json({ message: "Email not verified" });
+    
   } catch (error) {
     console.log("error : ", error.message);
     return res.status(400).json({ message: "token expired..." });

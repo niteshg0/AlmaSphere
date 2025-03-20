@@ -1,5 +1,5 @@
 import connectUser from "../model/connectUserModel.js";
-import User from "../model/userModel.js";
+import User from "../model/User/userInfo.js";
 
 const createConnection = async (req, res) => {
   try {

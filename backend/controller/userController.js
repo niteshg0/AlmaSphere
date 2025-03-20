@@ -1,4 +1,4 @@
-import User from "../model/userModel.js";
+import User from "../model/User/userInfo.js";
 import bcrypt from "bcryptjs";
 import generateToken from "../utils/createToken.js";
 // const nodemailer = require("nodemailer");

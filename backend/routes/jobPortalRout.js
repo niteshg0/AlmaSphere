@@ -9,6 +9,6 @@ import authentication from "../middleware/authentication.js";
 const jobPortalRouter = Router();
 
 jobPortalRouter.route("/").get(getAllJobsDetails).post(authentication, createJobs);
-jobPortalRouter.get("/:id", getOneJobDetails);
+jobPortalRouter.get("/:id", authentication, getOneJobDetails);
 
 export default jobPortalRouter;
