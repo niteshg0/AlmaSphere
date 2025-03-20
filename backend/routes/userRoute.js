@@ -7,7 +7,7 @@ import {
   getUserProfile,
   logoutUser,
   updateUserProfile,
-  verifyCode
+  verifyCode,
 } from "../controller/userController.js";
 
 // admin controllers
@@ -22,21 +22,16 @@ import { authrizeAlumni, authrizeAdmin } from "../middleware/authrizeRole.js";
 const router = Router();
 
 // creating user
-router
-  .route("/")
-  .post(createUser)
-  .get(authentication, authrizeAdmin, getAllUser);
+router.route("/").post(createUser).get(authentication, getUserProfile);
 
 // login and logout
 router.route("/auth").post(loginUser);
-router.post("/logout",logoutUser)
+router.post("/logout", logoutUser);
 
 // verify-code
 // router.route("/verify/:email")
-router.post("/verify/:email", verifyCode)
+router.post("/verify/:email", verifyCode);
 
-// alumni profile
-router.route("/:id")
-     .get(authentication, getUserProfile)
+
 
 export default router;

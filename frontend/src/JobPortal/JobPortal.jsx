@@ -150,7 +150,6 @@ const JobPortal = ({ isDarkTheme }) => {
           return salaryInLakh >= minSalary && salaryInLakh <= maxSalary;
         });
       }
-
       setFilteredData(filtered);
     }
   }, [

@@ -156,7 +156,7 @@ const logoutUser = async (req, res) => {
 };
 
 const getUserProfile = async (req, res) => {
-  const id = await req.params;
+  const id = await req.user._id;
   if (!id) {
     return res.status(401).json({ message: "not login..." });
   }

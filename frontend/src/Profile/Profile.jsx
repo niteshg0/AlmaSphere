@@ -1,7 +1,7 @@
 import React,{useState} from "react";
 import ProfileList from "../components/ProfileComponents/ProfileList.jsx";
 import UserDetails from "../components/ProfileComponents/UserDetails.jsx";
-import { useLogoutMutation } from "../redux/Api/userApiSlice.js";
+import { useGetProfileQuery, useLogoutMutation } from "../redux/Api/userApiSlice.js";
 import { useNavigate, Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../redux/features/authSlice.js";
@@ -11,17 +11,17 @@ import ToastComp from "../components/ToastComp.jsx";
 const Profile = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { user } = useSelector((state) => state.auth);
+  const {data,isLoading,isError} = useGetProfileQuery();
   const [logoutApiCall] = useLogoutMutation();
   const [toast,setToast] = useState(null)
 
   const logoutHandler = async () => {
     try {
       await logoutApiCall().unwrap();
+      dispatch(logout());
       setToast({type : 'success',message:"Logout successful..."})
 
       setTimeout(() => {
-        dispatch(logout());
         navigate("/");
       }, 2000);
     } catch (error) {
@@ -42,8 +42,8 @@ const Profile = () => {
             className="w-20 h-20 rounded-full"
           />
           <div className="ml-4">
-            <h2 className="text-xl font-semibold">{user.data?.fullName}</h2>
-            <p className="text-gray-400">{user.data?.email}</p>
+            <h2 className="text-xl font-semibold">{isLoading ? "loading..":data?.fullName}</h2>
+            <p className="text-gray-400">{isLoading ? "loading..":data?.email}</p>
           </div>
           <div className="ml-auto">
             <Link to="/createJob">
