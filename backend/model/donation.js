@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 const donationSchema = new mongoose.Schema({
   donor: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "users",
+    ref: "User",
     required: true,
   },
   donations: [

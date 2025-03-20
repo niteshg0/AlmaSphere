@@ -18,7 +18,7 @@ const vAuthrize = (req, res, next) => {
   if (req.user.isVerified) {
     return next();
   } else {
-    return res.status(402).json({ message: "please varify email or login..." });
+    return res.status(402).json({ message: "Please verify your email " });
   }
 };
 

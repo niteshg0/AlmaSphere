@@ -6,7 +6,7 @@ import { useNavigate } from "react-router";
 
 const AskQuestion = () => {
 //   const { user } = useSelector((state) => state.auth);
-  const [postQuestion, { isLoading }] = usePostQuestionMutation();
+  const [postQuestion, { isLoading, error }] = usePostQuestionMutation();
   const navigate = useNavigate();
   const [selectedCategory, setSelectedCategory] = useState("General");
 
@@ -46,6 +46,29 @@ const AskQuestion = () => {
     { value: "Academic", label: "Academic", icon: "🏆" },
     { value: "General", label: "General", icon: "🔍" },
   ];
+
+  if (error){
+    console.log(error);
+    
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-indigo-50 to-indigo-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
+        <div className="max-w-md p-8 bg-white dark:bg-gray-800 rounded-lg shadow-lg">
+          <h2 className="text-2xl font-bold text-red-600 dark:text-red-400 mb-4">
+            Error Loading Query
+          </h2>
+          <p className="text-gray-700 dark:text-gray-300 mb-6">
+            {error.data.message}
+          </p>
+          <button
+            onClick={() => window.location.reload()}
+            className="inline-block px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
+          >
+            Retry
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-3xl mx-auto px-4 pb-8 mt-16">

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import {
   FaQuestion,
   FaFilter,
@@ -13,6 +13,7 @@ import { useShowAllQueryQuery } from "../redux/Api/queryApiSlice";
 const Query = () => {
 
   const {data: queryData, isLoading, error}= useShowAllQueryQuery()
+  const navigate= useNavigate()
   
   const [allQueries, setAllQueries] = useState([]);
   const [searchTerm, setSearchTerm]= useState("");
@@ -30,7 +31,6 @@ const Query = () => {
 
       if(queryData){
         let filteredQueries= queryData.filter((q)=>{
-
           const matchesSearch= searchTerm === "" 
               || q.title.toLowerCase().includes(searchTerm.toLowerCase()) 
               || q.content.toLowerCase().includes(searchTerm.toLowerCase());
@@ -69,7 +69,9 @@ const Query = () => {
         </div>
       );
   
-    if (error)
+    if (error){
+      console.log(error);
+      
       return (
         <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-indigo-50 to-indigo-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
           <div className="max-w-md p-8 bg-white dark:bg-gray-800 rounded-lg shadow-lg">
@@ -77,17 +79,18 @@ const Query = () => {
               Error Loading Query
             </h2>
             <p className="text-gray-700 dark:text-gray-300 mb-6">
-              Failed to load Query. Please try again.
+              {error.data.message}
             </p>
             <button
-              onClick={() => window.location.reload()}
+              onClick={() => navigate(-1) }
               className="inline-block px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
             >
-              Retry
+              Go back
             </button>
           </div>
         </div>
       );
+    }
     
     
 

@@ -197,7 +197,7 @@ const JobPortal = ({ isDarkTheme }) => {
       </div>
     );
 
-  if (error)
+  if (error){   
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-indigo-50 to-indigo-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
         <div className="max-w-md p-8 bg-white dark:bg-gray-800 rounded-lg shadow-lg">
@@ -205,7 +205,7 @@ const JobPortal = ({ isDarkTheme }) => {
             Error Loading Jobs
           </h2>
           <p className="text-gray-700 dark:text-gray-300 mb-6">
-            Failed to load job listings. Please try again.
+            {error.data.message || "Something went wrong. Please try again."}
           </p>
           <button
             onClick={() => window.location.reload()}
@@ -216,6 +216,7 @@ const JobPortal = ({ isDarkTheme }) => {
         </div>
       </div>
     );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-indigo-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">

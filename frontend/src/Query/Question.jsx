@@ -1,4 +1,4 @@
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import {
   useDownvotesMutation,
   useShowAllAnswerQuery,
@@ -27,7 +27,7 @@ const Question = () => {
   const [voteStatus, setVoteStatus] = useState("");
   const [isVoting, setIsVoting]= useState(false);
   const [postActive, setPostActive]= useState(false);
-
+  const navigate= useNavigate();
 
 
   useEffect(() => {
@@ -64,13 +64,13 @@ const Question = () => {
             Error Loading Question
           </h2>
           <p className="text-gray-700 dark:text-gray-300 mb-6">
-            Failed to load Question. Please try again.
+            {error.data.message || "An error occurred while loading the question."}
           </p>
           <button
-            onClick={() => window.location.reload()}
+            onClick={() => navigate(-1)}
             className="inline-block px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
           >
-            Retry
+            Go back
           </button>
         </div>
       </div>

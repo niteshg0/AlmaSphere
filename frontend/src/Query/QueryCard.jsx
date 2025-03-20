@@ -151,14 +151,13 @@ const QueryCard = ({q, setSelectedCategory, setSelectedStatus}) => {
             </div>
 
             {/* Content description */}
-            
-            <p className="text-gray-600 dark:text-gray-300 mb-4 line-clamp-2 overflow-hidden text-ellipsis">
             <Link to={`/query/${q._id}`}>
-            {q.content}
-            </Link>
+            <p className="text-gray-600 dark:text-gray-300 mb-4 line-clamp-2 overflow-hidden text-ellipsis">           
+            {q.content}            
             </p>
+            </Link>
             
-
+            <Link to={`/query/${q._id}`}>
             {/* Footer with metadata in a single line */}
             <div className="flex flex-wrap justify-between items-center text-sm">
             {/* Left side - Engagement metrics */}
@@ -194,6 +193,7 @@ const QueryCard = ({q, setSelectedCategory, setSelectedStatus}) => {
                 </div>
                 </div>
             </div>
+            
 
             {/* Right side - User info (smaller) */}
             <div className="flex items-center text-gray-500 dark:text-gray-400 shrink-0">
@@ -206,10 +206,11 @@ const QueryCard = ({q, setSelectedCategory, setSelectedStatus}) => {
                 </span>
             </div>
             </div>
+            </Link>
         </div>
         <div className="h-1 w-full bg-gradient-to-r from-indigo-500 to-purple-500"></div>
     </div>
- 
+    // </Link>
   )
 }
 export default QueryCard

@@ -1,5 +1,5 @@
 import React from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import { useGetOneJobDetailQuery } from "../redux/Api/jobDetailApiSlice";
 import { FaHome } from "react-icons/fa";
 
@@ -8,6 +8,7 @@ const JobDetails = ({ isDarkTheme }) => {
 
   // Fetch job details using the job parameter
   const { data, isLoading, error } = useGetOneJobDetailQuery(jobId || "");
+  const navigate = useNavigate();
 
   // Handle loading state
   if (isLoading) {
@@ -31,15 +32,15 @@ const JobDetails = ({ isDarkTheme }) => {
             Error Loading Job
           </h2>
           <p className="text-gray-700 dark:text-gray-300 mb-6">
-            {error.message ||
+            {error.data.message||
               "Failed to load job details. Please try again later."}
           </p>
-          <Link
-            to="/jobs"
+          <button
+            onClick={() => navigate(-1)}
             className="inline-block px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
           >
             Back to Jobs
-          </Link>
+          </button>
         </div>
       </div>
     );

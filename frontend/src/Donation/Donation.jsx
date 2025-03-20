@@ -3,7 +3,7 @@ import { useDonationMutation } from "../redux/Api/donationApi";
 import { useSelector } from "react-redux";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   FaHome,
   FaHeart,
@@ -18,6 +18,7 @@ const Donation = ({ isDarkTheme }) => {
   const { user } = useSelector((state) => state.auth);
   const PORT = import.meta.env.VITE_BACKEND_PORT;
   const [activeTab, setActiveTab] = useState("donate");
+  const navigate= useNavigate();
 
   const [formData, setFormData] = useState({
     rollNumber: user?.data?.rollNumber || "",
@@ -26,7 +27,7 @@ const Donation = ({ isDarkTheme }) => {
     message: "",
   });
 
-  const [donation, { isLoading }] = useDonationMutation();
+  const [donation, { isLoading, error }] = useDonationMutation();
   const [donationStats, setDonationStats] = useState({
     totalRaised: 1250000,
     donors: 328,
@@ -154,6 +155,28 @@ const Donation = ({ isDarkTheme }) => {
         "Help improve campus facilities and create better learning environments.",
     },
   ];
+
+  if (error) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-indigo-50 to-indigo-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
+        <div className="max-w-md p-8 bg-white dark:bg-gray-800 rounded-lg shadow-lg">
+          <h2 className="text-2xl font-bold text-red-600 dark:text-red-400 mb-4">
+            Error Loading Job
+          </h2>
+          <p className="text-gray-700 dark:text-gray-300 mb-6">
+            {error.data.message||
+              "Failed to load job details. Please try again later."}
+          </p>
+          <button
+            onClick={() => navigate(-1)}
+            className="inline-block px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
+          >
+            Back
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-indigo-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 py-12 px-4 sm:px-6 lg:px-8">

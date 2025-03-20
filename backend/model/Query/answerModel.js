@@ -3,7 +3,7 @@ import mongoose from "mongoose"
 const answerSchema= new mongoose.Schema({
     answeredBy: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "user",
+        ref: "User",
         require: true
     },
 
@@ -20,12 +20,12 @@ const answerSchema= new mongoose.Schema({
 
     upvotes: [{ 
         type: mongoose.Schema.Types.ObjectId,
-        ref: "user" 
+        ref: "User" 
     }],
 
     downvotes:[{ 
         type: mongoose.Schema.Types.ObjectId,
-        ref: "user" 
+        ref: "User" 
     }],
 
     comments: [{

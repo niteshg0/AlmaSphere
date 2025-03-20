@@ -18,7 +18,7 @@ const userInfo= new mongoose.Schema({
     role: {
         type: String,
         enum: ["Alumni", "Admin", "Student"],
-        default: "Alumni",
+        default: "Student",
     },
     gender: {
         type: String,
@@ -26,11 +26,11 @@ const userInfo= new mongoose.Schema({
     },
     course: {
         type: String,
-        required: true,
+        // required: true,
     },
     branch: {
         type: String,
-        required: true,
+        // required: true,
     },
     cgpa: {
         type: Number

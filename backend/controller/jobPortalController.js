@@ -95,7 +95,7 @@ const getAllJobsDetails = async (req, res) => {
 
     res
       .status(500)
-      .json({ message: "Failed to fetch job details", error: error.message });
+      .json({ message: error.message});
   }
 };
 

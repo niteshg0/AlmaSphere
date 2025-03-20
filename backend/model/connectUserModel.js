@@ -6,12 +6,12 @@ const connectUserSchema = mongoose.Schema(
 
     senderUserId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "user",
+      ref: "User",
       required: true,
     },
     recieverUserId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "user",
+      ref: "User",
       required: true,
     },
     status: {

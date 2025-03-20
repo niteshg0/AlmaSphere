@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 const questionSchema= new mongoose.Schema({
     askedBy: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "user",
+        ref: "User",
         require: true
     },
 
@@ -36,12 +36,12 @@ const questionSchema= new mongoose.Schema({
 
     upvotes: [{ 
         type: mongoose.Schema.Types.ObjectId,
-        ref: "user" 
+        ref: "User" 
     }],
 
     downvotes: [{ 
         type: mongoose.Schema.Types.ObjectId,
-        ref: "user"
+        ref: "User"
     }],
 
     createdAt: {
