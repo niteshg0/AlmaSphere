@@ -10,6 +10,7 @@ import {
   addUserSkills,
   updateUserSkills,
   verifyCode,
+  getProfile,
 } from "../controller/userController.js";
 
 // admin controllers
@@ -34,5 +35,9 @@ router.post("/addUserSkills",authentication,addUserSkills)
 // verify-code
 // router.route("/verify/:email")
 router.post("/verify/:email", verifyCode);
+
+router.get("/:rollNumber", getProfile);
+
+
 
 export default router;
