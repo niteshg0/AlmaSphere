@@ -6,7 +6,9 @@ import {
   loginUser,
   getUserProfile,
   logoutUser,
-  updateUserProfile,
+  updateUserInfo,
+  addUserSkills,
+  updateUserSkills,
   verifyCode,
 } from "../controller/userController.js";
 
@@ -23,15 +25,14 @@ const router = Router();
 
 // creating user
 router.route("/").post(createUser).get(authentication, getUserProfile);
-
 // login and logout
 router.route("/auth").post(loginUser);
 router.post("/logout", logoutUser);
+router.put("/updateSkills",authentication,updateUserSkills)
+router.post("/addUserSkills",authentication,addUserSkills)
 
 // verify-code
 // router.route("/verify/:email")
 router.post("/verify/:email", verifyCode);
-
-
 
 export default router;

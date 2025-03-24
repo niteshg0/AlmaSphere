@@ -32,6 +32,6 @@ const extraInfo= new mongoose.Schema({
 }, {timestamps: true})
 
 
-const ExtraInfo= mongoose.model("Skill", extraInfo);
+const ExtraInfo= mongoose.model("Extra", extraInfo);
 
 export default ExtraInfo;

@@ -1,19 +1,19 @@
 import User from "../model/User/userInfo.js";
+import SkillInfo from "../model/User/skillInfo.js";
 import bcrypt from "bcryptjs";
 import generateToken from "../utils/createToken.js";
 // const nodemailer = require("nodemailer");
-import nodemailer from "nodemailer"
+import nodemailer from "nodemailer";
 
-async function sendVerificationEmail(email, code){
-  
-console.log(email, code);
+async function sendVerificationEmail(email, code) {
+  console.log(email, code);
 
   let transporter = nodemailer.createTransport({
-      service: 'gmail',
-      auth: {
-          user: 'alumniteam95@gmail.com',
-          pass: 'jdde essm exwg pptw'
-      }
+    service: "gmail",
+    auth: {
+      user: "alumniteam95@gmail.com",
+      pass: "jdde essm exwg pptw",
+    },
   });
 
   // const transporter = nodemailer.createTransport({
@@ -25,13 +25,12 @@ console.log(email, code);
   //   }
   // });
 
-
   let mailOptions = {
-      // from: 'alumniteam95@gmail.com',
-      from : 'Alumni Association <alumniteam95@gmail.com>', 
-      to: email,
-      subject: 'Your OTP Code',
-      html: `
+    // from: 'alumniteam95@gmail.com',
+    from: "Alumni Association <alumniteam95@gmail.com>",
+    to: email,
+    subject: "Your OTP Code",
+    html: `
           <div style="font-family: Arial, sans-serif; text-align: center;">
               <h2>OTP Verification</h2>
               <p>Your One-Time Password (OTP) for verification is:</p>
@@ -41,23 +40,21 @@ console.log(email, code);
               </div>
               <p>This OTP is valid for 1 hour. Do not share it with anyone.</p>
           </div>
-      `
+      `,
   };
 
-  transporter.sendMail(mailOptions, function(error, info){
-      if (error) {
-          console.log(error);
-      } else {
-          console.log('Email sent: ' + info.response);
-      }
+  transporter.sendMail(mailOptions, function (error, info) {
+    if (error) {
+      console.log(error);
+    } else {
+      console.log("Email sent: " + info.response);
+    }
   });
-
-
 }
 
-
 const createUser = async (req, res) => {
-  const { rollNumber, fullName, email, password, role,gender,batch } = req.body;
+  const { rollNumber, fullName, email, password, role, gender, batch } =
+    req.body;
   if (!rollNumber || !fullName || !email || !password || !gender || !batch) {
     return res.status(400).json({ message: "All inputs are required." });
   }
@@ -82,26 +79,26 @@ const createUser = async (req, res) => {
     password: hashPassword,
     role,
     gender,
-    batch
+    batch,
   });
 
-  newUser.verifyCode= Math.floor(Math.random()*9000 + 1000)
-  newUser.codeExpiry= new Date(Date.now() + 3600000)
+  newUser.verifyCode = Math.floor(Math.random() * 9000 + 1000);
+  newUser.codeExpiry = new Date(Date.now() + 3600000);
 
   try {
     const savedUser = await newUser.save();
 
-    await sendVerificationEmail(savedUser.email, savedUser.verifyCode)
+    await sendVerificationEmail(savedUser.email, savedUser.verifyCode);
     // generating token
-     await generateToken(res, savedUser._id);
+    await generateToken(res, savedUser._id);
     return res.status(201).json({
       _id: savedUser._id,
       rollNumber: savedUser.rollNumber,
       fullName: savedUser.fullName,
       email: savedUser.email,
       role: savedUser.role,
-      gender:savedUser.gender,
-      batch:savedUser.batch
+      gender: savedUser.gender,
+      batch: savedUser.batch,
     });
   } catch (error) {
     console.error(error.message);
@@ -122,7 +119,10 @@ const loginUser = async (req, res) => {
     }
 
     // Compare entered password with hashed password
-    const passwordValidation = await bcrypt.compare(password, findUser.password);
+    const passwordValidation = await bcrypt.compare(
+      password,
+      findUser.password
+    );
 
     if (!passwordValidation) {
       return res.status(401).json({ message: "Invalid password..." });
@@ -138,13 +138,11 @@ const loginUser = async (req, res) => {
       gender: findUser.gender,
       batch: findUser.batch,
     });
-
   } catch (error) {
     console.error("Login error:", error);
     return res.status(500).json({ message: "Internal server error." });
   }
 };
-
 
 const logoutUser = async (req, res) => {
   res.clearCookie("authToken", {
@@ -156,7 +154,7 @@ const logoutUser = async (req, res) => {
 };
 
 const getUserProfile = async (req, res) => {
-  const id = await req.user._id; 
+  const id = await req.user._id;
   if (!id) {
     return res.status(401).json({ message: "not login..." });
   }
@@ -169,7 +167,7 @@ const getUserProfile = async (req, res) => {
   }
 };
 
-const updateUserProfile = async (req, res) => {
+const updateUserInfo = async (req, res) => {
   try {
     const user = await User.findById(req.user._id);
     if (user) {
@@ -188,39 +186,104 @@ const updateUserProfile = async (req, res) => {
   }
 };
 
-const verifyCode = async (req, res) => {
-  const {code}= req.body;
-  const {email}= req.params;
-  
+const addUserSkills = async (req, res) => {
+  const userId = req.user._id;
+  if (!userId) {
+    res.status(402).json({ message: "userId not found.." });
+  }
+  const existingSkill = await SkillInfo.findOne({ userId });
+  if (existingSkill) {
+    return res
+      .status(403)
+      .json({ message: "you can only update the skill...." });
+  }
+  const { technicalSkill, nonTechnicalSkill } = req.body;
   try {
-    const foundUser= await User.findOne({email})
-  
-    if(!foundUser){
+    const newSkills = new SkillInfo({
+      userId,
+      technicalSkill,
+      nonTechnicalSkill,
+    });
+
+    const savedSkills = await newSkills.save();
+    return res.status(202).json({
+      message: "new skills added..",
+      technicalSkill: savedSkills.technicalSkill,
+      nonTechnicalSkill: savedSkills.nonTechnicalSkill,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(502).json({ message: "error in saving skills.." });
+  }
+};
+
+const updateUserSkills = async (req, res) => {
+  try {
+    const userId = req.user._id;
+    if (!userId) {
+      return res.status(402).json({ message: "please login..." });
+    }
+    const skills = await SkillInfo.findOne({ userId });
+    if (!skills) {
+      return res.status(403).json({ message: "skill not founded..." });
+    }
+    if (req.body.technicalSkill && Array.isArray(req.body.technicalSkill)) {
+      skills.technicalSkill.push(...req.body.technicalSkill);
+    }
+    if (skills.nonTechnicalSkill && Array.isArray(req.body.nonTechnicalSkill)){
+      skills.nonTechnicalSkill.push(...req.body.nonTechnicalSkill);
+    }
+    await skills.save();
+    return res
+      .status(202)
+      .json({ message: "skill added successfully", skills });
+  } catch (err) {
+    console.log(err.message);
+    return res.status(403).json({ message: "server error..." });
+  }
+};
+
+const verifyCode = async (req, res) => {
+  const { code } = req.body;
+  const { email } = req.params;
+
+  try {
+    const foundUser = await User.findOne({ email });
+
+    if (!foundUser) {
       return res.status(404).json({ message: "User not found..." });
     }
-  
-    const foundUserVerifyCode= foundUser.verifyCode;
-    const foundUserexpiry= foundUser.codeExpiry;
-  
+
+    const foundUserVerifyCode = foundUser.verifyCode;
+    const foundUserexpiry = foundUser.codeExpiry;
+
     const isnotExpired = foundUserexpiry > Date.now();
 
-    const codeVerification= code== foundUserVerifyCode;
-  
-    if(codeVerification && isnotExpired){
-      foundUser.isVerified= true
+    const codeVerification = code == foundUserVerifyCode;
+
+    if (codeVerification && isnotExpired) {
+      foundUser.isVerified = true;
       await foundUser.save();
       return res.status(200).json({ message: "User verified successfully." });
-
-    }else{
-      if(!isnotExpired){
-        return res.status(400).json({message: "Code Expired"})
-      }else{
-        return res.status(400).json({message: "Incorrect Verification Code"})
+    } else {
+      if (!isnotExpired) {
+        return res.status(400).json({ message: "Code Expired" });
+      } else {
+        return res.status(400).json({ message: "Incorrect Verification Code" });
       }
     }
   } catch (error) {
-    return res.status(500).json({message: "could not run verify-code"})
+    return res.status(500).json({ message: "could not run verify-code" });
   }
-}
+};
 
-export { createUser, loginUser, getUserProfile, logoutUser, updateUserProfile, verifyCode };
+export {
+  createUser,
+  loginUser,
+  getUserProfile,
+  logoutUser,
+  updateUserInfo,
+  verifyCode,
+  updateUserSkills,
+  addUserSkills,
+};

@@ -7,10 +7,12 @@ const skillInfo= new mongoose.Schema({
         required: true,
     },
     technicalSkill: {
-        type: String
+        type: [String],
+        default:[] //this is for that it doesn't hold the undefined value
     },
     nonTechnicalSkill: {
-        type: String
+        type: [String],
+        default:[]
     },
 }, {timestamps: true})
 

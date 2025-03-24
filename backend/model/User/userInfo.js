@@ -60,7 +60,23 @@ const userInfo= new mongoose.Schema({
         url: {
             type: String
         }
-    }]
+    }],
+    skillId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Skill",
+    },
+    jobId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Job",
+    },
+    extraId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Extra",
+    },
+    analyticsId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Analytics",
+    },
 }, {timestamps: true});
 
 const User=  mongoose.model("User", userInfo)

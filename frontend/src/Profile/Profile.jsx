@@ -5,7 +5,7 @@ import { useGetProfileQuery, useLogoutMutation } from "../redux/Api/userApiSlice
 import { useNavigate, Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../redux/features/authSlice.js";
-import AcademicDetails from "../components/ProfileComponents/AcademicDetails.jsx";
+// import AcademicDetails from "../components/ProfileComponents/AcademicDetails.jsx";
 import ToastComp from "../components/ToastComp.jsx";
 
 const Profile = () => {
@@ -64,8 +64,9 @@ const Profile = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-6">
           {/* user details */}
           <UserDetails />
-          {/* Account Details */}
+          {/* Account Details 
           <AcademicDetails />
+          */}
           {/* Security Settings */}
           <ProfileList />
           {/* Preferences */}
