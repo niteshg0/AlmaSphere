@@ -223,4 +223,22 @@ const verifyCode = async (req, res) => {
   }
 }
 
-export { createUser, loginUser, getUserProfile, logoutUser, updateUserProfile, verifyCode };
+const getProfile= async (req , res)=>{
+  const rollNumber= req.params.rollNumber;
+  try {
+    const user= await User.find({rollNumber: rollNumber}).populate(["extraId", "analyticsId", "jobId", "skillId" ]);
+
+    if(!user){
+      return res.status(404).json({message: "User not found"})
+    }
+
+    return res.status(200).json(user);
+
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({message: error.message})
+    
+  }
+}
+
+export { createUser, loginUser, getUserProfile, logoutUser, updateUserProfile, verifyCode, getProfile };

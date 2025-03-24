@@ -21,6 +21,7 @@ import Layout from "./components/Layout";
 import Query from "./Query/Query";
 import AskQuestion from "./Query/AskQuestion";
 import Question from "./Query/Question";
+import Profiles from "./Profiles";
 
 function App() {
   const [isDarkTheme, setIsDarkTheme] = useState(() => {
@@ -187,6 +188,8 @@ function App() {
           <Route path="/about" element={<AboutUs />}/>
 
           <Route path="/contact" element={<ContactUs />}/>
+
+          <Route path="/profiles" element={<Profiles />}/>
 
           <Route path="/donation/verify" element={<VerifyDonation isDarkTheme={isDarkTheme}  />}/>
 

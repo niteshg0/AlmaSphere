@@ -7,10 +7,10 @@ const skillInfo= new mongoose.Schema({
         required: true,
     },
     technicalSkill: {
-        type: String
+        type: [String]
     },
     nonTechnicalSkill: {
-        type: String
+        type: [String]
     },
 }, {timestamps: true})
 

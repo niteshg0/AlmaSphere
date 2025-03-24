@@ -8,6 +8,7 @@ import {
   logoutUser,
   updateUserProfile,
   verifyCode,
+  getProfile,
 } from "../controller/userController.js";
 
 // admin controllers
@@ -31,6 +32,8 @@ router.post("/logout", logoutUser);
 // verify-code
 // router.route("/verify/:email")
 router.post("/verify/:email", verifyCode);
+
+router.get("/:rollNumber", getProfile);
 
 
 
