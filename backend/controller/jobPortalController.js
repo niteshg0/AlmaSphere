@@ -1,10 +1,12 @@
 import JobPortal from "../model/jobPortalModel.js";
+import AnalyticsInfo from "../model/User/analyticsInfo.js";
+import User from "../model/User/userInfo.js";
 // import User from "../model/User/userInfo.js";
 
 const createJobs = async (req, res) => {
   const userId = await req.user?._id;
   if (!userId) {
-    return res.status(402).json({ message: "not authrize to create jobs.." });
+    return res.status(402).json({ message: "Not Authorize to create job.." });
   }
   const {
     title,
@@ -57,6 +59,23 @@ const createJobs = async (req, res) => {
   try {
     const saveDetails = await jobDetail.save();
 
+    if(saveDetails){
+      const user= await User.findById(userId);
+
+        const analytics= await AnalyticsInfo.findOneAndUpdate(
+            {userId: userId},
+            {$inc: {jobPosted: 1}},
+            {  new: true, 
+                upsert: true, 
+                setDefaultsOnInsert: true });
+        
+
+        if(!user.analyticsId){
+            user.analyticsId= analytics._id;
+            await user.save();
+        }
+    }
+
     return res.status(202).json({
       id: saveDetails._id,
       userId: saveDetails.userId,
@@ -74,6 +93,7 @@ const createJobs = async (req, res) => {
       location:saveDetails.location,
       yearOfExperience:saveDetails.yearOfExperience
     });
+
   } catch (error) {
     console.log(error);
     return res.status(500).json({ message: "server issue..." });

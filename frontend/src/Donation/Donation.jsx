@@ -97,7 +97,7 @@ const Donation = ({ isDarkTheme }) => {
         description: "Test Transaction",
         image: "/AA-logo.png",
         order_id: donate.donation.id,
-        callback_url: `${import.meta.env.VITE_BACKEND_URL}/donation/verify`,
+        callback_url: `${import.meta.env.VITE_BACKEND_URL}/api/donation/verify`,
         prefill: {
           name: user?.data?.fullname || "",
           email: user.data.email || "",
