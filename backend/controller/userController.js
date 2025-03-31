@@ -189,7 +189,11 @@ const updateUserInfo = async (req, res) => {
 const addUserSkills = async (req, res) => {
   const userId = req.user._id;
   if (!userId) {
-    res.status(402).json({ message: "userId not found.." });
+    return res.status(402).json({ message: "userId not found.." });
+  }
+  const user = await User.findById(userId)
+  if(!user){
+    return res.status(402).json({ message: "user not found.." });
   }
   const existingSkill = await SkillInfo.findOne({ userId });
   if (existingSkill) {
@@ -206,6 +210,10 @@ const addUserSkills = async (req, res) => {
     });
 
     const savedSkills = await newSkills.save();
+
+    user.skillId = savedSkills._id;
+    await user.save();
+    
     return res.status(202).json({
       message: "new skills added..",
       technicalSkill: savedSkills.technicalSkill,
@@ -230,7 +238,7 @@ const updateUserSkills = async (req, res) => {
     if (req.body.technicalSkill && Array.isArray(req.body.technicalSkill)) {
       skills.technicalSkill.push(...req.body.technicalSkill);
     }
-    if (skills.nonTechnicalSkill && Array.isArray(req.body.nonTechnicalSkill)){
+    if (skills.nonTechnicalSkill && Array.isArray(req.body.nonTechnicalSkill)) {
       skills.nonTechnicalSkill.push(...req.body.nonTechnicalSkill);
     }
     await skills.save();
@@ -277,6 +285,27 @@ const verifyCode = async (req, res) => {
   }
 };
 
+const getProfile = async (req, res) => {
+  const rollNumber = req.params.rollNumber;
+  try {
+    const user = await User.find({ rollNumber: rollNumber }).populate([
+      "extraId",
+      "analyticsId",
+      "jobId",
+      "skillId",
+    ]);
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    return res.status(200).json(user);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: error.message });
+  }
+};
+
 export {
   createUser,
   loginUser,
@@ -286,4 +315,5 @@ export {
   verifyCode,
   updateUserSkills,
   addUserSkills,
+  getProfile,
 };
