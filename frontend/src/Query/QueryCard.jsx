@@ -198,9 +198,9 @@ const QueryCard = ({q, setSelectedCategory, setSelectedStatus}) => {
             {/* Right side - User info (smaller) */}
             <div className="flex items-center text-gray-500 dark:text-gray-400 shrink-0">
                 <span className="w-5 h-5 rounded-full bg-indigo-100 dark:bg-indigo-900/30 flex items-center justify-center font-medium text-indigo-600 dark:text-indigo-400 text-xs mr-1">
-                {q.askedBy.fullName.charAt(0)}
+                {q.askedBy?.fullName.charAt(0) || 'A'}
                 </span>
-                <span className="mr-1">{q.askedBy.fullName}</span>
+                <span className="mr-1">{q.askedBy?.fullName || "Anonymous"}</span>
                 <span className="text-xs">
                 ({formatDate(q.createdAt)})
                 </span>

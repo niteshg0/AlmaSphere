@@ -1,6 +1,8 @@
 import { Answer } from "../../model/Query/answerModel.js";
 import { Comment } from "../../model/Query/commentModel.js";
 import { Question } from "../../model/Query/questionModel.js";
+import AnalyticsInfo from "../../model/User/analyticsInfo.js"
+import User from "../../model/User/userInfo.js";
 
 const showAllQuery= async (req, res)=> {
 	try {
@@ -182,7 +184,7 @@ const showAllAnswer= async (req, res)=>{
         question.answers.sort((a,b)=>{
             return new Date(b.createdAt) - new Date(a.createdAt)
         })
-        console.log(question);
+        // console.log(question);
         
         // question.answers.comments?.sort((a,b)=>{
         //     return new Date(b.createdAt) - new Date(a.createdAt)
@@ -256,6 +258,21 @@ const postAnswer= async (req, res)=>{
         question.answers.push(createdAnswer._id);
         await question.save();
         await newAnswer.save();
+
+        const user= await User.findById(userId);
+
+        const analytics= await AnalyticsInfo.findOneAndUpdate(
+            {userId: userId},
+            {$inc: {QueryAnswered: 1}},
+            {  new: true, 
+                upsert: true, 
+                setDefaultsOnInsert: true });
+        
+
+        if(!user.analyticsId){
+            user.analyticsId= analytics._id;
+            await user.save();
+        }
 
         res.status(200).json({newAnswer})
 

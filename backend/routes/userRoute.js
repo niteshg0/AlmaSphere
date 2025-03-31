@@ -9,8 +9,7 @@ import {
   updateUserInfo,
   addUserSkills,
   updateUserSkills,
-  verifyCode,
-  getProfile,
+  verifyCode
 } from "../controller/userController.js";
 
 // admin controllers
@@ -36,7 +35,7 @@ router.post("/addUserSkills",authentication,addUserSkills)
 // router.route("/verify/:email")
 router.post("/verify/:email", verifyCode);
 
-router.get("/:rollNumber", getProfile);
+router.get("/:rollNumber", authentication, getUserProfile);
 
 
 

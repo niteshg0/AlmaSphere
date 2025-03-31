@@ -1,5 +1,6 @@
 import { instance } from "../index.js";
 import { Donation } from "../model/donation.js";
+import AnalyticsInfo from "../model/User/analyticsInfo.js";
 import User from "../model/User/userInfo.js";
 import pkg from "razorpay";
 const { validateWebhookSignature } = pkg;
@@ -81,7 +82,7 @@ export const verify_donation = async (req, res) => {
     if (isValidSignature) {
       // Update the order with payment details
 
-      await Donation.findOneAndUpdate(
+      const verifiedDonation= await Donation.findOneAndUpdate(
         { "donations.razorpay_order_id": razorpay_order_id },
         {
           $set: {
@@ -91,6 +92,36 @@ export const verify_donation = async (req, res) => {
         },
         { new: true }
       );
+
+      const amt= verifiedDonation.donations.filter((don)=>(
+        don.razorpay_order_id===razorpay_order_id ))
+
+
+
+      // console.log("VD", amt[0].amount);
+      // const amt= await findOne({"donations."})
+      
+
+      const userId= req.user._id;
+
+      const analytics= await AnalyticsInfo.findOneAndUpdate(
+        {userId: userId},
+        {$inc: {Donation: amt[0].amount}},
+        { new: true,
+          upsert: true,
+          setDefaultsOnInsert: true,
+        }
+      )
+
+      if(verifiedDonation){
+        
+        const user= await User.findById(userId).select("analyticsId");
+
+        if(!user.analyticsId){
+          user.analyticsId= analytics._id;
+          await user.save();
+        }
+      }
 
       // res.status(200).json({ status: 'ok' });
       // console.log("Payment verification successful");

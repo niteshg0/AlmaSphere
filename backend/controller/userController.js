@@ -211,14 +211,18 @@ const addUserSkills = async (req, res) => {
 
     const savedSkills = await newSkills.save();
 
-    user.skillId = savedSkills._id;
-    await user.save();
-    
+    const user= await User.findByIdAndUpdate(userId, {skillId: savedSkills._id}, {new: true});
+
     return res.status(202).json({
-      message: "new skills added..",
-      technicalSkill: savedSkills.technicalSkill,
-      nonTechnicalSkill: savedSkills.nonTechnicalSkill,
+      user,
+      savedSkills
     });
+
+    // return res.status(202).json({
+    //   message: "new skills added..",
+    //   technicalSkill: savedSkills.technicalSkill,
+    //   nonTechnicalSkill: savedSkills.nonTechnicalSkill,
+    // });
   } catch (error) {
     console.log(error);
     res.status(502).json({ message: "error in saving skills.." });
