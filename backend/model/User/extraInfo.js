@@ -1,37 +1,43 @@
 import mongoose from "mongoose";
 
-const extraInfo= new mongoose.Schema({
+const extraInfo = new mongoose.Schema(
+  {
     userId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
-        required: true,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
     },
-    achievements: [{
+    achievements: [
+      {
         title: {
-            type: String,
+          type: String,
         },
         description: {
-            type: String, 
+          type: String,
         },
         date: {
-            type: Date, 
+          type: Date,
         },
-    }],
-    extracurriculars: [{
+      },
+    ],
+    extracurriculars: [
+      {
         activity: {
-            type: String,
-            required: true, 
+          type: String,
+          required: true,
         },
         description: {
-            type: String,
+          type: String,
         },
         duration: {
-            type: String, 
+          type: String,
         },
-    }],
-}, {timestamps: true})
+      },
+    ],
+  },
+  { timestamps: true }
+);
 
-
-const ExtraInfo= mongoose.model("Extra", extraInfo);
+const ExtraInfo = mongoose.model("Extra", extraInfo);
 
 export default ExtraInfo;

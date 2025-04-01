@@ -1,29 +1,31 @@
 import mongoose from "mongoose";
 
-const analyticsInfo= new mongoose.Schema({
+const analyticsInfo = new mongoose.Schema(
+  {
     userId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
-        required: true,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
     },
     Donation: {
-        type: Number
+      type: Number,
     },
     QueryAnswered: {
-        type: Number
+      type: Number,
     },
     jobPosted: {
-        type: Number
+      type: Number,
     },
     EventOrganised: {
-        type: Number
+      type: Number,
     },
     postMade: {
-        type: Number
+      type: Number,
     },
-}, {timestamps: true})
+  },
+  { timestamps: true }
+);
 
-
-const AnalyticsInfo= mongoose.model("Analytics", analyticsInfo);
+const AnalyticsInfo = mongoose.model("Analytics", analyticsInfo);
 
 export default AnalyticsInfo;

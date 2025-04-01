@@ -4,6 +4,7 @@ import bcrypt from "bcryptjs";
 import generateToken from "../utils/createToken.js";
 // const nodemailer = require("nodemailer");
 import nodemailer from "nodemailer";
+import JobInfo from "../model/User/jobInfo.js";
 
 async function sendVerificationEmail(email, code) {
   console.log(email, code);
@@ -191,8 +192,8 @@ const addUserSkills = async (req, res) => {
   if (!userId) {
     return res.status(402).json({ message: "userId not found.." });
   }
-  const user = await User.findById(userId)
-  if(!user){
+  const user = await User.findById(userId);
+  if (!user) {
     return res.status(402).json({ message: "user not found.." });
   }
   const existingSkill = await SkillInfo.findOne({ userId });
@@ -211,11 +212,15 @@ const addUserSkills = async (req, res) => {
 
     const savedSkills = await newSkills.save();
 
-    const user= await User.findByIdAndUpdate(userId, {skillId: savedSkills._id}, {new: true});
+    const user = await User.findByIdAndUpdate(
+      userId,
+      { skillId: savedSkills._id },
+      { new: true }
+    );
 
     return res.status(202).json({
       user,
-      savedSkills
+      savedSkills,
     });
 
     // return res.status(202).json({
@@ -251,6 +256,89 @@ const updateUserSkills = async (req, res) => {
       .json({ message: "skill added successfully", skills });
   } catch (err) {
     console.log(err.message);
+    return res.status(403).json({ message: "server error..." });
+  }
+};
+
+const addUserJobInfo = async (req, res) => {
+  const userId = req.user._id;
+  if (!userId) {
+    return res.status(402).json({ message: "userId not found.." });
+  }
+  const user = await User.findById(userId);
+  if (!user) {
+    return res.status(402).json({ message: "user not found.." });
+  }
+  const existingJobId = await JobInfo.findOne({ userId });
+  if (existingJobId) {
+    return res
+      .status(403)
+      .json({ message: "you can only update the skill...." });
+  }
+  const { companyName, position, duration, location, previousCompany } =
+    req.body;
+  if (previousCompany && !Array.isArray(previousCompany)) {
+    return res.status(403).json({ message: "provide an array..." });
+  }
+  try {
+    const newJobInfo = new JobInfo({
+      userId,
+      companyName,
+      position,
+      duration,
+      location,
+      previousCompany,
+    });
+    const saveJobInfo = await newJobInfo.save();
+    const user = await User.findByIdAndUpdate(
+      userId,
+      { jobId: saveJobInfo._id },
+      { new: true }
+    );
+    return res.status(202).json({
+      user,
+      saveJobInfo,
+    });
+  } catch (e) {
+    console.log(e);
+    return res.status(502).json({ message: "error in saving jobDtails.." });
+  }
+};
+
+const updateJobInfo = async (req, res) => {
+  try {
+    const userId = req.user._id;
+    if (!userId) {
+      return res.status(402).json({ message: "please login..." });
+    }
+    const job = await JobInfo.findOne({ userId });
+    if (!job) {
+      return res.status(403).json({ message: "jobinfo not founded..." });
+    }
+    const previous = {
+      companyName: job.companyName,
+      position: job.position,
+      duration: job.duration,
+    };
+    job.previousCompany.push(previous);
+
+    const { companyName, position, duration, location } = req.body;
+    if (companyName) {
+      job.companyName = companyName;
+    }
+    if (position) {
+      job.position = position;
+    }
+    if (duration) {
+      job.duration = duration;
+    }
+    if (location) {
+      job.location = location;
+    }
+    await job.save();
+    return res.status(202).json({ message: "jobInfo added successfully", job });
+  } catch (error) {
+    console.log(error);
     return res.status(403).json({ message: "server error..." });
   }
 };
@@ -320,4 +408,6 @@ export {
   updateUserSkills,
   addUserSkills,
   getProfile,
+  addUserJobInfo,
+  updateJobInfo,
 };

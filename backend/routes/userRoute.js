@@ -7,6 +7,8 @@ import {
   getUserProfile,
   logoutUser,
   updateUserInfo,
+  addUserJobInfo,
+  updateJobInfo,
   addUserSkills,
   updateUserSkills,
   verifyCode
@@ -30,6 +32,8 @@ router.route("/auth").post(loginUser);
 router.post("/logout", logoutUser);
 router.put("/updateSkills",authentication,updateUserSkills)
 router.post("/addUserSkills",authentication,addUserSkills)
+router.post("/addUserJobInfo",authentication,addUserJobInfo)
+router.put("/updateJobInfo",authentication,updateJobInfo)
 
 // verify-code
 // router.route("/verify/:email")
