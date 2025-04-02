@@ -4,6 +4,7 @@ import bcrypt from "bcryptjs";
 import generateToken from "../utils/createToken.js";
 // const nodemailer = require("nodemailer");
 import nodemailer from "nodemailer";
+import JobInfo from "../model/User/jobInfo.js";
 
 async function sendVerificationEmail(email, code) {
   console.log(email, code);
@@ -284,6 +285,22 @@ const verifyCode = async (req, res) => {
     return res.status(500).json({ message: "could not run verify-code" });
   }
 };
+
+const addJobInfo= async (req, res)=>{
+  try {
+    const userId= req.user._id;
+    const {companyName, position, duration, location, previousCompany}= req.body;
+
+    const response= await JobInfo.create({
+      companyName, position, duration, location, previousCompany
+    })
+
+    
+
+  } catch (error) {
+    
+  }
+}
 
 export {
   createUser,

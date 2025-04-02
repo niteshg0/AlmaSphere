@@ -15,11 +15,26 @@ import {
   FaChartLine,
   FaEdit,
   FaPlus,
+  FaTimes,
 } from "react-icons/fa";
+import axios from "axios";
+import { useSelector } from "react-redux";
 
 const Profiles = () => {
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [activeModal, setActiveModal] = useState(null);
+  const [formData, setFormData] = useState({});
+
+  // Modal types
+  const MODAL_TYPES = {
+    PROFILE: "profile",
+    JOB: "job",
+    SKILLS: "skills",
+    ACHIEVEMENT: "achievement",
+    EXTRACURRICULAR: "extracurricular",
+    ANALYTICS: "analytics",
+  };
 
   useEffect(() => {
     setUserData({
@@ -81,7 +96,7 @@ const Profiles = () => {
       analyticsId: {
         _id: "67aba8031f6ce79b330daaa7",
         userId: "67aba8031f6ce79b330daaa3",
-        Donation: 500000, // 5L in rupees
+        Donation: 500000,
         QueryAnswered: 1,
         jobPosted: 10,
         EventOrganised: 0,
@@ -91,10 +106,343 @@ const Profiles = () => {
     setLoading(false);
   }, []);
 
+  const handleOpenModal = (type, data = null) => {
+    setActiveModal(type);
+    if (data) {
+      setFormData(data);
+    } else {
+      setFormData({});
+    }
+  };
+
+  const handleCloseModal = () => {
+    setActiveModal(null);
+    setFormData({});
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      // Here you would make an API call to update the data
+      console.log("Submitting form data:", formData);
+      handleCloseModal();
+    } catch (error) {
+      console.error("Error submitting form:", error);
+    }
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const renderModal = () => {
+    if (!activeModal) return null;
+
+    return (
+      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div className="bg-white dark:bg-gray-800 rounded-xl p-6 w-full max-w-md">
+          <div className="flex justify-between items-center mb-4">
+            <h3 className="text-xl font-bold text-indigo-600 dark:text-indigo-400">
+              {activeModal === MODAL_TYPES.PROFILE && "Edit Profile"}
+              {activeModal === MODAL_TYPES.JOB && "Add/Edit Job"}
+              {activeModal === MODAL_TYPES.SKILLS && "Edit Skills"}
+              {activeModal === MODAL_TYPES.ACHIEVEMENT && "Add Achievement"}
+              {activeModal === MODAL_TYPES.EXTRACURRICULAR &&
+                "Add Extracurricular"}
+              {activeModal === MODAL_TYPES.ANALYTICS && "Update Analytics"}
+            </h3>
+            <button
+              onClick={handleCloseModal}
+              className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+            >
+              <FaTimes className="h-5 w-5" />
+            </button>
+          </div>
+
+          <form onSubmit={handleSubmit} className="space-y-4">
+            {activeModal === MODAL_TYPES.PROFILE && (
+              <>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                    Full Name
+                  </label>
+                  <input
+                    type="text"
+                    name="fullName"
+                    value={formData.fullName || userData.fullName}
+                    onChange={handleInputChange}
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-700 dark:border-gray-600"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                    Roll Number
+                  </label>
+                  <input
+                    type="text"
+                    name="rollNumber"
+                    value={formData.rollNumber || userData.rollNumber}
+                    onChange={handleInputChange}
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-700 dark:border-gray-600"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                    Branch
+                  </label>
+                  <input
+                    type="text"
+                    name="branch"
+                    value={formData.branch || userData.branch}
+                    onChange={handleInputChange}
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-700 dark:border-gray-600"
+                  />
+                </div>
+              </>
+            )}
+
+            {activeModal === MODAL_TYPES.JOB && (
+              <>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                    Company Name
+                  </label>
+                  <input
+                    type="text"
+                    name="companyName"
+                    value={formData.companyName || ""}
+                    onChange={handleInputChange}
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-700 dark:border-gray-600"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                    Position
+                  </label>
+                  <input
+                    type="text"
+                    name="position"
+                    value={formData.position || ""}
+                    onChange={handleInputChange}
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-700 dark:border-gray-600"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                    Duration
+                  </label>
+                  <input
+                    type="text"
+                    name="duration"
+                    value={formData.duration || ""}
+                    onChange={handleInputChange}
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-700 dark:border-gray-600"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                    Location
+                  </label>
+                  <input
+                    type="text"
+                    name="location"
+                    value={formData.location || ""}
+                    onChange={handleInputChange}
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-700 dark:border-gray-600"
+                  />
+                </div>
+              </>
+            )}
+
+            {activeModal === MODAL_TYPES.SKILLS && (
+              <>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                    Technical Skills (comma-separated)
+                  </label>
+                  <input
+                    type="text"
+                    name="technicalSkill"
+                    value={
+                      formData.technicalSkill || userData.skillId.technicalSkill
+                    }
+                    onChange={handleInputChange}
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-700 dark:border-gray-600"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                    Non-Technical Skills (comma-separated)
+                  </label>
+                  <input
+                    type="text"
+                    name="nonTechnicalSkill"
+                    value={
+                      formData.nonTechnicalSkill ||
+                      userData.skillId.nonTechnicalSkill
+                    }
+                    onChange={handleInputChange}
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-700 dark:border-gray-600"
+                  />
+                </div>
+              </>
+            )}
+
+            {activeModal === MODAL_TYPES.ACHIEVEMENT && (
+              <>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                    Title
+                  </label>
+                  <input
+                    type="text"
+                    name="title"
+                    value={formData.title || ""}
+                    onChange={handleInputChange}
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-700 dark:border-gray-600"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                    Description
+                  </label>
+                  <textarea
+                    name="description"
+                    value={formData.description || ""}
+                    onChange={handleInputChange}
+                    rows="3"
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-700 dark:border-gray-600"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                    Date
+                  </label>
+                  <input
+                    type="date"
+                    name="date"
+                    value={formData.date || ""}
+                    onChange={handleInputChange}
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-700 dark:border-gray-600"
+                  />
+                </div>
+              </>
+            )}
+
+            {activeModal === MODAL_TYPES.EXTRACURRICULAR && (
+              <>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                    Activity
+                  </label>
+                  <input
+                    type="text"
+                    name="activity"
+                    value={formData.activity || ""}
+                    onChange={handleInputChange}
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-700 dark:border-gray-600"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                    Description
+                  </label>
+                  <textarea
+                    name="description"
+                    value={formData.description || ""}
+                    onChange={handleInputChange}
+                    rows="3"
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-700 dark:border-gray-600"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                    Duration
+                  </label>
+                  <input
+                    type="text"
+                    name="duration"
+                    value={formData.duration || ""}
+                    onChange={handleInputChange}
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-700 dark:border-gray-600"
+                  />
+                </div>
+              </>
+            )}
+
+            {activeModal === MODAL_TYPES.ANALYTICS && (
+              <>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                    Donation Amount
+                  </label>
+                  <input
+                    type="number"
+                    name="Donation"
+                    value={formData.Donation || userData.analyticsId.Donation}
+                    onChange={handleInputChange}
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-700 dark:border-gray-600"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                    Queries Answered
+                  </label>
+                  <input
+                    type="number"
+                    name="QueryAnswered"
+                    value={
+                      formData.QueryAnswered ||
+                      userData.analyticsId.QueryAnswered
+                    }
+                    onChange={handleInputChange}
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-700 dark:border-gray-600"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                    Jobs Posted
+                  </label>
+                  <input
+                    type="number"
+                    name="jobPosted"
+                    value={formData.jobPosted || userData.analyticsId.jobPosted}
+                    onChange={handleInputChange}
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-700 dark:border-gray-600"
+                  />
+                </div>
+              </>
+            )}
+
+            <div className="flex justify-end space-x-3 mt-6">
+              <button
+                type="button"
+                onClick={handleCloseModal}
+                className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-600 dark:hover:bg-gray-600"
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                className="px-4 py-2 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              >
+                Save Changes
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    );
+  };
+
   if (loading) {
     return (
       <div className="flex justify-center items-center min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-indigo-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-600"></div>       
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-600"></div>
       </div>
     );
   }
@@ -122,6 +470,7 @@ const Profiles = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-indigo-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 py-8 px-4 sm:px-6 lg:px-8">
+      {renderModal()}
       <div className="max-w-5xl mx-auto space-y-6">
         {/* Top Profile Card */}
         <div className="rounded-xl shadow-md overflow-hidden border border-blue-100/50 dark:border-gray-700/50 bg-white/95 dark:bg-gray-800/95 backdrop-blur-sm transition-all duration-300 hover:shadow-lg">
@@ -131,7 +480,10 @@ const Profiles = () => {
                 <FaUserCircle className="mr-2" />
                 Profile
               </h2>
-              <button className="p-2 rounded-lg bg-white dark:bg-gray-700 text-indigo-600 dark:text-indigo-400 shadow-sm border border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors">
+              <button
+                onClick={() => handleOpenModal(MODAL_TYPES.PROFILE, userData)}
+                className="p-2 rounded-lg bg-white dark:bg-gray-700 text-indigo-600 dark:text-indigo-400 shadow-sm border border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors"
+              >
                 <FaEdit className="h-5 w-5" />
               </button>
             </div>
@@ -248,10 +600,18 @@ const Profiles = () => {
                 Job History
               </h2>
               <div className="flex gap-2">
-                <button className="p-2 rounded-lg bg-white dark:bg-gray-700 text-indigo-600 dark:text-indigo-400 shadow-sm border border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors">
+                <button
+                  onClick={() => handleOpenModal(MODAL_TYPES.JOB)}
+                  className="p-2 rounded-lg bg-white dark:bg-gray-700 text-indigo-600 dark:text-indigo-400 shadow-sm border border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors"
+                >
                   <FaPlus className="h-5 w-5" />
                 </button>
-                <button className="p-2 rounded-lg bg-white dark:bg-gray-700 text-indigo-600 dark:text-indigo-400 shadow-sm border border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors">
+                <button
+                  onClick={() =>
+                    handleOpenModal(MODAL_TYPES.JOB, userData.jobId)
+                  }
+                  className="p-2 rounded-lg bg-white dark:bg-gray-700 text-indigo-600 dark:text-indigo-400 shadow-sm border border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors"
+                >
                   <FaEdit className="h-5 w-5" />
                 </button>
               </div>
@@ -308,10 +668,12 @@ const Profiles = () => {
                 Skills
               </h2>
               <div className="flex gap-2">
-                <button className="p-2 rounded-lg bg-white dark:bg-gray-700 text-indigo-600 dark:text-indigo-400 shadow-sm border border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors">
-                  <FaPlus className="h-5 w-5" />
-                </button>
-                <button className="p-2 rounded-lg bg-white dark:bg-gray-700 text-indigo-600 dark:text-indigo-400 shadow-sm border border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors">
+                <button
+                  onClick={() =>
+                    handleOpenModal(MODAL_TYPES.SKILLS, userData.skillId)
+                  }
+                  className="p-2 rounded-lg bg-white dark:bg-gray-700 text-indigo-600 dark:text-indigo-400 shadow-sm border border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors"
+                >
                   <FaEdit className="h-5 w-5" />
                 </button>
               </div>
@@ -376,16 +738,16 @@ const Profiles = () => {
                   Achievements
                 </h2>
                 <div className="flex gap-2">
-                  <button className="p-2 rounded-lg bg-white dark:bg-gray-700 text-indigo-600 dark:text-indigo-400 shadow-sm border border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors">
+                  <button
+                    onClick={() => handleOpenModal(MODAL_TYPES.ACHIEVEMENT)}
+                    className="p-2 rounded-lg bg-white dark:bg-gray-700 text-indigo-600 dark:text-indigo-400 shadow-sm border border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors"
+                  >
                     <FaPlus className="h-5 w-5" />
-                  </button>
-                  <button className="p-2 rounded-lg bg-white dark:bg-gray-700 text-indigo-600 dark:text-indigo-400 shadow-sm border border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors">
-                    <FaEdit className="h-5 w-5" />
                   </button>
                 </div>
               </div>
               <div className="space-y-2">
-                {userData.extraId?.achievements.map((achievement, index) => (
+                {userData?.extraId?.achievements.map((achievement, index) => (
                   <div
                     key={index}
                     className="p-3 rounded-lg bg-white dark:bg-gray-700 shadow-sm border border-gray-100 dark:border-gray-600 flex items-start"
@@ -416,16 +778,16 @@ const Profiles = () => {
                   Extracurricular
                 </h2>
                 <div className="flex gap-2">
-                  <button className="p-2 rounded-lg bg-white dark:bg-gray-700 text-indigo-600 dark:text-indigo-400 shadow-sm border border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors">
+                  <button
+                    onClick={() => handleOpenModal(MODAL_TYPES.EXTRACURRICULAR)}
+                    className="p-2 rounded-lg bg-white dark:bg-gray-700 text-indigo-600 dark:text-indigo-400 shadow-sm border border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors"
+                  >
                     <FaPlus className="h-5 w-5" />
-                  </button>
-                  <button className="p-2 rounded-lg bg-white dark:bg-gray-700 text-indigo-600 dark:text-indigo-400 shadow-sm border border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors">
-                    <FaEdit className="h-5 w-5" />
                   </button>
                 </div>
               </div>
               <div className="space-y-2">
-                {userData.extraId?.extracurriculars.map((activity, index) => (
+                {userData?.extraId?.extracurriculars.map((activity, index) => (
                   <div
                     key={index}
                     className="p-3 rounded-lg bg-white dark:bg-gray-700 shadow-sm border border-gray-100 dark:border-gray-600 flex items-start"
@@ -459,7 +821,12 @@ const Profiles = () => {
                 <FaChartLine className="mr-2" />
                 Analytics
               </h2>
-              <button className="p-2 rounded-lg bg-white dark:bg-gray-700 text-indigo-600 dark:text-indigo-400 shadow-sm border border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors">
+              <button
+                onClick={() =>
+                  handleOpenModal(MODAL_TYPES.ANALYTICS, userData.analyticsId)
+                }
+                className="p-2 rounded-lg bg-white dark:bg-gray-700 text-indigo-600 dark:text-indigo-400 shadow-sm border border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors"
+              >
                 <FaEdit className="h-5 w-5" />
               </button>
             </div>
@@ -475,7 +842,7 @@ const Profiles = () => {
 
               <div className="p-4 rounded-lg bg-white dark:bg-gray-700 shadow-sm border border-gray-100 dark:border-gray-600 text-center">
                 <div className="text-2xl font-bold text-indigo-600 dark:text-indigo-400">
-                  {userData.analyticsId?.QueryAnswered}
+                  {userData?.analyticsId?.QueryAnswered}
                 </div>
                 <p className="text-sm text-gray-600 dark:text-gray-400">
                   Answers
@@ -484,7 +851,7 @@ const Profiles = () => {
 
               <div className="p-4 rounded-lg bg-white dark:bg-gray-700 shadow-sm border border-gray-100 dark:border-gray-600 text-center">
                 <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">
-                  {userData.analyticsId?.jobPosted}
+                  {userData?.analyticsId?.jobPosted}
                 </div>
                 <p className="text-sm text-gray-600 dark:text-gray-400">
                   Jobs Posted
@@ -493,7 +860,7 @@ const Profiles = () => {
 
               <div className="p-4 rounded-lg bg-white dark:bg-gray-700 shadow-sm border border-gray-100 dark:border-gray-600 text-center">
                 <div className="text-2xl font-bold text-purple-600 dark:text-purple-400">
-                  {userData.analyticsId?.EventOrganised}
+                  {userData?.analyticsId?.EventOrganised}
                 </div>
                 <p className="text-sm text-gray-600 dark:text-gray-400">
                   Events
@@ -502,7 +869,7 @@ const Profiles = () => {
 
               <div className="p-4 rounded-lg bg-white dark:bg-gray-700 shadow-sm border border-gray-100 dark:border-gray-600 text-center">
                 <div className="text-2xl font-bold text-orange-600 dark:text-orange-400">
-                  {userData.analyticsId?.postMade}
+                  {userData?.analyticsId?.postMade}
                 </div>
                 <p className="text-sm text-gray-600 dark:text-gray-400">
                   Posts
