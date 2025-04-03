@@ -189,7 +189,7 @@ function App() {
 
           <Route path="/contact" element={<ContactUs />}/>
 
-          <Route path="/profiles" element={<Profiles />}/>
+          <Route path="/profiles/:rollNumber" element={<Profiles />}/>
 
           <Route path="/donation/verify" element={<VerifyDonation isDarkTheme={isDarkTheme}  />}/>
 

@@ -5,6 +5,7 @@ import {
   createUser,
   loginUser,
   getUserProfile,
+  getProfile,
   logoutUser,
   updateUserInfo,
   addExtraInfo,
@@ -42,7 +43,7 @@ router.post("/extraInfo",authentication,addExtraInfo)
 // router.route("/verify/:email")
 router.post("/verify/:email", verifyCode);
 
-router.get("/:rollNumber", authentication, getUserProfile);
+router.get("/:rollNumber", authentication, getProfile);
 
 
 

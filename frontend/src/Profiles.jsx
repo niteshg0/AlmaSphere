@@ -19,12 +19,17 @@ import {
 } from "react-icons/fa";
 import axios from "axios";
 import { useSelector } from "react-redux";
+import { useGetProfileQuery } from "./redux/Api/userApiSlice";
+import { useParams } from "react-router";
 
 const Profiles = () => {
+  
+  const { rollNumber}=  useParams();
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [activeModal, setActiveModal] = useState(null);
   const [formData, setFormData] = useState({});
+  const {data, isLoading, isError, error} = useGetProfileQuery(rollNumber);
 
   // Modal types
   const MODAL_TYPES = {
@@ -35,76 +40,91 @@ const Profiles = () => {
     EXTRACURRICULAR: "extracurricular",
     ANALYTICS: "analytics",
   };
+ 
 
   useEffect(() => {
-    setUserData({
-      _id: "67aba8031f6ce79b330daaa3",
-      rollNumber: 2023071049,
-      fullName: "Nitesh Kumar Gupta",
-      email: "nit947396@gmail.com",
-      role: "Alumni",
-      gender: "Male",
-      batch: "2023-2027",
-      course: "Bachelor of Technology",
-      branch: "Information Technology",
-      cgpa: 8.5,
-      mediaUrl: [],
-      skillId: {
-        _id: "67aba8031f6ce79b330daaa4",
-        userId: "67aba8031f6ce79b330daaa3",
-        technicalSkill: "Web Development, Machine Learning, React, Node.js",
-        nonTechnicalSkill: "Public Speaking, Leadership",
-      },
-      jobId: {
-        _id: "67aba8031f6ce79b330daaa6",
-        userId: "67aba8031f6ce79b330daaa3",
-        companyName: "Google",
-        position: "Senior Software Engineer",
-        duration: "2027-Present",
-        location: "Gorakhpur, India",
-        previousCompany: [
-          {
-            companyName: "Microsoft",
-            position: "Junior Developer",
-            duration: "2025-2027",
-          },
-        ],
-      },
-      extraId: {
-        _id: "67aba8031f6ce79b330daaa5",
-        userId: "67aba8031f6ce79b330daaa3",
-        achievements: [
-          {
-            title: "Hackathon IIT",
-            description: "Won 1st place in AI Challenge",
-            date: "2026-03-15T00:00:00Z",
-          },
-          {
-            title: "Coderforces AIR -2",
-            description: "Achieved All India Rank 2 in competitive coding",
-            date: "2025-07-20T00:00:00Z",
-          },
-        ],
-        extracurriculars: [
-          {
-            activity: "Robotics Club",
-            description: "Lead the automation team",
-            duration: "1.5 years",
-          },
-        ],
-      },
-      analyticsId: {
-        _id: "67aba8031f6ce79b330daaa7",
-        userId: "67aba8031f6ce79b330daaa3",
-        Donation: 500000,
-        QueryAnswered: 1,
-        jobPosted: 10,
-        EventOrganised: 0,
-        postMade: 12,
-      },
-    });
+    if(data){
+      setUserData(data[0]);
+      console.log(data[0]);
+
+    }
+    
+    // setUserData({
+    //   _id: "67aba8031f6ce79b330daaa3",
+    //   rollNumber: 2023071049,
+    //   fullName: "Nitesh Kumar Gupta",
+    //   email: "nit947396@gmail.com",
+    //   role: "Alumni",
+    //   gender: "Male",
+    //   batch: "2023-2027",
+    //   course: "Bachelor of Technology",
+    //   branch: "Information Technology",
+    //   cgpa: 8.5,
+    //   mediaUrl: [],
+    //   skillId: {
+    //     _id: "67aba8031f6ce79b330daaa4",
+    //     userId: "67aba8031f6ce79b330daaa3",
+    //     technicalSkill: "Web Development, Machine Learning, React, Node.js",
+    //     nonTechnicalSkill: "Public Speaking, Leadership",
+    //   },
+    //   jobId: {
+    //     _id: "67aba8031f6ce79b330daaa6",
+    //     userId: "67aba8031f6ce79b330daaa3",
+    //     companyName: "Google",
+    //     position: "Senior Software Engineer",
+    //     duration: "2027-Present",
+    //     location: "Gorakhpur, India",
+    //     previousCompany: [
+    //       {
+    //         companyName: "Microsoft",
+    //         position: "Junior Developer",
+    //         duration: "2025-2027",
+    //       },
+    //     ],
+    //   },
+    //   extraId: {
+    //     _id: "67aba8031f6ce79b330daaa5",
+    //     userId: "67aba8031f6ce79b330daaa3",
+    //     achievements: [
+    //       {
+    //         title: "Hackathon IIT",
+    //         description: "Won 1st place in AI Challenge",
+    //         date: "2026-03-15T00:00:00Z",
+    //       },
+    //       {
+    //         title: "Coderforces AIR -2",
+    //         description: "Achieved All India Rank 2 in competitive coding",
+    //         date: "2025-07-20T00:00:00Z",
+    //       },
+    //     ],
+    //     extracurriculars: [
+    //       {
+    //         activity: "Robotics Club",
+    //         description: "Lead the automation team",
+    //         duration: "1.5 years",
+    //       },
+    //     ],
+    //   },
+    //   analyticsId: {
+    //     _id: "67aba8031f6ce79b330daaa7",
+    //     userId: "67aba8031f6ce79b330daaa3",
+    //     Donation: 500000,
+    //     QueryAnswered: 1,
+    //     jobPosted: 10,
+    //     EventOrganised: 0,
+    //     postMade: 12,
+    //   },
+    // });
     setLoading(false);
-  }, []);
+  }, [data]);
+
+  // if (isLoading) {
+  //   return <LoadingSpinner />;
+  // }
+
+  if (isError) {
+    return <ErrorMessage error={error} />;
+  }
 
   const handleOpenModal = (type, data = null) => {
     setActiveModal(type);
@@ -138,6 +158,31 @@ const Profiles = () => {
       [name]: value,
     }));
   };
+
+  // console.log(error);
+
+  if(error){
+    return(
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-indigo-50 to-indigo-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
+        <div className="max-w-md p-8 bg-white dark:bg-gray-800 rounded-lg shadow-lg">
+          <h2 className="text-2xl font-bold text-red-600 dark:text-red-400 mb-4">
+            error
+            
+            
+          </h2>
+          <p className="text-gray-700 dark:text-gray-300 mb-6">
+            {error.data.message || "An error occurred while loading the question."}
+          </p>
+          <button
+            onClick={() => navigate(-1)}
+            className="inline-block px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
+          >
+            Go back
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   const renderModal = () => {
     if (!activeModal) return null;
@@ -439,7 +484,7 @@ const Profiles = () => {
     );
   };
 
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="flex justify-center items-center min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-indigo-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
         <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-600"></div>
@@ -458,7 +503,8 @@ const Profiles = () => {
   }
 
   // Process skills into arrays for better display
-  const technicalSkills = userData.skillId?.technicalSkill?.split(", ") || [];
+  if(userData){
+    const technicalSkills = userData.skillId?.technicalSkill?.split(", ") || [];
   const nonTechnicalSkills =
     userData.skillId?.nonTechnicalSkill?.split(", ") || [];
 
@@ -467,6 +513,7 @@ const Profiles = () => {
     userData.analyticsId?.Donation >= 100000
       ? `${(userData.analyticsId?.Donation / 100000).toFixed(0)}L`
       : `₹${userData.analyticsId?.Donation}`;
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-indigo-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 py-8 px-4 sm:px-6 lg:px-8">
