@@ -5,6 +5,7 @@ import generateToken from "../utils/createToken.js";
 // const nodemailer = require("nodemailer");
 import nodemailer from "nodemailer";
 import JobInfo from "../model/User/jobInfo.js";
+import ExtraInfo from "../model/User/extraInfo.js";
 
 async function sendVerificationEmail(email, code) {
   console.log(email, code);
@@ -273,7 +274,7 @@ const addUserJobInfo = async (req, res) => {
   if (existingJobId) {
     return res
       .status(403)
-      .json({ message: "you can only update the skill...." });
+      .json({ message: "you can only update the job info...." });
   }
   const { companyName, position, duration, location, previousCompany } =
     req.body;
@@ -293,10 +294,9 @@ const addUserJobInfo = async (req, res) => {
     const user = await User.findByIdAndUpdate(
       userId,
       { jobId: saveJobInfo._id },
-      { new: true }
+      { new: true, upsert: true }
     );
     return res.status(202).json({
-      user,
       saveJobInfo,
     });
   } catch (e) {
@@ -340,6 +340,57 @@ const updateJobInfo = async (req, res) => {
   } catch (error) {
     console.log(error);
     return res.status(403).json({ message: "server error..." });
+  }
+};
+
+const addExtraInfo = async (req, res) => {
+  const userId = req.user._id;
+  if (!userId) {
+    return res.status(402).json({ message: "userId not found.." });
+  }
+  const user = await User.findById(userId);
+  if (!user) {
+    return res.status(402).json({ message: "user not found.." });
+  }
+  const extraInfo = await ExtraInfo.findOne({ userId });
+  const { achievements, extracurriculars } = req.body;
+  if (!extraInfo) {
+    try {
+      const newExtraInfo = new ExtraInfo({
+        userId,
+        achievements,
+        extracurriculars,
+      });
+
+      const saveExtraInfo = await newExtraInfo.save();
+      const user = await User.findByIdAndUpdate(
+        userId,
+        { extraId: saveExtraInfo._id },
+        { new: true, upsert: true }
+      );
+      return res.status(202).json({
+        saveExtraInfo,
+      });
+    } catch (error) {
+      console.log(error);
+      return res.status(502).json({ message: "some server error occure..." });
+    }
+  } else {
+    try {
+      if (achievements && Array.isArray(achievements)) {
+        extraInfo.achievements.push(...achievements);
+      }
+      if (extracurriculars && Array.isArray(extracurriculars)) {
+        extraInfo.extracurriculars.push(...extracurriculars);
+      }
+      extraInfo.save();
+      return res
+        .status(202)
+        .json({ message: "ExtraInfo added successfully", extraInfo });
+    } catch (error) {
+      console.log(error);
+      return res.status(502).json({ message: "server error occure..." });
+    }
   }
 };
 
@@ -410,4 +461,5 @@ export {
   getProfile,
   addUserJobInfo,
   updateJobInfo,
+  addExtraInfo,
 };

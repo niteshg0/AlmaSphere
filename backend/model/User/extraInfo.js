@@ -7,33 +7,39 @@ const extraInfo = new mongoose.Schema(
       ref: "User",
       required: true,
     },
-    achievements: [
-      {
-        title: {
-          type: String,
+    achievements: {
+      type: [
+        {
+          title: {
+            type: String,
+          },
+          description: {
+            type: String,
+          },
+          date: {
+            type: Date,
+          },
         },
-        description: {
-          type: String,
+      ],
+      default: [],
+    },
+    extracurriculars: {
+      type: [
+        {
+          activity: {
+            type: String,
+            required: true,
+          },
+          description: {
+            type: String,
+          },
+          duration: {
+            type: String,
+          },
         },
-        date: {
-          type: Date,
-        },
-      },
-    ],
-    extracurriculars: [
-      {
-        activity: {
-          type: String,
-          required: true,
-        },
-        description: {
-          type: String,
-        },
-        duration: {
-          type: String,
-        },
-      },
-    ],
+      ],
+      default: [],
+    },
   },
   { timestamps: true }
 );

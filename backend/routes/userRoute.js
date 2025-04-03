@@ -7,6 +7,7 @@ import {
   getUserProfile,
   logoutUser,
   updateUserInfo,
+  addExtraInfo,
   addUserJobInfo,
   updateJobInfo,
   addUserSkills,
@@ -34,6 +35,8 @@ router.put("/updateSkills",authentication,updateUserSkills)
 router.post("/addUserSkills",authentication,addUserSkills)
 router.post("/addUserJobInfo",authentication,addUserJobInfo)
 router.put("/updateJobInfo",authentication,updateJobInfo)
+router.post("/extraInfo",authentication,addExtraInfo)
+
 
 // verify-code
 // router.route("/verify/:email")
