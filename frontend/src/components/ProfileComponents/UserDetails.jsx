@@ -1,11 +1,16 @@
 import React from "react";
-import { useGetProfileQuery } from "../../redux/Api/userApiSlice";
+import { useGetProfileQuery, useUserProfileQuery } from "../../redux/Api/userApiSlice";
 
 const UserDetails = () => {
-  const { data, isLoading, isError } = useGetProfileQuery();
-  console.log(data);
+   const rollNumber= localStorage.getItem("rollNumber");
+   console.log(localStorage.user.data, rollNumber);
+   
+  const {data, isLoading, isError, error} = useUserProfileQuery();
+  if(data) console.log(data);
 
   if (isError) {
+    console.log(isError);
+    
     return (
       <>
         <h1>Somting Error encountered .... </h1>
