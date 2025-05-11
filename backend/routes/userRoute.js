@@ -28,7 +28,7 @@ import { authrizeAlumni, authrizeAdmin } from "../middleware/authrizeRole.js";
 const router = Router();
 
 // creating user
-router.route("/").post(createUser).get(authentication, getUserProfile);
+router.route("/profile").post(createUser).get(authentication, getUserProfile);
 // login and logout
 router.route("/auth").post(loginUser);
 router.post("/logout", logoutUser);
