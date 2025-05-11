@@ -7,6 +7,7 @@ import mongoose from "mongoose";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import Razorpay from "razorpay";
+import cors from 'cors';
 
 // db connection
 import connectDB from "./utils/DbConnection.js";
@@ -17,6 +18,8 @@ connectDB();
 const PORT = process.env.VITE_BACKEND_PORT || 8001;
 
 const app = express();
+
+app.use(cors()); 
 
 export const instance = new Razorpay({
   key_id: process.env.VITE_RAZOR_PAY_API_ID,

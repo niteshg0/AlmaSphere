@@ -158,10 +158,15 @@ const logoutUser = async (req, res) => {
 const getUserProfile = async (req, res) => {
   const id = await req.user._id;
   if (!id) {
-    return res.status(401).json({ message: "not login..." });
+    return res.status(401).json({ message: "Not login..." });
   }
   try {
-    const user = await User.findById(id);
+    const user = await User.findById(id).populate([
+      "extraId",
+      "analyticsId",
+      "jobId",
+      "skillId",
+    ]);
     return res.status(201).json(user);
   } catch (error) {
     console.log(error);
