@@ -31,6 +31,9 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
+app.use("/", (req, res)=>{
+  return res.status(200).json("Welcome to Backend")
+})
 app.use("/api/users", router);
 // app.use("/api/academics", academicRouter);
 app.use("/api/jobDetail", jobPortalRouter);
