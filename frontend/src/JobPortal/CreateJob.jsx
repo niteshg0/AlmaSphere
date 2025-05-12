@@ -4,47 +4,57 @@ import { useNavigate, Link } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { FaHome } from "react-icons/fa";
+import {string, z} from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 const CreateJob = ({ isDarkTheme }) => {
-  const [formData, setFormData] = useState({
-    title: "",
-    description: "",
-    companyName: "",
-    requirements: "",
-    application_deadline: "",
-    applyLink: "",
-    job_type: "Full-time",
-    salary: {
-      range: "",
-      currency: "INR",
-    },
-    contact_email: "",
-    contact_phone: "",
-    status: "active",
-    location: "",
-    yearOfExperience: "fresher",
-  });
+  
+  
+  
+   const formSchema = z.object({
+    title: z.string().min(3, "Enter the Title"),
+    job_type: z.enum(["Full-time", "Part-time", "Contract", "Internship", "Freelance"]),
+
+    salary: z.object({
+      range: z.string().regex(/^\d+-\d+$/, {
+    message: "Salary range must be in format: 10000-20000",
+  }),
+      currency: z.enum(["USD","INR" , "EUR","GBP"]).default("INR"), // assuming only "INR" for now
+    }),
+
+   status: z.enum(["active", "inactive"]).default("active"),
+
+    yearOfExperience: z.enum(["fresher", "1 year", "2 year", "3 year" ,"4 year" , "5 year" , "5+ year"]),
+
+    description: z.string().min(15, "Enter the discription"),
+    companyName: z.string().min(1, "Enter Company Name"),
+    requirements: z.string().min(3, "Requirements are "),
+    applyLink: z.string().url("Enter valid Applylink"),
+    contact_email: z.string().email("Invalid Email"),
+    contact_phone: z.string().min(10, "Enter Phone No."),
+    location: z.string().min(1, "Enter Location"),
+    application_deadline: z.coerce.date(),
+
+    });
+    const {
+      register,
+      handleSubmit,
+      formState: { errors },
+    } = useForm({
+      resolver: zodResolver(formSchema),
+    });
+      console.log("Form errors:", errors);
 
   const navigate = useNavigate();
   const [createJob, { isLoading }] = useCreateJobMutation();
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    if (name === "salary.range" || name === "salary.currency") {
-      setFormData({
-        ...formData,
-        salary: {
-          ...formData.salary,
-          [name.split(".")[1]]: value,
-        },
-      });
-    } else {
-      setFormData({ ...formData, [name]: value });
-    }
-  };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+
+  const onsubmit = async (formData) => {
+
+        console.log("Form data submitted:", formData);
+    // e.preventDefault();
 
     // Convert comma-separated requirements to an array
     const formattedData = {
@@ -80,25 +90,7 @@ const CreateJob = ({ isDarkTheme }) => {
         },
       });
 
-      // Reset form
-      setFormData({
-        title: "",
-        description: "",
-        companyName: "",
-        requirements: "",
-        application_deadline: "",
-        applyLink: "",
-        job_type: "Full-time",
-        salary: {
-          range: "",
-          currency: "INR",
-        },
-        contact_email: "",
-        contact_phone: "",
-        status: "active",
-        location: "",
-        yearOfExperience: "fresher",
-      });
+ 
 
       setTimeout(() => {
         navigate("/jobs");
@@ -161,7 +153,7 @@ const CreateJob = ({ isDarkTheme }) => {
             <h1 className="text-3xl font-bold text-center text-gray-900 dark:text-white mb-8">
               Create a Job Post
             </h1>
-            <form onSubmit={handleSubmit} className="space-y-6">
+            <form onSubmit={handleSubmit(onsubmit)} className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {/* Job Title */}
                 <div>
@@ -171,12 +163,15 @@ const CreateJob = ({ isDarkTheme }) => {
                   <input
                     type="text"
                     name="title"
-                    value={formData.title}
-                    onChange={handleChange}
+                 
+                    {...register("title")}
+                   
                     placeholder="eg- Web Developer"
                     className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 focus:border-transparent transition-colors"
-                    required
                   />
+                  {errors.title && (
+     <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.title.message}</p>
+   )}
                 </div>
 
                 {/* Company Name */}
@@ -187,12 +182,15 @@ const CreateJob = ({ isDarkTheme }) => {
                   <input
                     type="text"
                     name="companyName"
-                    value={formData.companyName}
-                    onChange={handleChange}
+                    
+                    {...register("companyName")}
                     placeholder="Enter company name"
                     className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 focus:border-transparent transition-colors"
-                    required
+                    
                   />
+                   {errors.companyName && (
+     <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.companyName.message}</p>
+   )}
                 </div>
               </div>
 
@@ -203,13 +201,17 @@ const CreateJob = ({ isDarkTheme }) => {
                 </label>
                 <textarea
                   name="description"
-                  value={formData.description}
-                  onChange={handleChange}
+                  // value={formData.description}
+                  // onChange={handleChange}
+                  {...register("description")}
                   placeholder="Enter job description"
                   className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 focus:border-transparent transition-colors"
                   rows="4"
-                  required
+                  
                 />
+                 {errors.description && (
+     <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.description.message}</p>
+   )}
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -221,12 +223,17 @@ const CreateJob = ({ isDarkTheme }) => {
                   <input
                     type="text"
                     name="requirements"
-                    value={formData.requirements}
-                    onChange={handleChange}
+                  
+                    {...register("requirements")}
+                    
                     placeholder="E.g., JavaScript, Node.js, MongoDB"
                     className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 focus:border-transparent transition-colors"
-                    required
+                    
                   />
+                  {errors.requirements && (
+     <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.requirements.message}</p>
+   )}
+  
                 </div>
 
                 {/* Application Deadline */}
@@ -237,11 +244,15 @@ const CreateJob = ({ isDarkTheme }) => {
                   <input
                     type="date"
                     name="application_deadline"
-                    value={formData.application_deadline}
-                    onChange={handleChange}
+                    // value={formData.application_deadline}
+                    // onChange={handleChange}
+                    {...register("application_deadline")}
                     className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 focus:border-transparent transition-colors"
-                    required
+                    
                   />
+                   {errors.application_deadline && (
+     <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.application_deadline.message}</p>
+   )}
                 </div>
               </div>
 
@@ -254,12 +265,16 @@ const CreateJob = ({ isDarkTheme }) => {
                   <input
                     type="text"
                     name="location"
-                    value={formData.location}
-                    onChange={handleChange}
+                    // value={formData.location}
+                    // onChange={handleChange}
+                    {...register("location")}
                     placeholder="Enter job location"
                     className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 focus:border-transparent transition-colors"
-                    required
+                    
                   />
+                   {errors.location && (
+     <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.location.message}</p>
+   )}
                 </div>
 
                 {/* Job Type */}
@@ -269,11 +284,15 @@ const CreateJob = ({ isDarkTheme }) => {
                   </label>
                   <select
                     name="job_type"
-                    value={formData.job_type}
-                    onChange={handleChange}
+                    // value={formData.job_type}
+                    // onChange={handleChange}
+                    {...register("job_type")}
                     className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 focus:border-transparent transition-colors"
-                    required
+                    
                   >
+                     {errors.job_type && (
+     <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.job_type.message}</p>
+   )}
                     <option value="Full-time">Full-time</option>
                     <option value="Part-time">Part-time</option>
                     <option value="Internship">Internship</option>
@@ -291,14 +310,20 @@ const CreateJob = ({ isDarkTheme }) => {
                   <input
                     type="text"
                     name="salary.range"
-                    value={formData.salary.range}
-                    onChange={handleChange}
+                    // value={formData.salary.range}
+                    // onChange={handleChange}
+                    {
+                     ...register("salary.range")
+                    }
                     placeholder="E.g., 10000-20000"
                     className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 focus:border-transparent transition-colors"
-                    required
+                    
                   />
+                   {errors.salary?.range && (
+     <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.salary.range.message}</p>
+   )}
                   <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
-                    Format: min-max (e.g., 10000-20000)
+                    Format: min-max ( 10000-20000)
                   </p>
                 </div>
 
@@ -309,13 +334,18 @@ const CreateJob = ({ isDarkTheme }) => {
                   </label>
                   <select
                     name="salary.currency"
-                    value={formData.salary.currency}
-                    onChange={handleChange}
+                    // value={formData.salary.currency}
+                    // onChange={handleChange}
+                    {...register("salary.currency")}
                     className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 focus:border-transparent transition-colors"
-                    required
+                    
                   >
+                     {errors.salary?.currency && (
+     <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.salary.currency.message}</p>
+   )}
+   <option value="INR">INR</option>
                     <option value="USD">USD</option>
-                    <option value="INR">INR</option>
+                    
                     <option value="EUR">EUR</option>
                     <option value="GBP">GBP</option>
                   </select>
@@ -330,11 +360,15 @@ const CreateJob = ({ isDarkTheme }) => {
                   </label>
                   <select
                     name="yearOfExperience"
-                    value={formData.yearOfExperience}
-                    onChange={handleChange}
+                    // value={formData.yearOfExperience}
+                    // onChange={handleChange}
+                    {...register("yearOfExperience")}
                     className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 focus:border-transparent transition-colors"
-                    required
+                    
                   >
+                     {errors.yearOfExperience && (
+      <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.yearOfExperience.message}</p>
+    )}
                     <option value="fresher">Fresher</option>
                     <option value="1 year">1 year</option>
                     <option value="2 year">2 year</option>
@@ -353,12 +387,16 @@ const CreateJob = ({ isDarkTheme }) => {
                   <input
                     type="url"
                     name="applyLink"
-                    value={formData.applyLink}
-                    onChange={handleChange}
+                    // value={formData.applyLink}
+                    // onChange={handleChange}
+                    {...register("applyLink")}
                     placeholder="https://example.com/apply"
                     className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 focus:border-transparent transition-colors"
-                    required
+                    
                   />
+                   {errors.applyLink && (
+      <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.applyLink.message}</p>
+    )}
                 </div>
               </div>
 
@@ -371,12 +409,17 @@ const CreateJob = ({ isDarkTheme }) => {
                   <input
                     type="email"
                     name="contact_email"
-                    value={formData.contact_email}
-                    onChange={handleChange}
+                    // value={formData.contact_email}
+                    // onChange={handleChange}
+                    {...register("contact_email")}
                     placeholder="contact@example.com"
                     className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 focus:border-transparent transition-colors"
-                    required
-                  />
+                   
+                    />
+                 {errors.contact_email && (
+                    <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.contact_email.message}</p>
+                  )}
+                  
                 </div>
 
                 {/* Contact Phone */}
@@ -387,12 +430,17 @@ const CreateJob = ({ isDarkTheme }) => {
                   <input
                     type="tel"
                     name="contact_phone"
-                    value={formData.contact_phone}
-                    onChange={handleChange}
+                    // value={formData.contact_phone}
+                    // onChange={handleChange}
+                    {...register("contact_phone")}
                     placeholder="+1 (123) 456-7890"
                     className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 focus:border-transparent transition-colors"
-                    required
+                    
                   />
+                   {errors.contact_phone && (
+      <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.contact_phone.message}</p>
+    )}
+ 
                 </div>
               </div>
 
@@ -400,6 +448,9 @@ const CreateJob = ({ isDarkTheme }) => {
                 <button
                   type="submit"
                   disabled={isLoading}
+                  
+                onClick={handleSubmit(onsubmit)}
+                
                   className="px-8 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-lg shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-105 flex items-center"
                 >
                   {isLoading ? (

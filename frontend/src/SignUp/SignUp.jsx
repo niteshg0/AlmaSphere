@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import {z} from "zod";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useSignupMutation } from "../redux/Api/userApiSlice";
@@ -6,29 +7,55 @@ import { setUserInfo } from "../redux/features/authSlice";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+
+
+
+
+
 const SignUp = () => {
-  const [formData, setFormData] = useState({
-    fullName: "",
-    rollNumber: 0,
-    email: "",
-    password: "",
-    batch: "",
-    gender: "",
-  });
+
+
+
+  const formSchema = z.object({
+     fullName: z.string().min(2, "Name is required"),
+  email: z.string().email("Invalid email address"),
+  rollNumber: z.string().min(10, "Roll number is required")
+  .regex(/^\d+$/, "Roll number must contain only digits")
+    .transform((val) => Number(val)),
+  gender: z.enum(["Male", "Female", "Other"], {
+    required_error: "Gender is required",
+     invalid_type_error: "Gender not selected"
+  }),
+  batch: z.string().regex(/^\d{4}-\d{4}$/, "Batch must be in format YYYY-YYYY (e.g. 2020-2024)"),
+  password: z.string().min(6, "Password must be at least 6 characters"),
+});
+
+
+const {
+  register,
+  handleSubmit,
+  formState: { errors },
+} = useForm({
+  resolver: zodResolver(formSchema),
+});
+  console.log('Form Errors:', errors);
+  
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [createUser] = useSignupMutation();
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prevData) => ({ ...prevData, [name]: value }));
-  };
+  // const handleChange = (e) => {
+  //   const { name, value } = e.target;
+  //   setFormData((prevData) => ({ ...prevData, [name]: value }));
+  // };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (isSubmitting) return; // Prevent multiple submissions
+ const onSubmit = async (formData)=>{
+     if (isSubmitting) return; // Prevent multiple submissions
     
     setIsSubmitting(true);
     try {
@@ -61,14 +88,7 @@ const SignUp = () => {
           className: "dark:!bg-gradient-to-r dark:!from-indigo-950/90 dark:!to-indigo-900/90 dark:!text-indigo-100 dark:!border-indigo-800 dark:!shadow-[0px_4px_10px_rgba(99,102,241,0.3)]",
         });
 
-        setFormData({
-          fullName: "",
-          rollNumber: 0,
-          email: "",
-          password: "",
-          batch: "",
-          gender: "",
-        });
+        
         setTimeout(() => {
           navigate(formData.email ? `/verify/${formData.email}` : "/");
         }, 1500);
@@ -117,7 +137,7 @@ const SignUp = () => {
           <h2 className="text-3xl font-bold text-center text-indigo-900 dark:text-indigo-400 mb-8">
             Join Our Alumni Network
           </h2>
-          <form onSubmit={handleSubmit} onKeyPress={handleKeyPress} className="space-y-8">
+          <form onSubmit={handleSubmit(onsubmit)} onKeyPress={handleKeyPress} className="space-y-8">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               {/* Personal Information Section */}
               <div className="space-y-4">
@@ -132,13 +152,14 @@ const SignUp = () => {
                     <input
                       type="text"
                       id="fullName"
-                      name="fullName"
-                      value={formData.fullName}
-                      onChange={handleChange}
+                      
+                      {...register("fullName")}
                       placeholder="John Doe"
                       className="w-full px-4 py-3 bg-white/80 dark:bg-gray-800/80 border border-indigo-200 dark:border-indigo-500/20 rounded-lg text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 dark:focus:ring-indigo-500/30 transition-all duration-300"
-                      required
                     />
+                    {errors.fullName && (
+                      <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.fullName.message}</p>
+                    )}
                   </div>
                   <div>
                     <label htmlFor="gender" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
@@ -146,17 +167,21 @@ const SignUp = () => {
                     </label>
                     <select
                       id="gender"
-                      name="gender"
-                      value={formData.gender}
-                      onChange={handleChange}
+                     
+                      {...register("gender")}
+                       
+                      
                       className="w-full px-4 py-3 bg-white/80 dark:bg-gray-800/80 border border-indigo-200 dark:border-indigo-500/20 rounded-lg text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 dark:focus:ring-indigo-500/30 transition-all duration-300"
-                      required
+                   
                     >
-                      <option value="" disabled>Choose your gender</option>
+                      <option value="" >Choose your gender</option>
                       <option value="Male">Male</option>
-                      <option value="Female">Female</option>
-                      <option value="Other">Other</option>
+                       <option value="Female">Female</option>
+                       <option value="Other">Other</option>
                     </select>
+                     {errors.gender && (
+                      <p className="mt-1 text-sm text-red-600 dark:text-red-400">Gender is not selected</p>
+                    )}
                   </div>
                 </div>
               </div>
@@ -174,13 +199,15 @@ const SignUp = () => {
                     <input
                       type="text"
                       id="rollNumber"
-                      name="rollNumber"
-                      value={formData.rollNumber || ""}
-                      onChange={handleChange}
+                      
+                      {...register("rollNumber")}
                       placeholder="e.g., 2020/BCA/123"
                       className="w-full px-4 py-3 bg-white/80 dark:bg-gray-800/80 border border-indigo-200 dark:border-indigo-500/20 rounded-lg text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 dark:focus:ring-indigo-500/30 transition-all duration-300"
-                      required
+                 
                     />
+                      {errors.rollNumber && (
+                      <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.rollNumber.message}</p>
+                    )}
                   </div>
                   <div>
                     <label htmlFor="batch" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
@@ -189,13 +216,14 @@ const SignUp = () => {
                     <input
                       type="text"
                       id="batch"
-                      name="batch"
-                      value={formData.batch}
-                      onChange={handleChange}
-                      placeholder="e.g., 2020-2024"
+                 
+                      {...register("batch")}
+                      placeholder="2020-2024"
                       className="w-full px-4 py-3 bg-white/80 dark:bg-gray-800/80 border border-indigo-200 dark:border-indigo-500/20 rounded-lg text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 dark:focus:ring-indigo-500/30 transition-all duration-300"
-                      required
                     />
+                    {errors.batch && (
+                      <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.batch.message}</p>
+                    )}
                   </div>
                 </div>
               </div>
@@ -214,13 +242,15 @@ const SignUp = () => {
                   <input
                     type="email"
                     id="email"
-                    name="email"
-                    value={formData.email}
-                    onChange={handleChange}
+                   
+                    {...register("email")}
                     placeholder="john.doe@example.com"
                     className="w-full px-4 py-3 bg-white/80 dark:bg-gray-800/80 border border-indigo-200 dark:border-indigo-500/20 rounded-lg text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 dark:focus:ring-indigo-500/30 transition-all duration-300"
-                    required
+                  
                   />
+                    {errors.email && (
+                    <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.email.message}</p>
+                  )}
                 </div>
                 <div>
                   <label htmlFor="password" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
@@ -229,13 +259,15 @@ const SignUp = () => {
                   <input
                     type="password"
                     id="password"
-                    name="password"
-                    value={formData.password}
-                    onChange={handleChange}
+                   
+                    {...register("password")}
                     placeholder="At least 6 characters"
                     className="w-full px-4 py-3 bg-white/80 dark:bg-gray-800/80 border border-indigo-200 dark:border-indigo-500/20 rounded-lg text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 dark:focus:ring-indigo-500/30 transition-all duration-300"
-                    required
+                  
                   />
+                   {errors.password && (
+                    <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.password.message}</p>
+                  )}
                 </div>
               </div>
             </div>
@@ -244,10 +276,9 @@ const SignUp = () => {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                onClick={(e) => {
-                  e.preventDefault();
-                  handleSubmit(e);
-                }}
+                onClick={handleSubmit(onSubmit)}
+               
+               
                 className="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-lg shadow-md transition-all duration-300 transform hover:scale-[1.02] relative overflow-hidden group disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <span className="relative z-10">{isSubmitting ? "Creating your account..." : "Create Account"}</span>

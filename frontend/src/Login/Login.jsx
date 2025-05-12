@@ -5,18 +5,35 @@ import { useLoginMutation } from "../redux/Api/userApiSlice.js";
 import { setUserInfo } from "../redux/features/authSlice.js";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import {z} from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 const Login = () => {
-  const [rollNumber, setRollNumber] = useState("");
-  const [password, setPassword] = useState("");
+  // const [rollNumber, setRollNumber] = useState("");
+  // const [password, setPassword] = useState("");
+  const formSchema = z.object({
+    rollNumber: z.string().min(10, "Roll number is required")
+      .regex(/^\d+$/, "Roll number must contain only digits")
+        .transform((val) => Number(val)),
+        password: z.string().min(6, "Password must be at least 6 characters"),
+  });
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: zodResolver(formSchema),
+  });
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [login] = useLoginMutation();
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+   const onsubmit = async (data) => {
+    // e.preventDefault();
     try {
-      const res = await login({ rollNumber, password });
+       const { rollNumber, password } = data;
+  const res = await login({ rollNumber, password });
       console.log(res);
       if (res.error) {
         const errorMessage =
@@ -47,8 +64,7 @@ const Login = () => {
         className:
           "dark:!bgCreating your account...-gradient-to-r dark:!from-indigo-950/90 dark:!to-indigo-900/90 dark:!text-indigo-100 dark:!border-indigo-800 dark:!shadow-[0px_4px_10px_rgba(99,102,241,0.3)]",
       });
-      setRollNumber("");
-      setPassword("");
+     
     } catch (error) {
       toast("Login failed. Please try again.", {
         style: {
@@ -91,7 +107,7 @@ const Login = () => {
           <p className="text-center text-gray-600 dark:text-gray-400 mb-8">
             Access your alumni account
           </p>
-          <form onSubmit={handleSubmit} method="POST">
+          <form onSubmit={handleSubmit(onsubmit)} method="POST">
             <div className="mb-6">
               <label
                 htmlFor="rollNumber"
@@ -102,12 +118,14 @@ const Login = () => {
               <input
                 type="text"
                 id="rollNumber"
-                value={rollNumber}
-                onChange={(e) => setRollNumber(e.target.value)}
+               {...register("rollNumber")}
                 placeholder="Enter your alumni ID"
                 className="w-full px-4 py-3 bg-white/80 dark:bg-gray-800/80 border border-indigo-200 dark:border-indigo-500/20 rounded-lg text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 dark:focus:ring-indigo-500/30 transition-all duration-300"
-                required
+               
               />
+               {errors.rollNumber && (
+                      <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.rollNumber.message}</p>
+                    )}
             </div>
             <div className="mb-6">
               <label
@@ -119,15 +137,18 @@ const Login = () => {
               <input
                 type="password"
                 id="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
+              {...register("password")}
                 placeholder="Enter your password"
                 className="w-full px-4 py-3 bg-white/80 dark:bg-gray-800/80 border border-indigo-200 dark:border-indigo-500/20 rounded-lg text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 dark:focus:ring-indigo-500/30 transition-all duration-300"
-                required
+               
               />
+               {errors.password && (
+                    <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.password.message}</p>
+                  )}
             </div>
             <button
               type="submit"
+              onClick={handleSubmit(onsubmit)}
               className="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-lg shadow-md transition-all duration-300 transform hover:scale-[1.02] relative overflow-hidden group"
             >
               <span className="relative z-10">Log In</span>
