@@ -149,8 +149,9 @@ const loginUser = async (req, res) => {
 const logoutUser = async (req, res) => {
   res.clearCookie("authToken", {
     httpOnly: true, // Ensures client-side JS cannot access it
-    // secure: process.env.NODE_ENV === 'production', // Ensures it's only cleared over HTTPS in production
-    sameSite: "strict",
+    secure: true, // Always use secure cookies
+    sameSite: "none", // Allow cross-site cookie clearing
+    path: "/", // Match the cookie path when clearing
   });
   res.status(200).json({ message: "logout successfully..." });
 };

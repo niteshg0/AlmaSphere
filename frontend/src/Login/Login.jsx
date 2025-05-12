@@ -17,10 +17,13 @@ const Login = () => {
     e.preventDefault();
     try {
       const res = await login({ rollNumber, password });
-      console.log(res);
+      // Debug information
+      console.log("Login response:", res);
+
       if (res.error) {
         const errorMessage =
           res.error.data?.message || "Login failed. Please try again.";
+        console.error("Login error:", res.error);
         toast(errorMessage, {
           style: {
             background: "linear-gradient(to right, #fee2e2, #fecaca)",
@@ -35,7 +38,25 @@ const Login = () => {
         return;
       }
 
-      dispatch(setUserInfo({ ...res }));
+      // Check if data exists in the response
+      if (!res.data) {
+        console.error("Login response has no data:", res);
+        toast("Login response is missing data", {
+          style: {
+            background: "linear-gradient(to right, #fee2e2, #fecaca)",
+            color: "#991b1b",
+          },
+          icon: "❌",
+        });
+        return;
+      }
+
+      // Store user info
+      dispatch(setUserInfo({ ...res.data }));
+
+      // Check if cookies are set after login
+      console.log("Cookies after login:", document.cookie);
+
       toast("Login successful! Redirecting...", {
         style: {
           background: "linear-gradient(to right, #e0e7ff, #c7d2fe)",
@@ -45,11 +66,18 @@ const Login = () => {
         },
         icon: "✅",
         className:
-          "dark:!bgCreating your account...-gradient-to-r dark:!from-indigo-950/90 dark:!to-indigo-900/90 dark:!text-indigo-100 dark:!border-indigo-800 dark:!shadow-[0px_4px_10px_rgba(99,102,241,0.3)]",
+          "dark:!bg-gradient-to-r dark:!from-indigo-950/90 dark:!to-indigo-900/90 dark:!text-indigo-100 dark:!border-indigo-800 dark:!shadow-[0px_4px_10px_rgba(99,102,241,0.3)]",
       });
+
       setRollNumber("");
       setPassword("");
+
+      // Delay navigation to allow cookie to be set
+      setTimeout(() => {
+        navigate("/");
+      }, 1500);
     } catch (error) {
+      console.error("Login exception:", error);
       toast("Login failed. Please try again.", {
         style: {
           background: "linear-gradient(to right, #fee2e2, #fecaca)",
@@ -62,9 +90,6 @@ const Login = () => {
           "dark:!bg-gradient-to-r dark:!from-red-950/90 dark:!to-red-900/90 dark:!text-red-100 dark:!border-red-800 dark:!shadow-[0px_4px_10px_rgba(239,68,68,0.3)]",
       });
     }
-    setTimeout(() => {
-      navigate("/");
-    }, 1500);
   };
 
   return (

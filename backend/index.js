@@ -2,12 +2,12 @@ import express from "express";
 import router from "./routes/userRoute.js";
 // import academicRouter from "./routes/academicRout.js";
 import jobPortalRouter from "./routes/jobPortalRout.js";
-import queryRouter from "./routes/queryRoute.js"
+import queryRouter from "./routes/queryRoute.js";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import Razorpay from "razorpay";
-import cors from 'cors';
+import cors from "cors";
 
 // db connection
 import connectDB from "./utils/DbConnection.js";
@@ -19,7 +19,15 @@ const PORT = process.env.VITE_BACKEND_PORT || 8001;
 
 const app = express();
 
-app.use(cors()); 
+// Configure CORS with specific options
+app.use(
+  cors({
+    origin: ["https://alumni-1gbt.onrender.com", "http://localhost:5173"], // Allow your frontend domain
+    credentials: true, // Allow cookies to be sent with requests
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  })
+);
 
 export const instance = new Razorpay({
   key_id: process.env.VITE_RAZOR_PAY_API_ID,
@@ -31,13 +39,14 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-app.use("/", (req, res)=>{
-  return res.status(200).json("Welcome to Backend")
-})
 app.use("/api/users", router);
 // app.use("/api/academics", academicRouter);
 app.use("/api/jobDetail", jobPortalRouter);
 app.use("/api/donation", donationRouter);
 app.use("/api/query", queryRouter);
+
+app.use("/", (req, res) => {
+  return res.status(200).json("Welcome to Backend");
+});
 
 app.listen(PORT, () => console.log(`server started at PORT : ${PORT}...`));
