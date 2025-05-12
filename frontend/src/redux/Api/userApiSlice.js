@@ -9,6 +9,14 @@ export const userApiSlice = apiSlice.injectEndpoints({
         method: "POST",
         body: data,
       }),
+      transformResponse: (response) => {
+        console.log("Raw login response:", response);
+        return response;
+      },
+      transformErrorResponse: (response) => {
+        console.error("Login error response:", response);
+        return response;
+      },
     }),
     getProfile: builder.query({
       query: (rollNumber) => ({
@@ -41,7 +49,7 @@ export const userApiSlice = apiSlice.injectEndpoints({
         method: "POST",
         body: { code },
       }),
-    })
+    }),
   }),
 });
 

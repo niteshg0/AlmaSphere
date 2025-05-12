@@ -131,7 +131,7 @@ const loginUser = async (req, res) => {
     }
 
     // Generate token and return user data
-    generateToken(res, findUser._id);
+    const token = generateToken(res, findUser._id);
     return res.status(200).json({
       rollNumber: findUser.rollNumber,
       fullName: findUser.fullName,
@@ -139,6 +139,7 @@ const loginUser = async (req, res) => {
       role: findUser.role,
       gender: findUser.gender,
       batch: findUser.batch,
+      token: token,
     });
   } catch (error) {
     console.error("Login error:", error);
@@ -149,8 +150,9 @@ const loginUser = async (req, res) => {
 const logoutUser = async (req, res) => {
   res.clearCookie("authToken", {
     httpOnly: true, // Ensures client-side JS cannot access it
-    // secure: process.env.NODE_ENV === 'production', // Ensures it's only cleared over HTTPS in production
-    sameSite: "strict",
+    secure: true, // Always use secure cookies
+    sameSite: "none", // Allow cross-site cookie clearing
+    path: "/", // Match the cookie path when clearing
   });
   res.status(200).json({ message: "logout successfully..." });
 };

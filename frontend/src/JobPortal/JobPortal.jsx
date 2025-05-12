@@ -5,8 +5,10 @@ import { TbFilterSearch } from "react-icons/tb";
 import { FaSearch, FaPlus, FaHome } from "react-icons/fa";
 import Select from "react-select";
 import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const JobPortal = ({ isDarkTheme }) => {
+  const { user, token } = useSelector((state) => state.auth);
   const { data, isLoading, error } = useGetAllJobsQuery();
   const [value, setValue] = useState("");
   const [salary, setSalary] = useState(0);
@@ -197,7 +199,7 @@ const JobPortal = ({ isDarkTheme }) => {
       </div>
     );
 
-  if (error){   
+  if (error) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-indigo-50 to-indigo-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
         <div className="max-w-md p-8 bg-white dark:bg-gray-800 rounded-lg shadow-lg">
@@ -234,13 +236,23 @@ const JobPortal = ({ isDarkTheme }) => {
               Job Portal
             </h1>
           </div>
-          <Link
-            to="/createJob"
-            className="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg transition-colors duration-300"
-          >
-            <FaPlus size={14} />
-            <span>Post a Job</span>
-          </Link>
+          {user && token ? (
+            <Link
+              to="/createJob"
+              className="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg transition-colors duration-300"
+            >
+              <FaPlus size={14} />
+              <span>Post a Job</span>
+            </Link>
+          ) : (
+            <Link
+              to="/login"
+              className="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg transition-colors duration-300"
+            >
+              <FaPlus size={14} />
+              <span>Login to Post</span>
+            </Link>
+          )}
         </div>
 
         {/* Mobile filter toggle */}
@@ -261,7 +273,6 @@ const JobPortal = ({ isDarkTheme }) => {
               isFilterOpen ? "block" : "hidden"
             } md:block md:w-80 bg-white dark:bg-gray-800 shadow-lg rounded-xl p-6 h-fit sticky top-4 z-10`}
           >
-            
             <div className="mb-6">
               <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">
                 Search
@@ -368,8 +379,6 @@ const JobPortal = ({ isDarkTheme }) => {
                   {salary} LPA
                 </p>
               </div>
-
-              
 
               <div className="flex justify-between pt-4">
                 <button

@@ -9,9 +9,10 @@ const generateToken = (res, userId) => {
   //   add cookie in headers
   res.cookie("authToken", token, {
     httpOnly: true, // Prevents client-side JS access for security
-    secure: process.env.NODE_ENV === "production", // Use secure cookies in production
-    sameSite: "strict", // 
-    maxAge: 1 * 24 * 60 * 60 * 1000, // jwt for 1 hour
+    secure: true, // Always use secure cookies for production and development
+    sameSite: "none", // Allow cross-site cookie sending
+    path: "/", // Make cookie available on all paths
+    maxAge: 1 * 24 * 60 * 60 * 1000, // jwt for 1 day
   });
 
   return token;
