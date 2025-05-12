@@ -50,6 +50,19 @@ export const userApiSlice = apiSlice.injectEndpoints({
         body: { code },
       }),
     }),
+    verify_roll: builder.mutation({
+      query: ({ rollNumber }) => ({
+        url: `${USERS_URL}/verify/${rollNumber}`,
+        method: "POST"
+      }),
+    }),
+    verify_Roll_Code: builder.mutation({
+      query: ({ rollNumber, code }) => ({
+        url: `${USERS_URL}/verify/${rollNumber}`,
+        method: "POST",
+        body: { code },
+      }),
+    }),
   }),
 });
 
@@ -60,4 +73,6 @@ export const {
   useVerifyMutation,
   useGetProfileQuery,
   useUserProfileQuery,
+  useVerify_rollMutation,
+  useVerify_Roll_CodeMutation,
 } = userApiSlice;

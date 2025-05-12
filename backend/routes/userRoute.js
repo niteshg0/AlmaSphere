@@ -13,7 +13,9 @@ import {
   updateJobInfo,
   addUserSkills,
   updateUserSkills,
-  verifyCode
+  verifyCode,
+  verify_roll,
+  verify_Roll_Code
 } from "../controller/userController.js";
 
 // admin controllers
@@ -28,7 +30,10 @@ import { authrizeAlumni, authrizeAdmin } from "../middleware/authrizeRole.js";
 const router = Router();
 
 // creating user
-router.route("/profile").post(createUser).get(authentication, getUserProfile);
+router.route("/").post(createUser)
+router.post("/verify/:rollNumber", verify_roll)
+router.post("/verify/:rollNumber/code", verify_Roll_Code)
+router.route("/profile").get(authentication, getUserProfile);
 // login and logout
 router.route("/auth").post(loginUser);
 router.post("/logout", logoutUser);
