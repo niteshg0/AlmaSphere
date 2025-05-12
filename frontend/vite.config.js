@@ -15,7 +15,7 @@ export default defineConfig(({ mode }) => {
         // "/api/":`http://localhost:8000`,
 
         "/api/": {
-          target: "https://alumni-backend-8eqk.onrender.com",
+          target: env.VITE_BACKEND_URL,
           changeOrigin: true,
           secure: true,
           cookieDomainRewrite: {

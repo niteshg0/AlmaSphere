@@ -22,7 +22,7 @@ const app = express();
 // Configure CORS with specific options
 app.use(
   cors({
-    origin: ["https://alumni-1gbt.onrender.com", "http://localhost:5173"], // Allow your frontend domain
+    origin: [process.env.VITE_BACKEND_URL, `http://localhost:${process.env.VITE_PORT}`], // Allow your frontend domain
     credentials: true, // Allow cookies to be sent with requests
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],

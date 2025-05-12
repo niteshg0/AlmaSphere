@@ -18,12 +18,12 @@ const Login = () => {
     try {
       const res = await login({ rollNumber, password });
       // Debug information
-      console.log("Login response:", res);
+      // console.log("Login response:", res);
 
       if (res.error) {
         const errorMessage =
           res.error.data?.message || "Login failed. Please try again.";
-        console.error("Login error:", res.error);
+        // console.error("Login error:", res.error);
         toast(errorMessage, {
           style: {
             background: "linear-gradient(to right, #fee2e2, #fecaca)",
@@ -61,7 +61,7 @@ const Login = () => {
       }
 
       // Check if cookies are set after login
-      console.log("Cookies after login:", document.cookie);
+      // console.log("Cookies after login:", document.cookie);
 
       toast("Login successful! Redirecting...", {
         style: {
