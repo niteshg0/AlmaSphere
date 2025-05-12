@@ -16,8 +16,12 @@ import {
   FaEdit,
   FaPlus,
   FaTimes,
+  FaLock,
 } from "react-icons/fa";
-import { useUserProfileQuery, useLogoutMutation } from "../redux/Api/userApiSlice";
+import {
+  useUserProfileQuery,
+  useLogoutMutation,
+} from "../redux/Api/userApiSlice";
 import { useParams } from "react-router";
 import ToastComp from "../components/ToastComp.jsx";
 
@@ -25,10 +29,9 @@ import { useNavigate, Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../redux/features/authSlice.js";
 
-const Profile= () => {
-
-  
-  const {data, isLoading, error} = useUserProfileQuery();
+const Profile = () => {
+  const { user, token } = useSelector((state) => state.auth);
+  const { data, isLoading, error } = useUserProfileQuery();
   const [userData, setUserData] = useState(null);
   const [formData, setFormData] = useState({});
 
@@ -36,8 +39,8 @@ const Profile= () => {
   const navigate = useNavigate();
 
   const [logoutApiCall] = useLogoutMutation();
-  const [toast, setToast] = useState(null)
-  
+  const [toast, setToast] = useState(null);
+
   const [loading, setLoading] = useState(true);
   const [activeModal, setActiveModal] = useState(null);
 
@@ -59,21 +62,20 @@ const Profile= () => {
     setLoading(false);
   }, [data]);
 
-
   const logoutHandler = async () => {
     try {
       await logoutApiCall().unwrap();
       dispatch(logout());
-      setToast({type : 'success',message:"Logout successful..."})   
+      setToast({ type: "success", message: "Logout successful..." });
 
       setTimeout(() => {
         navigate("/");
-        setUserData(null)
+        setUserData(null);
       }, 2000);
     } catch (error) {
       console.log(error?.data?.message || error?.message);
 
-      setToast({type: 'error',message:"Unable to logout..."})
+      setToast({ type: "error", message: "Unable to logout..." });
     }
   };
 
@@ -109,6 +111,38 @@ const Profile= () => {
     }));
   };
 
+  // Guest view for when user is not logged in
+  if (!user || !token) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-indigo-50 to-indigo-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
+        <div className="max-w-md p-8 bg-white dark:bg-gray-800 rounded-lg shadow-lg text-center">
+          <FaLock className="mx-auto h-16 w-16 text-indigo-500 mb-6" />
+          <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-4">
+            Profile Access
+          </h2>
+          <p className="text-gray-600 dark:text-gray-300 mb-8">
+            To view and manage your personal profile, please log in or create an
+            account.
+          </p>
+          <div className="flex flex-col sm:flex-row justify-center gap-4">
+            <Link
+              to="/login"
+              className="px-6 py-3 rounded-lg font-medium transition-all duration-300 transform hover:scale-105 bg-indigo-600 hover:bg-indigo-700 text-white"
+            >
+              Log In
+            </Link>
+            <Link
+              to="/signup"
+              className="px-6 py-3 rounded-lg font-medium transition-all duration-300 transform hover:scale-105 bg-white hover:bg-gray-50 text-indigo-900 border border-indigo-200 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-gray-200 dark:border-gray-600"
+            >
+              Sign Up
+            </Link>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   if (error) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-indigo-50 to-indigo-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
@@ -117,7 +151,8 @@ const Profile= () => {
             Error
           </h2>
           <p className="text-gray-700 dark:text-gray-300 mb-6">
-            {error.data.message || "An error occurred while loading the profile."}
+            {error.data.message ||
+              "An error occurred while loading the profile."}
           </p>
           <button
             onClick={() => navigate(-1)}
@@ -142,7 +177,8 @@ const Profile= () => {
               {activeModal === MODAL_TYPES.JOB && "Add/Edit Job"}
               {activeModal === MODAL_TYPES.SKILLS && "Edit Skills"}
               {activeModal === MODAL_TYPES.ACHIEVEMENT && "Add Achievement"}
-              {activeModal === MODAL_TYPES.EXTRACURRICULAR && "Add Extracurricular"}
+              {activeModal === MODAL_TYPES.EXTRACURRICULAR &&
+                "Add Extracurricular"}
               {activeModal === MODAL_TYPES.ANALYTICS && "Update Analytics"}
             </h3>
             <button
@@ -204,7 +240,9 @@ const Profile= () => {
                   <input
                     type="text"
                     name="companyName"
-                    value={formData.companyName || userData?.jobId?.companyName || ""}
+                    value={
+                      formData.companyName || userData?.jobId?.companyName || ""
+                    }
                     onChange={handleInputChange}
                     className="mt-1 p-2 block w-full rounded-md border border-gray-300 dark:border-gray-600 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-gray-200 transition-all"
                   />
@@ -257,7 +295,9 @@ const Profile= () => {
                   <textarea
                     name="technicalSkill"
                     value={
-                      formData.technicalSkill || userData?.skillId?.technicalSkill || ""
+                      formData.technicalSkill ||
+                      userData?.skillId?.technicalSkill ||
+                      ""
                     }
                     onChange={handleInputChange}
                     rows="3"
@@ -271,7 +311,9 @@ const Profile= () => {
                   <textarea
                     name="nonTechnicalSkill"
                     value={
-                      formData.nonTechnicalSkill || userData?.skillId?.nonTechnicalSkill || ""
+                      formData.nonTechnicalSkill ||
+                      userData?.skillId?.nonTechnicalSkill ||
+                      ""
                     }
                     onChange={handleInputChange}
                     rows="3"
@@ -402,7 +444,7 @@ const Profile= () => {
     );
   }
 
-  // Process skills into arrays for better display 
+  // Process skills into arrays for better display
   const technicalSkills = userData.skillId?.technicalSkill || [];
   const nonTechnicalSkills = userData.skillId?.nonTechnicalSkill || [];
 
@@ -478,15 +520,13 @@ const Profile= () => {
                     <FaFileAlt className="mr-2" />
                     Resume
                   </button>
-                  <button 
-                      onClick={logoutHandler}
-                      className="px-4 py-2 rounded-lg bg-gradient-to-r from-red-600 to-pink-600 hover:from-red-700 hover:to-pink-700 text-white shadow-sm transition-colors flex items-center"
-                    >
-                      Logout
-                </button>
+                  <button
+                    onClick={logoutHandler}
+                    className="px-4 py-2 rounded-lg bg-gradient-to-r from-red-600 to-pink-600 hover:from-red-700 hover:to-pink-700 text-white shadow-sm transition-colors flex items-center"
+                  >
+                    Logout
+                  </button>
                 </div>
-
-                
               </div>
 
               {/* Right Side - Profile Image and Connection */}
@@ -578,7 +618,9 @@ const Profile= () => {
                   Current Position
                 </h3>
                 <div className="p-4 rounded-lg bg-white dark:bg-gray-700 shadow-sm border border-gray-100 dark:border-gray-600">
-                  <p className="font-medium">{userData.jobId?.position || "Not specified"}</p>
+                  <p className="font-medium">
+                    {userData.jobId?.position || "Not specified"}
+                  </p>
                   <p>{userData.jobId?.companyName || "Not specified"}</p>
                   <p className="flex items-center text-sm text-gray-600 dark:text-gray-400">
                     <FaMapMarkerAlt className="mr-1" size={12} />
@@ -610,7 +652,9 @@ const Profile= () => {
                       </div>
                     ))
                   ) : (
-                    <p className="text-gray-500 dark:text-gray-400">No previous jobs listed</p>
+                    <p className="text-gray-500 dark:text-gray-400">
+                      No previous jobs listed
+                    </p>
                   )}
                 </div>
               </div>
@@ -659,7 +703,9 @@ const Profile= () => {
                         </div>
                       ))
                     ) : (
-                      <p className="text-gray-500 dark:text-gray-400">No technical skills listed</p>
+                      <p className="text-gray-500 dark:text-gray-400">
+                        No technical skills listed
+                      </p>
                     )}
                   </div>
                 </div>
@@ -685,7 +731,9 @@ const Profile= () => {
                         </div>
                       ))
                     ) : (
-                      <p className="text-gray-500 dark:text-gray-400">No non-technical skills listed</p>
+                      <p className="text-gray-500 dark:text-gray-400">
+                        No non-technical skills listed
+                      </p>
                     )}
                   </div>
                 </div>
@@ -735,7 +783,9 @@ const Profile= () => {
                   ))
                 ) : (
                   <div className="p-3 rounded-lg bg-white dark:bg-gray-700 shadow-sm border border-gray-100 dark:border-gray-600 text-center">
-                    <p className="text-gray-500 dark:text-gray-400">No achievements listed</p>
+                    <p className="text-gray-500 dark:text-gray-400">
+                      No achievements listed
+                    </p>
                   </div>
                 )}
               </div>
@@ -751,7 +801,6 @@ const Profile= () => {
                   Extracurricular
                 </h2>
                 <div className="flex gap-2">
-                  
                   <button
                     onClick={() => handleOpenModal(MODAL_TYPES.EXTRACURRICULAR)}
                     className="p-2 rounded-lg bg-white dark:bg-gray-700 text-indigo-600 dark:text-indigo-400 shadow-sm border border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors"
@@ -785,7 +834,9 @@ const Profile= () => {
                   ))
                 ) : (
                   <div className="p-3 rounded-lg bg-white dark:bg-gray-700 shadow-sm border border-gray-100 dark:border-gray-600 text-center">
-                    <p className="text-gray-500 dark:text-gray-400">No extracurricular activities listed</p>
+                    <p className="text-gray-500 dark:text-gray-400">
+                      No extracurricular activities listed
+                    </p>
                   </div>
                 )}
               </div>
@@ -801,7 +852,6 @@ const Profile= () => {
                 <FaChartLine className="mr-2" />
                 Analytics
               </h2>
-              
             </div>
             <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
               <div className="p-4 rounded-lg bg-gradient-to-br from-green-50 to-blue-50 dark:from-green-900/20 dark:to-blue-900/20 shadow-sm border border-green-100 dark:border-green-800/50 text-center">
@@ -853,8 +903,7 @@ const Profile= () => {
         </div>
       </div>
 
-       {toast && <ToastComp toastType={toast.type} message={toast.message}/>}
-
+      {toast && <ToastComp toastType={toast.type} message={toast.message} />}
     </div>
   );
 };

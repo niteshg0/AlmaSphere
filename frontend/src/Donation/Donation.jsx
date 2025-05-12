@@ -12,13 +12,15 @@ import {
   FaUniversity,
   FaGraduationCap,
   FaUsers,
+  FaLock,
+  FaInfo,
 } from "react-icons/fa";
 
 const Donation = ({ isDarkTheme }) => {
-  const { user } = useSelector((state) => state.auth);
+  const { user, token } = useSelector((state) => state.auth);
   const PORT = import.meta.env.VITE_BACKEND_PORT;
   const [activeTab, setActiveTab] = useState("donate");
-  const navigate= useNavigate();
+  const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
     rollNumber: user?.data?.rollNumber || "",
@@ -164,7 +166,7 @@ const Donation = ({ isDarkTheme }) => {
             Error Loading Job
           </h2>
           <p className="text-gray-700 dark:text-gray-300 mb-6">
-            {error.data.message||
+            {error.data.message ||
               "Failed to load job details. Please try again later."}
           </p>
           <button
@@ -254,372 +256,282 @@ const Donation = ({ isDarkTheme }) => {
                   : "text-gray-600 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400"
               }`}
             >
-              Your Impact
+              Our Impact
             </button>
           </div>
         </div>
 
-        {/* Main content */}
-        {activeTab === "donate" ? (
-          <div className="flex flex-col lg:flex-row gap-8">
-            {/* Left side - Donation form */}
-            <div className="flex-1">
-              <div className="relative overflow-hidden rounded-2xl bg-white/90 dark:bg-gray-800/90 shadow-xl">
-                {/* Background decorative elements */}
-                <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                  <div className="absolute -top-40 -right-40 w-80 h-80 rounded-full bg-indigo-200/30 dark:bg-indigo-500/10 blur-3xl" />
-                  <div className="absolute -bottom-40 -left-40 w-80 h-80 rounded-full bg-purple-200/30 dark:bg-purple-500/10 blur-3xl" />
-                </div>
+        {/* Content */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+          {/* Main Content */}
+          <div
+            className={`lg:col-span-7 ${
+              activeTab === "donate" ? "block" : "hidden"
+            }`}
+          >
+            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden">
+              <div className="p-6 sm:p-8">
+                <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
+                  Make Your Donation
+                </h2>
 
-                {/* Content */}
-                <div className="relative z-10 p-8">
-                  <div className="flex items-center mb-6">
-                    <div className="p-3 rounded-xl bg-indigo-100 dark:bg-indigo-900/30 mr-4">
-                      <FaHandHoldingHeart className="text-indigo-600 dark:text-indigo-400 text-xl" />
-                    </div>
-                    <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
-                      Make a Donation
-                    </h2>
-                  </div>
-
-                  <form onSubmit={handleSubmit} className="space-y-6">
-                    {/* Donation Purpose */}
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                        Select Purpose (Optional)
-                      </label>
-                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                        {donationPurposes.map((purpose) => (
-                          <button
-                            type="button"
-                            key={purpose.id}
-                            onClick={() =>
-                              setFormData({ ...formData, purpose: purpose.id })
-                            }
-                            className={`flex flex-col items-center p-4 rounded-lg transition-colors ${
-                              formData.purpose === purpose.id
-                                ? "bg-indigo-50 dark:bg-indigo-900/30 border-2 border-indigo-500 dark:border-indigo-400"
-                                : "bg-gray-50 dark:bg-gray-700/50 border-2 border-transparent hover:border-gray-200 dark:hover:border-gray-600"
-                            }`}
+                {!user || !token ? (
+                  <div className="bg-indigo-50 dark:bg-indigo-900/30 border border-indigo-100 dark:border-indigo-800/50 rounded-xl p-6 mb-6">
+                    <div className="flex items-start">
+                      <div className="shrink-0 p-2 rounded-full bg-indigo-100 dark:bg-indigo-800/50">
+                        <FaInfo className="h-5 w-5 text-indigo-600 dark:text-indigo-400" />
+                      </div>
+                      <div className="ml-4">
+                        <h3 className="text-lg font-medium text-indigo-800 dark:text-indigo-300 mb-2">
+                          Login Required for Donations
+                        </h3>
+                        <p className="text-indigo-700 dark:text-indigo-400 mb-4">
+                          To make a donation, you'll need to log in or create an
+                          account. This helps us track your contributions and
+                          provide you with receipts.
+                        </p>
+                        <div className="flex flex-col xs:flex-row gap-3">
+                          <Link
+                            to="/login"
+                            className="px-4 py-2 rounded-lg text-center font-medium bg-indigo-600 hover:bg-indigo-700 text-white transition-colors"
                           >
-                            <div className="p-2 rounded-full bg-indigo-100 dark:bg-indigo-900/50 mb-2">
-                              {purpose.icon}
-                            </div>
-                            <span className="font-medium text-gray-900 dark:text-white">
-                              {purpose.title}
-                            </span>
-                          </button>
-                        ))}
+                            Log In
+                          </Link>
+                          <Link
+                            to="/signup"
+                            className="px-4 py-2 rounded-lg text-center font-medium bg-white hover:bg-gray-50 text-indigo-700 border border-indigo-200 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-indigo-400 dark:border-indigo-800/50 transition-colors"
+                          >
+                            Sign Up
+                          </Link>
+                        </div>
                       </div>
                     </div>
+                  </div>
+                ) : null}
 
-                    {/* Donation Amount */}
+                <form onSubmit={handleSubmit}>
+                  <div className="space-y-6">
+                    {/* Predefined Amounts */}
                     <div>
                       <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                         Select Amount
                       </label>
-                      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-4">
-                        {predefinedAmounts.map((amt) => (
+                      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                        {predefinedAmounts.map((amount) => (
                           <button
+                            key={amount}
                             type="button"
-                            key={amt}
-                            onClick={() => handleAmountClick(amt)}
-                            className={`px-4 py-3 rounded-lg font-medium transition-colors ${
-                              formData.amount === amt
-                                ? "bg-indigo-600 text-white"
-                                : "bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 hover:bg-indigo-100 dark:hover:bg-gray-600"
+                            className={`py-3 px-4 rounded-lg border transition-all ${
+                              formData.amount === amount
+                                ? "bg-indigo-50 dark:bg-indigo-900/30 border-indigo-300 dark:border-indigo-700 text-indigo-700 dark:text-indigo-400 font-medium"
+                                : "border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:border-indigo-300 dark:hover:border-indigo-700"
                             }`}
+                            onClick={() => handleAmountClick(amount)}
+                            disabled={!user || !token}
                           >
-                            ₹{amt.toLocaleString()}
+                            ₹{amount}
                           </button>
                         ))}
                       </div>
+                    </div>
+
+                    {/* Custom Amount */}
+                    <div>
+                      <label
+                        htmlFor="amount"
+                        className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                      >
+                        Or Enter Custom Amount
+                      </label>
                       <div className="relative">
-                        <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-500 dark:text-gray-400">
-                          ₹
-                        </span>
+                        <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                          <span className="text-gray-500 dark:text-gray-400">
+                            ₹
+                          </span>
+                        </div>
                         <input
                           type="number"
-                          placeholder="Enter custom amount"
+                          id="amount"
+                          name="amount"
                           value={formData.amount}
-                          onChange={(e) =>
-                            setFormData({ ...formData, amount: e.target.value })
-                          }
+                          onChange={handleChange}
+                          placeholder="Enter amount"
                           className="w-full pl-8 pr-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 focus:border-transparent transition-colors"
+                          disabled={!user || !token}
                         />
                       </div>
                     </div>
 
                     {/* Donation Type */}
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                      <label
+                        htmlFor="donationType"
+                        className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                      >
                         Donation Type
                       </label>
-                      <div className="flex gap-4">
-                        {["One-Time", "Recurring"].map((type) => (
-                          <button
-                            type="button"
-                            key={type}
-                            onClick={() =>
-                              setFormData({ ...formData, donationType: type })
-                            }
-                            className={`flex-1 px-4 py-3 rounded-lg font-medium transition-colors ${
-                              formData.donationType === type
-                                ? "bg-indigo-600 text-white"
-                                : "bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 hover:bg-indigo-100 dark:hover:bg-gray-600"
-                            }`}
-                          >
-                            {type}
-                          </button>
-                        ))}
-                      </div>
+                      <select
+                        id="donationType"
+                        name="donationType"
+                        value={formData.donationType}
+                        onChange={handleChange}
+                        className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 focus:border-transparent transition-colors"
+                        disabled={!user || !token}
+                      >
+                        <option value="One-Time">One-Time</option>
+                        <option value="Monthly">Monthly</option>
+                        <option value="Annual">Annual</option>
+                      </select>
                     </div>
 
                     {/* Message */}
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                      <label
+                        htmlFor="message"
+                        className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                      >
                         Message (Optional)
                       </label>
                       <textarea
+                        id="message"
                         name="message"
-                        placeholder="Share why you're donating or any specific area you'd like your donation to support..."
                         value={formData.message}
                         onChange={handleChange}
-                        rows="4"
+                        placeholder="Add a personal message with your donation..."
+                        rows="3"
                         className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 focus:border-transparent transition-colors"
+                        disabled={!user || !token}
                       ></textarea>
                     </div>
 
                     {/* Submit Button */}
-                    <button
-                      type="submit"
-                      disabled={isLoading}
-                      className="w-full flex items-center justify-center bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-lg transition-colors duration-300 font-medium shadow-md hover:shadow-lg"
-                    >
-                      {isLoading ? (
-                        <>
-                          <svg
-                            className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                          >
-                            <circle
-                              className="opacity-25"
-                              cx="12"
-                              cy="12"
-                              r="10"
-                              stroke="currentColor"
-                              strokeWidth="4"
-                            ></circle>
-                            <path
-                              className="opacity-75"
-                              fill="currentColor"
-                              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                            ></path>
-                          </svg>
-                          Processing...
-                        </>
-                      ) : (
-                        <>
-                          <FaRegCreditCard className="mr-2" />
-                          Donate{" "}
-                          {formData.amount ? `₹${formData.amount}` : "Now"}
-                        </>
-                      )}
-                    </button>
-                  </form>
-                </div>
-              </div>
-            </div>
-
-            {/* Right side - Testimonials */}
-            <div className="lg:w-96">
-              <div className="bg-white/90 dark:bg-gray-800/90 rounded-2xl shadow-xl overflow-hidden">
-                <div className="p-8">
-                  <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-6 flex items-center">
-                    <FaHeart className="text-red-500 mr-2" />
-                    Donor Testimonials
-                  </h3>
-
-                  <div className="space-y-6">
-                    <div className="bg-indigo-50 dark:bg-indigo-900/20 rounded-xl p-4">
-                      <p className="text-gray-700 dark:text-gray-300 italic mb-3">
-                        "My donation helped fund a scholarship for a deserving
-                        student. It's incredibly rewarding to know I'm making a
-                        difference in someone's education journey."
-                      </p>
-                      <div className="flex items-center">
-                        <div className="w-8 h-8 rounded-full bg-indigo-200 dark:bg-indigo-700 flex items-center justify-center font-bold text-indigo-600 dark:text-indigo-300">
-                          R
-                        </div>
-                        <div className="ml-2">
-                          <p className="font-medium text-gray-900 dark:text-white">
-                            Rahul M.
-                          </p>
-                          <p className="text-xs text-gray-500 dark:text-gray-400">
-                            Class of 2015
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="bg-purple-50 dark:bg-purple-900/20 rounded-xl p-4">
-                      <p className="text-gray-700 dark:text-gray-300 italic mb-3">
-                        "The alumni network has given me so much. Donating
-                        annually is my way of giving back and ensuring future
-                        graduates have the same opportunities."
-                      </p>
-                      <div className="flex items-center">
-                        <div className="w-8 h-8 rounded-full bg-purple-200 dark:bg-purple-700 flex items-center justify-center font-bold text-purple-600 dark:text-purple-300">
-                          P
-                        </div>
-                        <div className="ml-2">
-                          <p className="font-medium text-gray-900 dark:text-white">
-                            Priya S.
-                          </p>
-                          <p className="text-xs text-gray-500 dark:text-gray-400">
-                            Class of 2010
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="bg-blue-50 dark:bg-blue-900/20 rounded-xl p-4">
-                      <p className="text-gray-700 dark:text-gray-300 italic mb-3">
-                        "Supporting campus development projects has been a
-                        meaningful way to leave a lasting legacy at my alma
-                        mater."
-                      </p>
-                      <div className="flex items-center">
-                        <div className="w-8 h-8 rounded-full bg-blue-200 dark:bg-blue-700 flex items-center justify-center font-bold text-blue-600 dark:text-blue-300">
-                          A
-                        </div>
-                        <div className="ml-2">
-                          <p className="font-medium text-gray-900 dark:text-white">
-                            Amit K.
-                          </p>
-                          <p className="text-xs text-gray-500 dark:text-gray-400">
-                            Class of 2008
-                          </p>
-                        </div>
-                      </div>
+                    <div>
+                      <button
+                        type="submit"
+                        className={`w-full py-3 px-6 rounded-lg font-medium flex items-center justify-center transition-colors ${
+                          user && token
+                            ? "bg-indigo-600 hover:bg-indigo-700 text-white"
+                            : "bg-gray-400 dark:bg-gray-600 cursor-not-allowed text-white"
+                        }`}
+                        disabled={!user || !token || isLoading}
+                      >
+                        {isLoading ? (
+                          <>
+                            <svg
+                              className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                            >
+                              <circle
+                                className="opacity-25"
+                                cx="12"
+                                cy="12"
+                                r="10"
+                                stroke="currentColor"
+                                strokeWidth="4"
+                              ></circle>
+                              <path
+                                className="opacity-75"
+                                fill="currentColor"
+                                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                              ></path>
+                            </svg>
+                            Processing...
+                          </>
+                        ) : (
+                          <>
+                            <FaRegCreditCard className="mr-2" />
+                            {user && token
+                              ? "Proceed to Payment"
+                              : "Login to Donate"}
+                          </>
+                        )}
+                      </button>
                     </div>
                   </div>
-                </div>
+                </form>
               </div>
             </div>
           </div>
-        ) : (
-          <div className="bg-white/90 dark:bg-gray-800/90 rounded-2xl shadow-xl overflow-hidden">
-            <div className="p-8">
-              <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
-                Your Donation Makes a Difference
-              </h2>
 
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                {donationPurposes.map((purpose) => (
-                  <div
-                    key={purpose.id}
-                    className="bg-gray-50 dark:bg-gray-700/50 rounded-xl p-6"
-                  >
-                    <div className="p-3 rounded-xl bg-indigo-100 dark:bg-indigo-900/30 inline-block mb-4">
-                      {purpose.icon}
-                    </div>
-                    <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
-                      {purpose.title}
-                    </h3>
-                    <p className="text-gray-600 dark:text-gray-300">
-                      {purpose.description}
-                    </p>
-
-                    <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-600">
-                      <div className="flex justify-between items-center mb-2">
-                        <span className="text-sm text-gray-500 dark:text-gray-400">
-                          Progress
-                        </span>
-                        <span className="text-sm font-medium text-indigo-600 dark:text-indigo-400">
-                          {purpose.id === "scholarships"
-                            ? "68%"
-                            : purpose.id === "events"
-                            ? "45%"
-                            : "32%"}
-                        </span>
-                      </div>
-                      <div className="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2">
-                        <div
-                          className="bg-indigo-600 dark:bg-indigo-500 h-2 rounded-full"
-                          style={{
-                            width:
-                              purpose.id === "scholarships"
-                                ? "68%"
-                                : purpose.id === "events"
-                                ? "45%"
-                                : "32%",
-                          }}
-                        ></div>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              <div className="mt-8 bg-indigo-50 dark:bg-indigo-900/20 rounded-xl p-6">
-                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4">
-                  Recent Achievements
+          {/* Right side - Testimonials */}
+          <div className="lg:col-span-5">
+            <div className="bg-white/90 dark:bg-gray-800/90 rounded-2xl shadow-xl overflow-hidden">
+              <div className="p-8">
+                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-6 flex items-center">
+                  <FaHeart className="text-red-500 mr-2" />
+                  Donor Testimonials
                 </h3>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 text-center">
-                  <div className="bg-white dark:bg-gray-700 rounded-lg p-4">
-                    <div className="text-3xl font-bold text-indigo-600 dark:text-indigo-400 mb-1">
-                      {donationStats.scholarships}
-                    </div>
-                    <div className="text-gray-600 dark:text-gray-300">
-                      Scholarships Awarded
-                    </div>
-                  </div>
-
-                  <div className="bg-white dark:bg-gray-700 rounded-lg p-4">
-                    <div className="text-3xl font-bold text-indigo-600 dark:text-indigo-400 mb-1">
-                      {donationStats.events}
-                    </div>
-                    <div className="text-gray-600 dark:text-gray-300">
-                      Events Organized
-                    </div>
-                  </div>
-
-                  <div className="bg-white dark:bg-gray-700 rounded-lg p-4">
-                    <div className="text-3xl font-bold text-indigo-600 dark:text-indigo-400 mb-1">
-                      3
-                    </div>
-                    <div className="text-gray-600 dark:text-gray-300">
-                      Labs Renovated
+                <div className="space-y-6">
+                  <div className="bg-indigo-50 dark:bg-indigo-900/20 rounded-xl p-4">
+                    <p className="text-gray-700 dark:text-gray-300 italic mb-3">
+                      "My donation helped fund a scholarship for a deserving
+                      student. It's incredibly rewarding to know I'm making a
+                      difference in someone's education journey."
+                    </p>
+                    <div className="flex items-center">
+                      <div className="w-8 h-8 rounded-full bg-indigo-200 dark:bg-indigo-700 flex items-center justify-center font-bold text-indigo-600 dark:text-indigo-300">
+                        R
+                      </div>
+                      <div className="ml-2">
+                        <p className="font-medium text-gray-900 dark:text-white">
+                          Rahul M.
+                        </p>
+                        <p className="text-xs text-gray-500 dark:text-gray-400">
+                          Class of 2015
+                        </p>
+                      </div>
                     </div>
                   </div>
 
-                  <div className="bg-white dark:bg-gray-700 rounded-lg p-4">
-                    <div className="text-3xl font-bold text-indigo-600 dark:text-indigo-400 mb-1">
-                      12
-                    </div>
-                    <div className="text-gray-600 dark:text-gray-300">
-                      Research Grants
+                  <div className="bg-purple-50 dark:bg-purple-900/20 rounded-xl p-4">
+                    <p className="text-gray-700 dark:text-gray-300 italic mb-3">
+                      "The alumni network has given me so much. Donating
+                      annually is my way of giving back and ensuring future
+                      graduates have the same opportunities."
+                    </p>
+                    <div className="flex items-center">
+                      <div className="w-8 h-8 rounded-full bg-purple-200 dark:bg-purple-700 flex items-center justify-center font-bold text-purple-600 dark:text-purple-300">
+                        P
+                      </div>
+                      <div className="ml-2">
+                        <p className="font-medium text-gray-900 dark:text-white">
+                          Priya S.
+                        </p>
+                        <p className="text-xs text-gray-500 dark:text-gray-400">
+                          Class of 2010
+                        </p>
+                      </div>
                     </div>
                   </div>
-                </div>
 
-                <div className="mt-6 text-center">
-                  <button
-                    onClick={() => setActiveTab("donate")}
-                    className="inline-flex items-center justify-center bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-lg transition-colors duration-300 font-medium shadow-md hover:shadow-lg"
-                  >
-                    <FaHandHoldingHeart className="mr-2" />
-                    Contribute Now
-                  </button>
+                  <div className="bg-blue-50 dark:bg-blue-900/20 rounded-xl p-4">
+                    <p className="text-gray-700 dark:text-gray-300 italic mb-3">
+                      "Supporting campus development projects has been a
+                      meaningful way to leave a lasting legacy at my alma
+                      mater."
+                    </p>
+                    <div className="flex items-center">
+                      <div className="w-8 h-8 rounded-full bg-blue-200 dark:bg-blue-700 flex items-center justify-center font-bold text-blue-600 dark:text-blue-300">
+                        A
+                      </div>
+                      <div className="ml-2">
+                        <p className="font-medium text-gray-900 dark:text-white">
+                          Amit K.
+                        </p>
+                        <p className="text-xs text-gray-500 dark:text-gray-400">
+                          Class of 2008
+                        </p>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        )}
+        </div>
       </div>
       <ToastContainer
         position="bottom-right"

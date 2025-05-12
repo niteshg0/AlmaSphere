@@ -3,9 +3,11 @@ import { useCreateJobMutation } from "../redux/Api/jobDetailApiSlice.js";
 import { useNavigate, Link } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { FaHome } from "react-icons/fa";
+import { FaHome, FaLock } from "react-icons/fa";
+import { useSelector } from "react-redux";
 
 const CreateJob = ({ isDarkTheme }) => {
+  const { user, token } = useSelector((state) => state.auth);
   const [formData, setFormData] = useState({
     title: "",
     description: "",
@@ -114,6 +116,45 @@ const CreateJob = ({ isDarkTheme }) => {
       });
     }
   };
+
+  // Guest view for when user is not logged in
+  if (!user || !token) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-indigo-50 to-indigo-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
+        <div className="max-w-md p-8 bg-white dark:bg-gray-800 rounded-lg shadow-lg text-center">
+          <FaLock className="mx-auto h-16 w-16 text-indigo-500 mb-6" />
+          <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-4">
+            Login Required
+          </h2>
+          <p className="text-gray-600 dark:text-gray-300 mb-8">
+            To post a job, you need to log in or create an account first.
+          </p>
+          <div className="flex flex-col sm:flex-row justify-center gap-4">
+            <Link
+              to="/login"
+              className="px-6 py-3 rounded-lg font-medium transition-all duration-300 transform hover:scale-105 bg-indigo-600 hover:bg-indigo-700 text-white"
+            >
+              Log In
+            </Link>
+            <Link
+              to="/signup"
+              className="px-6 py-3 rounded-lg font-medium transition-all duration-300 transform hover:scale-105 bg-white hover:bg-gray-50 text-indigo-900 border border-indigo-200 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-gray-200 dark:border-gray-600"
+            >
+              Sign Up
+            </Link>
+          </div>
+          <div className="mt-6">
+            <Link
+              to="/jobs"
+              className="text-indigo-600 dark:text-indigo-400 hover:underline"
+            >
+              Go back to Jobs
+            </Link>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-indigo-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 py-12 px-4 sm:px-6 lg:px-8">

@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 const Header = ({ isDarkTheme, toggleTheme, NavBar }) => {
   const navigate = useNavigate();
   const { user } = useSelector((state) => state.auth);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   // Access fullName directly from user, not from user.data
   const existUser = user?.fullName;
@@ -13,40 +14,42 @@ const Header = ({ isDarkTheme, toggleTheme, NavBar }) => {
 
   const handleClick = () => {
     navigate("/");
+    setMobileMenuOpen(false);
   };
 
   const profileClick = () => {
     navigate("/profile");
+    setMobileMenuOpen(false);
   };
 
   const [isNavbarVisible, setIsNavbarVisible] = useState(true);
-  // const [scrolled, setScrolled] = useState(false);
 
-  // Handle scroll event
-  // useEffect(() => {
-  //   const handleScroll = () => {
-  //     const scrollPosition = window.scrollY;
-  //     setScrolled(scrollPosition > 50);
+  const toggleMobileMenu = () => {
+    setMobileMenuOpen(!mobileMenuOpen);
+  };
 
-  //     const cardSection = document.getElementById("card-section");
-  //     if (cardSection) {
-  //       const cardSectionTop = cardSection.getBoundingClientRect().top;
-  //       setIsNavbarVisible(cardSectionTop >= 100);
-  //     }
-  //   };
+  // Close mobile menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (mobileMenuOpen && !event.target.closest(".mobile-menu-container")) {
+        setMobileMenuOpen(false);
+      }
+    };
 
-  //   window.addEventListener("scroll", handleScroll);
-  //   return () => window.removeEventListener("scroll", handleScroll);
-  // }, []);
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [mobileMenuOpen]);
 
   return (
     <div
-      className={` p-2 top-0 left-0 right-0 z-50 transition-all duration-300 ${
+      className={`p-2 top-0 left-0 right-0 z-50 transition-all duration-300 ${
         isNavbarVisible ? "translate-y-0" : "-translate-y-24"
       }`}
     >
       <div
-        className={`mx-4  rounded-2xl backdrop-blur-lg transition-all duration-300 relative overflow-hidden group 
+        className={`mx-2 sm:mx-4 rounded-2xl backdrop-blur-lg transition-all duration-300 relative overflow-hidden group 
             ? "bg-white/95 dark:bg-gray-900/90"
             : "bg-white/95 dark:bg-gray-900/70"
         }`}
@@ -66,16 +69,16 @@ const Header = ({ isDarkTheme, toggleTheme, NavBar }) => {
         </div>
 
         <nav className="w-full relative">
-          <div className="container mx-auto px-6 py-4 flex justify-between items-center">
+          <div className="container mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
             {/* Logo/Home Link */}
             <h2
-              className="font-bold font-serif cursor-pointer text-2xl bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-purple-600 dark:from-indigo-400 dark:to-purple-400"
+              className="font-bold font-serif cursor-pointer text-xl sm:text-2xl bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-purple-600 dark:from-indigo-400 dark:to-purple-400"
               onClick={handleClick}
             >
               AlumniHub
             </h2>
 
-            {/* Navigation Links */}
+            {/* Navigation Links - Desktop */}
             <ul className="hidden md:flex gap-8 items-center">
               <Link
                 to="/about"
@@ -92,16 +95,23 @@ const Header = ({ isDarkTheme, toggleTheme, NavBar }) => {
                 <span className="absolute bottom-0 left-0 w-0 h-0.5 transition-all duration-300 group-hover:w-full bg-gradient-to-r from-indigo-600 to-purple-600 dark:from-indigo-400 dark:to-purple-400" />
               </Link>
               <Link
-                to="/faq"
+                to="/query"
                 className="text-base font-medium transition-all duration-300 hover:scale-105 relative group text-gray-700 hover:text-indigo-600 dark:text-gray-300 dark:hover:text-indigo-400"
               >
-                FAQ
+                Queries
+                <span className="absolute bottom-0 left-0 w-0 h-0.5 transition-all duration-300 group-hover:w-full bg-gradient-to-r from-indigo-600 to-purple-600 dark:from-indigo-400 dark:to-purple-400" />
+              </Link>
+              <Link
+                to="/jobs"
+                className="text-base font-medium transition-all duration-300 hover:scale-105 relative group text-gray-700 hover:text-indigo-600 dark:text-gray-300 dark:hover:text-indigo-400"
+              >
+                Job Portal
                 <span className="absolute bottom-0 left-0 w-0 h-0.5 transition-all duration-300 group-hover:w-full bg-gradient-to-r from-indigo-600 to-purple-600 dark:from-indigo-400 dark:to-purple-400" />
               </Link>
             </ul>
 
-            {/* Right Section (Theme Toggle + Login/Profile) */}
-            <div className="flex items-center gap-4">
+            {/* Right Section (Theme Toggle + Login/Profile + Mobile Menu Button) */}
+            <div className="flex items-center gap-3 sm:gap-4">
               {/* Theme Toggle Button */}
               <button
                 onClick={toggleTheme}
@@ -151,23 +161,122 @@ const Header = ({ isDarkTheme, toggleTheme, NavBar }) => {
                 <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-gradient-to-r from-indigo-100/50 to-purple-100/50 dark:from-indigo-500/20 dark:to-purple-500/20" />
               </button>
 
-              {/* Login/Profile Button */}
-              {!existUser ? (
-                <Link to="/login">
-                  <button className="px-6 py-2 rounded-full text-sm font-medium transition-all duration-300 transform hover:scale-105 relative overflow-hidden group bg-indigo-600 hover:bg-indigo-700 text-white">
-                    <span className="relative z-10">Join Our Community</span>
+              {/* Login/Profile Button - Desktop */}
+              <div className="hidden sm:block">
+                {!existUser ? (
+                  <Link to="/login">
+                    <button className="px-4 sm:px-6 py-2 rounded-full text-sm font-medium transition-all duration-300 transform hover:scale-105 relative overflow-hidden group bg-indigo-600 hover:bg-indigo-700 text-white">
+                      <span className="relative z-10">Login / Register</span>
+                      <div className="absolute inset-0 bg-gradient-to-r from-indigo-500/20 to-purple-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                    </button>
+                  </Link>
+                ) : (
+                  <div
+                    className="px-4 sm:px-6 py-2 rounded-full text-sm font-medium cursor-pointer transition-all duration-300 transform hover:scale-105 relative overflow-hidden group bg-indigo-600 hover:bg-indigo-700 text-white"
+                    onClick={profileClick}
+                  >
+                    <span className="relative z-10">{existUser}</span>
                     <div className="absolute inset-0 bg-gradient-to-r from-indigo-500/20 to-purple-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                  </button>
-                </Link>
-              ) : (
-                <div
-                  className="px-6 py-2 rounded-full text-sm font-medium cursor-pointer transition-all duration-300 transform hover:scale-105 relative overflow-hidden group bg-indigo-600 hover:bg-indigo-700 text-white"
-                  onClick={profileClick}
+                  </div>
+                )}
+              </div>
+
+              {/* Mobile Menu Button */}
+              <button
+                className="md:hidden p-2 rounded-lg bg-white/80 text-gray-700 hover:text-indigo-600 border border-indigo-100 dark:bg-gray-800/50 dark:text-gray-300 dark:hover:text-white"
+                onClick={toggleMobileMenu}
+                aria-label="Toggle mobile menu"
+              >
+                <svg
+                  className="w-6 h-6"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
                 >
-                  <span className="relative z-10">{existUser}</span>
-                  <div className="absolute inset-0 bg-gradient-to-r from-indigo-500/20 to-purple-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                </div>
-              )}
+                  {mobileMenuOpen ? (
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M6 18L18 6M6 6l12 12"
+                    />
+                  ) : (
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M4 6h16M4 12h16M4 18h16"
+                    />
+                  )}
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          {/* Mobile Menu */}
+          <div
+            className={`mobile-menu-container md:hidden ${
+              mobileMenuOpen ? "block" : "hidden"
+            }`}
+          >
+            <div className="px-4 py-6 bg-white/95 dark:bg-gray-800/95 border-t border-gray-200 dark:border-gray-700 rounded-b-2xl">
+              <ul className="space-y-4">
+                <li>
+                  <Link
+                    to="/about"
+                    className="block py-2 text-gray-700 hover:text-indigo-600 dark:text-gray-300 dark:hover:text-indigo-400"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    About Us
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    to="/contact"
+                    className="block py-2 text-gray-700 hover:text-indigo-600 dark:text-gray-300 dark:hover:text-indigo-400"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    Contact Us
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    to="/query"
+                    className="block py-2 text-gray-700 hover:text-indigo-600 dark:text-gray-300 dark:hover:text-indigo-400"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    Queries
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    to="/jobs"
+                    className="block py-2 text-gray-700 hover:text-indigo-600 dark:text-gray-300 dark:hover:text-indigo-400"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    Job Portal
+                  </Link>
+                </li>
+                {/* Mobile Login/Profile Button */}
+                <li className="pt-2 sm:hidden">
+                  {!existUser ? (
+                    <Link
+                      to="/login"
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="block w-full py-3 text-center rounded-lg text-sm font-medium bg-indigo-600 hover:bg-indigo-700 text-white"
+                    >
+                      Login / Register
+                    </Link>
+                  ) : (
+                    <button
+                      onClick={profileClick}
+                      className="block w-full py-3 text-center rounded-lg text-sm font-medium bg-indigo-600 hover:bg-indigo-700 text-white"
+                    >
+                      {existUser}
+                    </button>
+                  )}
+                </li>
+              </ul>
             </div>
           </div>
         </nav>

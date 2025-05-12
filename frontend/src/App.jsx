@@ -80,10 +80,8 @@ function App() {
 
           <Route path="/query/askQuestion" element={<AskQuestion />} />
           <Route path="/query/:questionId" element={<Question />} />
-        </Route>
 
-        {/* Protected Routes */}
-        <Route element={<PrivateRoute />}>
+          {/* Moved from protected routes to public routes */}
           <Route path="/profile" element={<Profile />} />
           <Route
             path="/donation"
@@ -102,6 +100,10 @@ function App() {
             element={<JobDetails isDarkTheme={isDarkTheme} />}
           />
         </Route>
+
+        {/* Protected Routes - leaving empty as we moved them to public routes */}
+        {/* <Route element={<PrivateRoute />}>
+        </Route> */}
       </>
     )
   );
