@@ -10,7 +10,7 @@ const Header = ({ isDarkTheme, toggleTheme, NavBar }) => {
   // Access fullName directly from user, not from user.data
   const existUser = user?.fullName;
 
-  console.log("User in header:", user); // Debug log
+  // console.log("User in header:", user); // Debug log
 
   const handleClick = () => {
     navigate("/");
@@ -24,14 +24,14 @@ const Header = ({ isDarkTheme, toggleTheme, NavBar }) => {
 
   const [isNavbarVisible, setIsNavbarVisible] = useState(true);
 
-  const toggleMobileMenu = () => {
-    setMobileMenuOpen(!mobileMenuOpen);
-  };
-
   // Close mobile menu when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (mobileMenuOpen && !event.target.closest(".mobile-menu-container")) {
+      if (
+        mobileMenuOpen &&
+        !event.target.closest(".mobile-menu-container") &&
+        !event.target.closest(".menu-button")
+      ) {
         setMobileMenuOpen(false);
       }
     };
@@ -183,9 +183,11 @@ const Header = ({ isDarkTheme, toggleTheme, NavBar }) => {
 
               {/* Mobile Menu Button */}
               <button
-                className="md:hidden p-2 rounded-lg bg-white/80 text-gray-700 hover:text-indigo-600 border border-indigo-100 dark:bg-gray-800/50 dark:text-gray-300 dark:hover:text-white"
-                onClick={toggleMobileMenu}
-                aria-label="Toggle mobile menu"
+                className="menu-button md:hidden p-2 rounded-lg bg-white/80 text-gray-700 hover:text-indigo-600 border border-indigo-100 dark:bg-gray-800/50 dark:text-gray-300 dark:hover:text-white"
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                aria-label={
+                  mobileMenuOpen ? "Close mobile menu" : "Open mobile menu"
+                }
               >
                 <svg
                   className="w-6 h-6"
@@ -220,6 +222,7 @@ const Header = ({ isDarkTheme, toggleTheme, NavBar }) => {
             }`}
           >
             <div className="px-4 py-6 bg-white/95 dark:bg-gray-800/95 border-t border-gray-200 dark:border-gray-700 rounded-b-2xl">
+             
               <ul className="space-y-4">
                 <li>
                   <Link

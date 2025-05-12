@@ -9,6 +9,7 @@ import "react-toastify/dist/ReactToastify.css";
 const Login = () => {
   const [rollNumber, setRollNumber] = useState("");
   const [password, setPassword] = useState("");
+  const [loggingIn, setLoggingIn] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [login] = useLoginMutation();
@@ -16,10 +17,10 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      setLoggingIn(true);
       const res = await login({ rollNumber, password });
       // Debug information
       // console.log("Login response:", res);
-
       if (res.error) {
         const errorMessage =
           res.error.data?.message || "Login failed. Please try again.";
@@ -60,6 +61,7 @@ const Login = () => {
         dispatch(setTokenInfo(res.data.token));
       }
 
+      setLoggingIn(false);
       // Check if cookies are set after login
       // console.log("Cookies after login:", document.cookie);
 
@@ -95,6 +97,8 @@ const Login = () => {
         className:
           "dark:!bg-gradient-to-r dark:!from-red-950/90 dark:!to-red-900/90 dark:!text-red-100 dark:!border-red-800 dark:!shadow-[0px_4px_10px_rgba(239,68,68,0.3)]",
       });
+    } finally {
+      setLoggingIn(false);
     }
   };
 
@@ -160,8 +164,9 @@ const Login = () => {
             <button
               type="submit"
               className="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-lg shadow-md transition-all duration-300 transform hover:scale-[1.02] relative overflow-hidden group"
+              disabled={loggingIn}
             >
-              <span className="relative z-10">Log In</span>
+              <span className="relative z-10">{!loggingIn? "Log In": "Logging In"}</span>
               <div className="absolute inset-0 bg-gradient-to-r from-indigo-500/20 to-purple-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
             </button>
           </form>
