@@ -23,11 +23,12 @@ const Donation = ({ isDarkTheme }) => {
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
-    rollNumber: user?.data?.rollNumber || "",
+    rollNumber: user?.rollNumber || "",
     amount: "",
     donationType: "One-Time",
     message: "",
   });
+  
 
   const [donation, { isLoading, error }] = useDonationMutation();
   const [donationStats, setDonationStats] = useState({
@@ -85,7 +86,7 @@ const Donation = ({ isDarkTheme }) => {
       }
 
       setFormData({
-        rollNumber: user?.data?.rollNumber || "",
+        rollNumber: user?.rollNumber || "",
         amount: "",
         donationType: "One-Time",
         message: "",
@@ -101,8 +102,8 @@ const Donation = ({ isDarkTheme }) => {
         order_id: donate.donation.id,
         callback_url: `${import.meta.env.VITE_BACKEND_URL}/api/donation/verify`,
         prefill: {
-          name: user?.data?.fullname || "",
-          email: user.data.email || "",
+          name: user?.fullname || "",
+          email: user?.email || "",
           contact: "",
         },
         notes: {
@@ -163,11 +164,11 @@ const Donation = ({ isDarkTheme }) => {
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-indigo-50 to-indigo-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
         <div className="max-w-md p-8 bg-white dark:bg-gray-800 rounded-lg shadow-lg">
           <h2 className="text-2xl font-bold text-red-600 dark:text-red-400 mb-4">
-            Error Loading Job
+            Error in Donation
           </h2>
           <p className="text-gray-700 dark:text-gray-300 mb-6">
-            {error.data.message ||
-              "Failed to load job details. Please try again later."}
+            {error?.data?.message ||
+              "Failed to load Donation details. Please try again later."}
           </p>
           <button
             onClick={() => navigate(-1)}

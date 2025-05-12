@@ -12,6 +12,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 const Login = () => {
   // const [rollNumber, setRollNumber] = useState("");
   // const [password, setPassword] = useState("");
+
+   const [loggingIn, setLoggingIn] = useState(false);
+
   const formSchema = z.object({
     rollNumber: z.string().min(10, "Roll number is required")
       .regex(/^\d+$/, "Roll number must contain only digits")
@@ -32,6 +35,7 @@ const Login = () => {
    const onsubmit = async (data) => {
     // e.preventDefault();
     try {
+      setLoggingIn(true);
        const { rollNumber, password } = data;
   const res = await login({ rollNumber, password });
       console.log(res);

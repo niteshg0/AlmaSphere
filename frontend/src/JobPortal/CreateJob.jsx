@@ -3,7 +3,6 @@ import { useCreateJobMutation } from "../redux/Api/jobDetailApiSlice.js";
 import { useNavigate, Link } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-<<<<<<< HEAD
 import { FaHome } from "react-icons/fa";
 import {string, z} from "zod";
 import { useForm } from "react-hook-form";
@@ -46,31 +45,6 @@ const CreateJob = ({ isDarkTheme }) => {
       resolver: zodResolver(formSchema),
     });
       console.log("Form errors:", errors);
-=======
-import { FaHome, FaLock } from "react-icons/fa";
-import { useSelector } from "react-redux";
-
-const CreateJob = ({ isDarkTheme }) => {
-  const { user, token } = useSelector((state) => state.auth);
-  const [formData, setFormData] = useState({
-    title: "",
-    description: "",
-    companyName: "",
-    requirements: "",
-    application_deadline: "",
-    applyLink: "",
-    job_type: "Full-time",
-    salary: {
-      range: "",
-      currency: "INR",
-    },
-    contact_email: "",
-    contact_phone: "",
-    status: "active",
-    location: "",
-    yearOfExperience: "fresher",
-  });
->>>>>>> a7d066a3e07af53ea8cf5ab0aeba56d772cabd26
 
   const navigate = useNavigate();
   const [createJob, { isLoading }] = useCreateJobMutation();

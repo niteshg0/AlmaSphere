@@ -8,6 +8,7 @@ const { validateWebhookSignature } = pkg;
 export const create_donation = async (req, res) => {
   try {
     const { rollNumber, amount, donationType, message } = req.body;
+    
 
     const options = {
       amount: Number(amount) * 100, //to convert in paise
@@ -127,7 +128,7 @@ export const verify_donation = async (req, res) => {
       // console.log("Payment verification successful");
 
       res.redirect(
-        `http://localhost:${process.env.VITE_PORT}/donation/verify?reference=${razorpay_payment_id}`
+        `${process.env.VITE_BACKEND_URL}/donation/verify?reference=${razorpay_payment_id}`
       );
     } else {
       res.status(400).json({ status: "verification_failed" });
