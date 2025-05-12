@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { useLoginMutation } from "../redux/Api/userApiSlice.js";
-import { setUserInfo } from "../redux/features/authSlice.js";
+import { setUserInfo, setTokenInfo } from "../redux/features/authSlice.js";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -53,6 +53,12 @@ const Login = () => {
 
       // Store user info
       dispatch(setUserInfo({ ...res.data }));
+
+      // Store auth token if it exists in the response
+      if (res.data.token) {
+        // Store the token for auth purposes
+        dispatch(setTokenInfo(res.data.token));
+      }
 
       // Check if cookies are set after login
       console.log("Cookies after login:", document.cookie);

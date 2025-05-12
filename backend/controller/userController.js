@@ -131,7 +131,7 @@ const loginUser = async (req, res) => {
     }
 
     // Generate token and return user data
-    generateToken(res, findUser._id);
+    const token = generateToken(res, findUser._id);
     return res.status(200).json({
       rollNumber: findUser.rollNumber,
       fullName: findUser.fullName,
@@ -139,6 +139,7 @@ const loginUser = async (req, res) => {
       role: findUser.role,
       gender: findUser.gender,
       batch: findUser.batch,
+      token: token,
     });
   } catch (error) {
     console.error("Login error:", error);

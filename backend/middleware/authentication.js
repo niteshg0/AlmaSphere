@@ -5,12 +5,28 @@ const authentication = async (req, res, next) => {
   // Debug - log cookie headers in production
   console.log("Cookie headers:", req.headers.cookie);
   console.log("Auth cookie:", req.cookies);
+  console.log("Authorization header:", req.headers.authorization);
 
-  const token = req.cookies.authToken;
+  // First try to get token from cookies
+  let token = req.cookies.authToken;
+
+  // If no cookie token, check Authorization header
+  if (
+    !token &&
+    req.headers.authorization &&
+    req.headers.authorization.startsWith("Bearer ")
+  ) {
+    token = req.headers.authorization.split(" ")[1];
+    console.log("Using token from Authorization header");
+  }
+
   if (!token) {
-    console.log("Authentication failed: No auth token found in cookies");
+    console.log(
+      "Authentication failed: No auth token found in cookies or headers"
+    );
     return res.status(400).json({ message: "Please Login" });
   }
+
   try {
     const decodeToken = jwt.verify(token, process.env.SECRET_KEY);
     console.log("Token verified successfully for user:", decodeToken.userId);
