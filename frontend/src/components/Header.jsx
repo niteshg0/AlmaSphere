@@ -2,10 +2,14 @@ import { Link, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 
-const Header = ({ isDarkTheme, toggleTheme, NavBar}) => {
+const Header = ({ isDarkTheme, toggleTheme, NavBar }) => {
   const navigate = useNavigate();
   const { user } = useSelector((state) => state.auth);
-  const existUser = user?.data?.fullName;
+
+  // Access fullName directly from user, not from user.data
+  const existUser = user?.fullName;
+
+  console.log("User in header:", user); // Debug log
 
   const handleClick = () => {
     navigate("/");

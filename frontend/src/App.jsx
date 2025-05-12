@@ -22,6 +22,7 @@ import Query from "./Query/Query";
 import AskQuestion from "./Query/AskQuestion";
 import Question from "./Query/Question";
 import Profiles from "./Profiles";
+import PrivateRoute from "./components/PrivateRoute";
 
 function App() {
   const [isDarkTheme, setIsDarkTheme] = useState(() => {
@@ -185,43 +186,49 @@ function App() {
         >
           <Route index element={<Home />} />
 
-          <Route path="/about" element={<AboutUs />}/>
+          <Route path="/about" element={<AboutUs />} />
 
-          <Route path="/contact" element={<ContactUs />}/>
+          <Route path="/contact" element={<ContactUs />} />
 
-          <Route path="/profiles/:rollNumber" element={<Profiles />}/>
+          <Route path="/profiles/:rollNumber" element={<Profiles />} />
 
-          <Route path="/donation/verify" element={<VerifyDonation isDarkTheme={isDarkTheme}  />}/>
+          <Route
+            path="/donation/verify"
+            element={<VerifyDonation isDarkTheme={isDarkTheme} />}
+          />
 
-          <Route path="/login" element={<Login />}/>
+          <Route path="/login" element={<Login />} />
 
-          <Route path="/verify/:email" element={<Verify />}/>
+          <Route path="/verify/:email" element={<Verify />} />
 
-          <Route path="/signup" element={<SignUp />}/>
+          <Route path="/signup" element={<SignUp />} />
 
-          <Route path="/query" element= {<Query />} />
-        
+          <Route path="/query" element={<Query />} />
+
           <Route path="/query/askQuestion" element={<AskQuestion />} />
           <Route path="/query/:questionId" element={<Question />} />
-
         </Route>
 
-        <Route path="/profile" element={<Profile />}/>
-
-        <Route path="/donation" element={<Donation isDarkTheme={isDarkTheme}  />}/>
-        
-        <Route
-          path="/jobs"
-          element={<JobPortal isDarkTheme={isDarkTheme} />}
-        />
-        <Route
-          path="/createJob"
-          element={<CreateJob isDarkTheme={isDarkTheme} />}
-        />
-        <Route
-          path="/jobDetail/:jobId"
-          element={<JobDetails isDarkTheme={isDarkTheme} />}
-        />
+        {/* Protected Routes */}
+        <Route element={<PrivateRoute />}>
+          <Route path="/profile" element={<Profile />} />
+          <Route
+            path="/donation"
+            element={<Donation isDarkTheme={isDarkTheme} />}
+          />
+          <Route
+            path="/jobs"
+            element={<JobPortal isDarkTheme={isDarkTheme} />}
+          />
+          <Route
+            path="/createJob"
+            element={<CreateJob isDarkTheme={isDarkTheme} />}
+          />
+          <Route
+            path="/jobDetail/:jobId"
+            element={<JobDetails isDarkTheme={isDarkTheme} />}
+          />
+        </Route>
       </>
     )
   );
