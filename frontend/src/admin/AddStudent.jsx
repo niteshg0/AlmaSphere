@@ -6,20 +6,24 @@ import "react-toastify/dist/ReactToastify.css";
 
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { usePostCollege_dataMutation } from "../redux/Api/adminApiSlice";
 
 function AddStudent() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
+  const [postCollege_data] = usePostCollege_dataMutation();
 
   const registrationSchema = z.object({
-    fullName: z.string().trim().min(2, "Name is required").regex(/^[A-Za-z\s]+$/, "Name must contain only letters and spaces"),
-   email: z
-  .string().trim()
-  .email("Invalid email address")
-  .regex(
-      /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-      "Email must be a valid format"
-    ),
+    fullName: z
+      .string()
+      .trim()
+      .min(2, "Name is required")
+      .regex(/^[A-Za-z\s]+$/, "Name must contain only letters and spaces"),
+    email: z
+      .string()
+      .trim()
+      .email("Invalid email address")
+      .regex(/^[^\s@]+@[^\s@]+\.[^\s@]+$/, "Email must be a valid format"),
     rollNumber: z
       .string()
       .min(10, "Roll number is required")
@@ -30,7 +34,8 @@ function AddStudent() {
       invalid_type_error: "Gender not selected",
     }),
     batch: z
-      .string().trim()
+      .string()
+      .trim()
       .regex(
         /^\d{4}-\d{4}$/,
         "Batch must be in format YYYY-YYYY (e.g. 2020-2024)"
@@ -70,14 +75,10 @@ function AddStudent() {
 
     setIsSubmitting(true);
     try {
-      // Here you would call your API to add the student
-      // Example: const res = await addStudent(formData);
+      const res = await postCollege_data(formData);
 
-      // For now, mock a successful response
-      const res = { success: true };
-
-      if (!res.success) {
-        const errorMessage = "Failed to add student. Please try again.";
+      if (res.error) {
+        const errorMessage = res.error?.data?.message || "Failed to add student. Please try again.";
         toast.error(errorMessage, {
           className:
             "dark:!bg-gradient-to-r dark:!from-red-950/90 dark:!to-red-900/90 dark:!text-red-100 dark:!border-red-800 dark:!shadow-[0px_4px_10px_rgba(239,68,68,0.3)]",
@@ -85,14 +86,16 @@ function AddStudent() {
         return;
       }
 
-      toast.success("Student added successfully!", {
+      // console.log("add ",res);
+      
+      toast.success(res.data?.message || "Student added successfully!", {
         className:
           "dark:!bg-gradient-to-r dark:!from-indigo-950/90 dark:!to-indigo-900/90 dark:!text-indigo-100 dark:!border-indigo-800 dark:!shadow-[0px_4px_10px_rgba(99,102,241,0.3)]",
       });
 
       // Clear form or navigate
       setTimeout(() => {
-        navigate("/admin/students");
+        navigate("/admin/student");
       }, 1000);
     } catch (error) {
       console.error(error);

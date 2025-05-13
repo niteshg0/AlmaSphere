@@ -1,11 +1,21 @@
 import { Link, useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
+import { useLogoutMutation } from "../redux/Api/userApiSlice";
+
+import { logout } from "../redux/features/authSlice.js";
+
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Header = ({ isDarkTheme, toggleTheme, NavBar }) => {
   const navigate = useNavigate();
   const { user } = useSelector((state) => state.auth);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  //logout
+  const [logoutApiCall] = useLogoutMutation();
+  const dispatch = useDispatch();
 
   // Access fullName directly from user, not from user.data
   const existUser = user?.fullName;
@@ -87,7 +97,35 @@ const Header = ({ isDarkTheme, toggleTheme, NavBar }) => {
       link : "/admin/student",
       role : "admin",
     },
+    
   ]
+
+
+  const handleLogout = async () => {
+      try {
+        // debugger
+        await logoutApiCall().unwrap();
+        dispatch(logout());
+        // setToast({ type: "success", message: "Logout successful..." });
+        toast.success("Logout Successfully ...", {
+          className:
+            "dark:!bg-gradient-to-r dark:!from-indigo-950/90 dark:!to-indigo-900/90 dark:!text-indigo-100",
+        });
+  
+        // setTimeout(() => {
+          navigate("/");
+          // setUserData(null);
+        // }, 1500);
+      } catch (error) {
+        console.log(error?.data?.message || error?.message);
+        toast.error("Logout failed ...", {
+          className:
+            "dark:!bg-gradient-to-r dark:!from-indigo-950/90 dark:!to-indigo-900/90 dark:!text-indigo-100",
+        });
+  
+        // setToast({ type: "error", message: "Unable to logout..." });
+      }
+    };
 
 
 
@@ -215,13 +253,24 @@ const Header = ({ isDarkTheme, toggleTheme, NavBar }) => {
                     </button>
                   </Link>
                 ) : (
-                  <div
+                  (user?.role==="Admin")? (
+                    <div>
+                      <button className="px-4 sm:px-6 py-2 rounded-full text-sm font-medium transition-all duration-300 transform hover:scale-105 relative overflow-hidden group bg-indigo-600 hover:bg-indigo-700 text-white"
+                      onClick={handleLogout}>
+                      <span className="relative z-10">Log Out</span>
+                      <div className="absolute inset-0 bg-gradient-to-r from-indigo-500/20 to-purple-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                    </button>
+                    </div>
+              
+                  ): (
+                    <div
                     className="px-4 sm:px-6 py-2 rounded-full text-sm font-medium cursor-pointer transition-all duration-300 transform hover:scale-105 relative overflow-hidden group bg-indigo-600 hover:bg-indigo-700 text-white"
                     onClick={profileClick}
                   >
                     <span className="relative z-10">{existUser}</span>
                     <div className="absolute inset-0 bg-gradient-to-r from-indigo-500/20 to-purple-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                   </div>
+                  )
                 )}
               </div>
 
@@ -328,6 +377,24 @@ const Header = ({ isDarkTheme, toggleTheme, NavBar }) => {
           </div>
         </nav>
       </div>
+      {/* <ToastContainer
+              position="top-right"
+              autoClose={3000}
+              hideProgressBar={false}
+              newestOnTop={false}
+              closeOnClick
+              rtl={false}
+              pauseOnFocusLoss
+              draggable
+              pauseOnHover
+              theme="dark"
+              toastStyle={{
+                borderRadius: "10px",
+                padding: "12px 16px",
+                fontSize: "14px",
+                fontWeight: "500",
+              }}
+            /> */}
     </div>
   );
 };

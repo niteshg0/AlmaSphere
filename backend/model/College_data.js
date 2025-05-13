@@ -45,7 +45,7 @@ const college_data = new mongoose.Schema(
     codeExpiry: {
       type: Date,
     },
-  },
+  },{timestamps: true}
 );
 
 const College_data = mongoose.model("College_data", college_data);
