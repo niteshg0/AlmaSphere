@@ -35,6 +35,20 @@ export const userApiSlice = apiSlice.injectEndpoints({
         body: data,
       }),
     }),
+    addSkills : builder.mutation({
+      query: (data) => ({
+        url: `${USERS_URL}/addUserSkills`,
+        method:"POST",
+        body:data,
+      })
+    }),
+    updateSkills : builder.mutation({
+      query:(data) => ({
+        url:`${USERS_URL}/updateSkills`,
+        method:"PUT",
+        body:data,
+      })
+    }),
     verify: builder.mutation({
       query: ({ email, code }) => ({
         url: `${USERS_URL}/verify/${email}`,
@@ -52,4 +66,6 @@ export const {
   useVerifyMutation,
   useGetProfileQuery,
   useUserProfileQuery,
+  useAddSkillsMutation,
+  useUpdateSkillsMutation
 } = userApiSlice;

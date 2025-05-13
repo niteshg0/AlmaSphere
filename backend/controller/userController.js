@@ -174,24 +174,7 @@ const getUserProfile = async (req, res) => {
   }
 };
 
-const updateUserInfo = async (req, res) => {
-  try {
-    const user = await User.findById(req.user._id);
-    if (user) {
-      user.fullName = req.body.fullName || user.fullName;
-      user.rollNumber = req.body.rollNumber || user.rollNumber;
-      user.email = req.body.email || user.email;
-      if (req.body.password) {
-        const salt = await bcrypt.genSalt(10);
-        const hashPassword = await bcrypt.hash(req.body.password, salt);
-        user.password = hashPassword;
-      }
-    }
-    return res.status(201).json(user);
-  } catch (error) {
-    console.log("error : ", error.message);
-  }
-};
+
 
 const addUserSkills = async (req, res) => {
   const userId = req.user._id;
@@ -240,31 +223,7 @@ const addUserSkills = async (req, res) => {
   }
 };
 
-const updateUserSkills = async (req, res) => {
-  try {
-    const userId = req.user._id;
-    if (!userId) {
-      return res.status(402).json({ message: "please login..." });
-    }
-    const skills = await SkillInfo.findOne({ userId });
-    if (!skills) {
-      return res.status(403).json({ message: "skill not founded..." });
-    }
-    if (req.body.technicalSkill && Array.isArray(req.body.technicalSkill)) {
-      skills.technicalSkill.push(...req.body.technicalSkill);
-    }
-    if (skills.nonTechnicalSkill && Array.isArray(req.body.nonTechnicalSkill)) {
-      skills.nonTechnicalSkill.push(...req.body.nonTechnicalSkill);
-    }
-    await skills.save();
-    return res
-      .status(202)
-      .json({ message: "skill added successfully", skills });
-  } catch (err) {
-    console.log(err.message);
-    return res.status(403).json({ message: "server error..." });
-  }
-};
+
 
 const addUserJobInfo = async (req, res) => {
   const userId = req.user._id;
@@ -310,43 +269,6 @@ const addUserJobInfo = async (req, res) => {
   }
 };
 
-const updateJobInfo = async (req, res) => {
-  try {
-    const userId = req.user._id;
-    if (!userId) {
-      return res.status(402).json({ message: "please login..." });
-    }
-    const job = await JobInfo.findOne({ userId });
-    if (!job) {
-      return res.status(403).json({ message: "jobinfo not founded..." });
-    }
-    const previous = {
-      companyName: job.companyName,
-      position: job.position,
-      duration: job.duration,
-    };
-    job.previousCompany.push(previous);
-
-    const { companyName, position, duration, location } = req.body;
-    if (companyName) {
-      job.companyName = companyName;
-    }
-    if (position) {
-      job.position = position;
-    }
-    if (duration) {
-      job.duration = duration;
-    }
-    if (location) {
-      job.location = location;
-    }
-    await job.save();
-    return res.status(202).json({ message: "jobInfo added successfully", job });
-  } catch (error) {
-    console.log(error);
-    return res.status(403).json({ message: "server error..." });
-  }
-};
 
 const addExtraInfo = async (req, res) => {
   const userId = req.user._id;
@@ -459,12 +381,9 @@ export {
   loginUser,
   getUserProfile,
   logoutUser,
-  updateUserInfo,
   verifyCode,
-  updateUserSkills,
   addUserSkills,
   getProfile,
   addUserJobInfo,
-  updateJobInfo,
   addExtraInfo,
 };

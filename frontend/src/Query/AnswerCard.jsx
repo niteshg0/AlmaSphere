@@ -122,7 +122,6 @@ const AnswerCard = ({ answer, userId }) => {
         setIsVoting(false)
       }, 3000)
     }
-
   }
 
   return (

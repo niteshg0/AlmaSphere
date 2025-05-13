@@ -9,7 +9,7 @@ import "react-toastify/dist/ReactToastify.css";
 const SignUp = () => {
   const [formData, setFormData] = useState({
     fullName: "",
-    rollNumber: 0,
+    rollNumber: "",
     email: "",
     password: "",
     batch: "",
@@ -32,7 +32,7 @@ const SignUp = () => {
     
     setIsSubmitting(true);
     try {
-      const res = await createUser(formData);
+      const res = await createUser(formData).unwrap();
       if (res.error) {
         console.log(res.error.data.message);
         const errorMessage = res.error.data?.message || "SignUp failed. Please try again.";
@@ -48,7 +48,7 @@ const SignUp = () => {
           className: "dark:!bg-gradient-to-r dark:!from-red-950/90 dark:!to-red-900/90 dark:!text-red-100 dark:!border-red-800 dark:!shadow-[0px_4px_10px_rgba(239,68,68,0.3)]",
         });
       } else {
-        dispatch(setUserInfo({ ...res }));
+        dispatch(setUserInfo({...res}));
 
         toast("Verify Email Redirecting...", {
           style: {
@@ -90,12 +90,7 @@ const SignUp = () => {
     }
   };
 
-  const handleKeyPress = (e) => {
-    if (e.key === 'Enter') {
-      e.preventDefault(); // Prevent form submission on Enter key
-    }
-  };
-
+  
   return (
     <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-indigo-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 p-4">
       <div className="w-full max-w-4xl p-8 bg-gradient-to-br from-white/95 via-blue-50/95 to-indigo-50/95 dark:from-gray-800/95 dark:via-gray-800/95 dark:to-gray-900/95 shadow-lg rounded-2xl relative overflow-hidden group">
@@ -117,7 +112,7 @@ const SignUp = () => {
           <h2 className="text-3xl font-bold text-center text-indigo-900 dark:text-indigo-400 mb-8">
             Join Our Alumni Network
           </h2>
-          <form onSubmit={handleSubmit} onKeyPress={handleKeyPress} className="space-y-8">
+          <form onSubmit={handleSubmit} className="space-y-8">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               {/* Personal Information Section */}
               <div className="space-y-4">
@@ -172,7 +167,7 @@ const SignUp = () => {
                       Your Roll Number
                     </label>
                     <input
-                      type="text"
+                      type="number"
                       id="rollNumber"
                       name="rollNumber"
                       value={formData.rollNumber || ""}
