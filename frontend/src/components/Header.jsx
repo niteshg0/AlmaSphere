@@ -42,6 +42,55 @@ const Header = ({ isDarkTheme, toggleTheme, NavBar }) => {
     };
   }, [mobileMenuOpen]);
 
+  const navItem = [
+    {
+      name : "About Us",
+      id : 1,
+      link : "/about",
+      role : "user",
+    } ,
+    {
+      name : "Contact Us",
+      id : 2,
+      link : "/contact",
+      role : "user",
+
+    } ,
+    {
+      name : "Queries",
+      id : 3,
+      link : "/query",
+      role : "user",
+
+    } ,
+    {
+      name : "Job Portal",
+      id : 4,
+      link : "/jobs",
+      role : "user",
+
+    } ,
+    
+    
+  ]
+
+  const navAdmin = [
+    {
+      name : "Add Student",
+      id : 5,
+      link : "/admin/add-student",
+      role : "admin",
+    },
+    {
+      name : "Student",
+      id : 6,
+      link : "/admin/student",
+      role : "admin",
+    },
+  ]
+
+
+
   return (
     <div
       className={`p-2 top-0 left-0 right-0 z-50 transition-all duration-300 ${
@@ -80,34 +129,29 @@ const Header = ({ isDarkTheme, toggleTheme, NavBar }) => {
 
             {/* Navigation Links - Desktop */}
             <ul className="hidden md:flex gap-8 items-center">
-              <Link
-                to="/about"
+              {(user?.role != "Admin") && navItem.map((item) => ( 
+                <Link
+                key={item.id}
+                to = {item.link}
                 className="text-base font-medium transition-all duration-300 hover:scale-105 relative group text-gray-700 hover:text-indigo-600 dark:text-gray-300 dark:hover:text-indigo-400"
               >
-                About Us
+               {item.name}
                 <span className="absolute bottom-0 left-0 w-0 h-0.5 transition-all duration-300 group-hover:w-full bg-gradient-to-r from-indigo-600 to-purple-600 dark:from-indigo-400 dark:to-purple-400" />
               </Link>
-              <Link
-                to="/contact"
+              ))}
+
+              {(user?.role == "Admin") && navAdmin.map((item) => (
+                <Link
+                key={item.id}
+                to = {item.link}
                 className="text-base font-medium transition-all duration-300 hover:scale-105 relative group text-gray-700 hover:text-indigo-600 dark:text-gray-300 dark:hover:text-indigo-400"
               >
-                Contact Us
+               {item.name}
                 <span className="absolute bottom-0 left-0 w-0 h-0.5 transition-all duration-300 group-hover:w-full bg-gradient-to-r from-indigo-600 to-purple-600 dark:from-indigo-400 dark:to-purple-400" />
               </Link>
-              <Link
-                to="/query"
-                className="text-base font-medium transition-all duration-300 hover:scale-105 relative group text-gray-700 hover:text-indigo-600 dark:text-gray-300 dark:hover:text-indigo-400"
-              >
-                Queries
-                <span className="absolute bottom-0 left-0 w-0 h-0.5 transition-all duration-300 group-hover:w-full bg-gradient-to-r from-indigo-600 to-purple-600 dark:from-indigo-400 dark:to-purple-400" />
-              </Link>
-              <Link
-                to="/jobs"
-                className="text-base font-medium transition-all duration-300 hover:scale-105 relative group text-gray-700 hover:text-indigo-600 dark:text-gray-300 dark:hover:text-indigo-400"
-              >
-                Job Portal
-                <span className="absolute bottom-0 left-0 w-0 h-0.5 transition-all duration-300 group-hover:w-full bg-gradient-to-r from-indigo-600 to-purple-600 dark:from-indigo-400 dark:to-purple-400" />
-              </Link>
+              ))}
+                
+              
             </ul>
 
             {/* Right Section (Theme Toggle + Login/Profile + Mobile Menu Button) */}

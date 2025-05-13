@@ -16,7 +16,11 @@ import {
   FaEdit,
   FaPlus,
   FaTimes,
+<<<<<<< HEAD
+  FaAd,
+=======
   FaLock,
+>>>>>>> a6e37a87d0a02608ea3e21cc587d249c3d42124c
 } from "react-icons/fa";
 import {
   useUserProfileQuery,
@@ -29,6 +33,9 @@ import { useNavigate, Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../redux/features/authSlice.js";
 
+<<<<<<< HEAD
+const Profile = () => {
+=======
 
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -36,6 +43,7 @@ import "react-toastify/dist/ReactToastify.css";
 
 const Profile = () => {
   const { user, token } = useSelector((state) => state.auth);
+>>>>>>> a6e37a87d0a02608ea3e21cc587d249c3d42124c
   const { data, isLoading, error } = useUserProfileQuery();
   const [userData, setUserData] = useState(null);
   const [formData, setFormData] = useState({});
@@ -44,7 +52,11 @@ const Profile = () => {
   const navigate = useNavigate();
 
   const [logoutApiCall] = useLogoutMutation();
+<<<<<<< HEAD
+  const [toast, setToast] = useState(null);
+=======
   // const [toast, setToast] = useState(null);
+>>>>>>> a6e37a87d0a02608ea3e21cc587d249c3d42124c
 
   const [loading, setLoading] = useState(true);
   const [activeModal, setActiveModal] = useState(null);
@@ -67,25 +79,36 @@ const Profile = () => {
     setLoading(false);
   }, [data]);
 
+<<<<<<< HEAD
+=======
   // if (!user || !token) {
   //   navigate("/login")
   // }
 
+>>>>>>> a6e37a87d0a02608ea3e21cc587d249c3d42124c
   const logoutHandler = async () => {
     try {
       // debugger
       await logoutApiCall().unwrap();
       dispatch(logout());
+<<<<<<< HEAD
+      setToast({ type: "success", message: "Logout successful..." });
+=======
       // setToast({ type: "success", message: "Logout successful..." });
       toast.success("Logout Successfully ...", {
                 className:
                   "dark:!bg-gradient-to-r dark:!from-indigo-950/90 dark:!to-indigo-900/90 dark:!text-indigo-100",
               });
+>>>>>>> a6e37a87d0a02608ea3e21cc587d249c3d42124c
 
       setTimeout(() => {
         navigate("/");
         setUserData(null);
+<<<<<<< HEAD
+      }, 2000);
+=======
       }, 1000);
+>>>>>>> a6e37a87d0a02608ea3e21cc587d249c3d42124c
     } catch (error) {
       console.log(error?.data?.message || error?.message);
 
@@ -656,14 +679,25 @@ const Profile = () => {
                 Skills
               </h2>
               <div className="flex gap-2">
-                <button
-                  onClick={() =>
-                    handleOpenModal(MODAL_TYPES.SKILLS, userData.skillId)
-                  }
-                  className="p-2 rounded-lg bg-white dark:bg-gray-700 text-indigo-600 dark:text-indigo-400 shadow-sm border border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors"
-                >
-                  <FaEdit className="h-5 w-5" />
-                </button>
+                {userData.skillId ? (
+                  <button
+                    onClick={() =>
+                      handleOpenModal(MODAL_TYPES.SKILLS, userData.skillId)
+                    }
+                    className="p-2 rounded-lg bg-white dark:bg-gray-700 text-indigo-600 dark:text-indigo-400 shadow-sm border border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors"
+                  >
+                    <FaEdit className="h-5 w-5" />
+                  </button>
+                ) : (
+                  <button
+                    onClick={() =>
+                      handleOpenModal(MODAL_TYPES.SKILLS, userData.skillId)
+                    }
+                    className="p-2 rounded-lg bg-white dark:bg-gray-700 text-indigo-600 dark:text-indigo-400 shadow-sm border border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors"
+                  >
+                    <FaPlus className="h-5 w-5" />
+                  </button>
+                )}
               </div>
             </div>
 
@@ -887,6 +921,10 @@ const Profile = () => {
           </div>
         </div>
       </div>
+<<<<<<< HEAD
+
+      {toast && <ToastComp toastType={toast.type} message={toast.message} />}
+=======
                 <ToastContainer
                         position="top-right"
                         autoClose={3000}
@@ -906,6 +944,7 @@ const Profile = () => {
                         }}
                       />
       {/* {toast && <ToastComp toastType={toast.type} message={toast.message} />} */}
+>>>>>>> a6e37a87d0a02608ea3e21cc587d249c3d42124c
     </div>
   );
 };

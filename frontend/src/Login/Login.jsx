@@ -5,7 +5,7 @@ import { useLoginMutation } from "../redux/Api/userApiSlice.js";
 import { setUserInfo, setTokenInfo } from "../redux/features/authSlice.js";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import {z} from "zod";
+import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
@@ -13,22 +13,30 @@ const Login = () => {
   // const [rollNumber, setRollNumber] = useState("");
   // const [password, setPassword] = useState("");
   // const navigate= useNavigate();
-
-   const [loggingIn, setLoggingIn] = useState(false);
+  // const {user} = useSelector((state) => state.auth);
+  const [loggingIn, setLoggingIn] = useState(false);
 
   const formSchema = z.object({
-  rollNumberOrEmail: z.union([
-    z.string()
-      .min(10, "Roll number must be at least 10 digits")
-      .regex(/^\d+$/, "Roll number must contain only digits")
-      .transform((val) => Number(val)),
-    z.string()
-      .email("Invalid email address")
-      .regex(/^[^\s@]+@[^\s@]+\.[^\s@]+$/, "Incorrect Email Format")
-  ]),
-  password: z.string()
-    .min(8, "Password must be at least 8 characters"),
-});
+    rollNumberOrEmail: z.union([
+      z
+        .string()
+        .min(10, "Roll number must be at least 10 digits")
+        .regex(/^\d+$/, "Roll number must contain only digits")
+        .transform((val) => Number(val)),
+      z
+        .string()
+        .email("Invalid email address")
+        .regex(/^[^\s@]+@[^\s@]+\.[^\s@]+$/, "Incorrect Email Format"),
+    ]),
+    password: z
+    .string()
+    .min(6, "Password must be at least 6 characters")
+    .regex(
+      /^(?=.*[A-Za-z])(?=.*\d)(?=.*[^A-Za-z\d])[A-Za-z\d\W]{6,}$/,
+      "Password must include a letter, a number, and a special character"
+    ),
+    selectLoginType: z.string(), 
+  });
 
   const {
     register,
@@ -41,12 +49,14 @@ const Login = () => {
   const dispatch = useDispatch();
   const [login] = useLoginMutation();
 
-   const onsubmit = async (data) => {
+  const onsubmit = async (data) => {
     // e.preventDefault();
     try {
       setLoggingIn(true);
-       const { rollNumberOrEmail, password } = data;
-    const res = await login({ rollNumberOrEmail, password });
+      const { rollNumberOrEmail, password , selectLoginType} = data;
+        //  console.log(data);
+         
+      const res = await login({ rollNumberOrEmail, password , role : selectLoginType});
       console.log(res);
       if (res.error) {
         const errorMessage =
@@ -104,8 +114,7 @@ const Login = () => {
           "dark:!bg-gradient-to-r dark:!from-indigo-950/90 dark:!to-indigo-900/90 dark:!text-indigo-100 dark:!border-indigo-800 dark:!shadow-[0px_4px_10px_rgba(99,102,241,0.3)]",
       });
 
-      navigate(-1)
-     
+      navigate(-1);
     } catch (error) {
       console.error("Login exception:", error);
       toast("Login failed. Please try again.", {
@@ -149,6 +158,34 @@ const Login = () => {
             Access your alumni account
           </p>
           <form onSubmit={handleSubmit(onsubmit)} method="POST">
+            
+            <div className="relative mb-6">
+              <select
+                id="selectLoginType"
+                {...register("selectLoginType")}
+                defaultValue="Student / Alumni"
+                className="appearance-none w-full px-4 py-3 bg-white/80 dark:bg-gray-800/80 border border-indigo-200 dark:border-indigo-500/20 rounded-lg text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 dark:focus:ring-indigo-500/30 transition-all duration-300"
+              >
+                <option value="Student / Alumni">Student / Alumni</option>
+                <option value="Admin">Admin</option>
+              </select>
+              <div className="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
+                <svg
+                  className="w-4 h-4 text-gray-400"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M19 9l-7 7-7-7"
+                  />
+                </svg>
+              </div>
+            </div>
+           
             <div className="mb-6">
               <label
                 htmlFor="rollNumber"
@@ -159,14 +196,15 @@ const Login = () => {
               <input
                 type="text"
                 id="rollNumber"
-               {...register("rollNumberOrEmail")}
+                {...register("rollNumberOrEmail")}
                 placeholder="Enter your Email Id or RollNumber"
                 className="w-full px-4 py-3 bg-white/80 dark:bg-gray-800/80 border border-indigo-200 dark:border-indigo-500/20 rounded-lg text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 dark:focus:ring-indigo-500/30 transition-all duration-300"
-               
               />
-               {errors.rollNumber && (
-                      <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.rollNumber.message}</p>
-                    )}
+              {errors.rollNumber && (
+                <p className="mt-1 text-sm text-red-600 dark:text-red-400">
+                  {errors.rollNumber.message}
+                </p>
+              )}
             </div>
             <div className="mb-6">
               <label
@@ -178,14 +216,15 @@ const Login = () => {
               <input
                 type="password"
                 id="password"
-              {...register("password")}
+                {...register("password")}
                 placeholder="Enter your password"
                 className="w-full px-4 py-3 bg-white/80 dark:bg-gray-800/80 border border-indigo-200 dark:border-indigo-500/20 rounded-lg text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 dark:focus:ring-indigo-500/30 transition-all duration-300"
-               
               />
-               {errors.password && (
-                    <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.password.message}</p>
-                  )}
+              {errors.password && (
+                <p className="mt-1 text-sm text-red-600 dark:text-red-400">
+                  {errors.password.message}
+                </p>
+              )}
             </div>
             <button
               type="submit"
@@ -193,7 +232,9 @@ const Login = () => {
               className="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-lg shadow-md transition-all duration-300 transform hover:scale-[1.02] relative overflow-hidden group"
               disabled={loggingIn}
             >
-              <span className="relative z-10">{!loggingIn? "Log In": "Logging In"}</span>
+              <span className="relative z-10">
+                {!loggingIn ? "Log In" : "Logging In"}
+              </span>
               <div className="absolute inset-0 bg-gradient-to-r from-indigo-500/20 to-purple-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
             </button>
           </form>
