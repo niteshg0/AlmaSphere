@@ -7,6 +7,7 @@ import nodemailer from "nodemailer";
 import JobInfo from "../model/User/jobInfo.js";
 import ExtraInfo from "../model/User/extraInfo.js";
 import College_data from "../model/College_data.js";
+import Admin from "../model/admin_model.js";
 
 async function sendVerificationEmail(email, code) {
   console.log(email, code);
@@ -207,40 +208,46 @@ const verify_Roll_Code = async (req, res) => {
 
 const loginUser = async (req, res) => {
   try {
-    const { rollNumberOrEmail, password } = req.body;
-    // let email, rollNumber
+    const { rollNumberOrEmail, password, role } = req.body;
 
-    let findUser
+    if(role === "Admin") {
+      const email = rollNumberOrEmail;
+      const adminUser = await Admin.findOne({ email });
+      
+      if (!adminUser) {
+        return res.status(404).json({ message: "Admin not found" });
+      }   
 
-    if(isNaN(Number(rollNumberOrEmail))){
-      const email= rollNumberOrEmail
-      findUser = await User.findOne({email});
+      // Add password validation for admin
+      const isValidPassword = await bcrypt.compare(password, adminUser.password);
+      if (!isValidPassword) {
+        return res.status(401).json({ message: "Invalid password" });
+      }
 
-    } else{
-
-      const rollNumber= rollNumberOrEmail
-      findUser = await User.findOne({rollNumber});
+      const token = generateToken(res, adminUser._id);
+      return res.status(200).json({
+        rollNumber: adminUser.rollNumber || "2023071049",
+        fullName: adminUser.fullName,
+        email: adminUser.email,
+        role: adminUser.role,
+        token: token
+      });
     }
 
-    // Find the user by roll number
-   
+    // Rest of the code for regular user login
+    let findUser = isNaN(Number(rollNumberOrEmail)) 
+      ? await User.findOne({ email: rollNumberOrEmail })
+      : await User.findOne({ rollNumber: rollNumberOrEmail });
 
-    // If user is not found
     if (!findUser) {
-      return res.status(404).json({ message: "User not found..." });
+      return res.status(404).json({ message: "User not found" });
     }
 
-    // Compare entered password with hashed password
-    const passwordValidation = await bcrypt.compare(
-      password,
-      findUser.password
-    );
-
-    if (!passwordValidation) {
-      return res.status(401).json({ message: "Invalid password..." });
+    const isValidPassword = await bcrypt.compare(password, findUser.password);
+    if (!isValidPassword) {
+      return res.status(401).json({ message: "Invalid password" });
     }
 
-    // Generate token and return user data
     const token = generateToken(res, findUser._id);
     return res.status(200).json({
       rollNumber: findUser.rollNumber,
@@ -249,11 +256,15 @@ const loginUser = async (req, res) => {
       role: findUser.role,
       gender: findUser.gender,
       batch: findUser.batch,
-      token: token,
+      token: token
     });
+
   } catch (error) {
     console.error("Login error:", error);
-    return res.status(500).json({ message: "Internal server error." });
+    return res.status(500).json({ 
+      message: "Internal server error",
+      error: error.message 
+    });
   }
 };
 
@@ -500,4 +511,5 @@ export {
   addExtraInfo,
   verify_roll,
   verify_Roll_Code,
+  // updateUserSkills,
 };

@@ -15,14 +15,10 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 const SignUp = () => {
-  const [formData, setFormData] = useState({
-    fullName: "",
-    rollNumber: 0,
-    email: "",
-    password: "",
-    batch: "",
-    gender: "",
-  });
+  // Track form steps
+  const [formStep, setFormStep] = useState(0);
+  const [isVerified, setIsVerified] = useState(false);
+  const [verificationOTP, setVerificationOTP] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isVerifying, setIsVerifying] = useState(false);
   const [prefilledData, setPrefilledData] = useState(null);
@@ -312,7 +308,9 @@ const SignUp = () => {
 
     setIsSubmitting(true);
     try {
-      const res = await createUser(formData);
+      const data= formData;
+      const res = await signup(data);
+
       if (res.error) {
         // console.log(res);
         const errorMessage =
@@ -322,8 +320,10 @@ const SignUp = () => {
           className:
             "dark:!bg-gradient-to-r dark:!from-red-950/90 dark:!to-red-900/90 dark:!text-red-100 dark:!border-red-800 dark:!shadow-[0px_4px_10px_rgba(239,68,68,0.3)]",
         });
-      } else {
-        dispatch(setUserInfo({ ...res }));
+        return
+      } 
+      
+      dispatch(setUserInfo({ ...res }));
 
         toast.success("Account created successfully!", {
           className:
@@ -346,7 +346,7 @@ const SignUp = () => {
   };
 
   const handleKeyPress = (e) => {
-    if (e.key === 'Enter') {
+    if (e.key === "Enter") {
       e.preventDefault(); // Prevent form submission on Enter key
     }
   };
@@ -372,13 +372,60 @@ const SignUp = () => {
           <h2 className="text-3xl font-bold text-center text-indigo-900 dark:text-indigo-400 mb-8">
             Join Our Alumni Network
           </h2>
-          <form onSubmit={handleSubmit} onKeyPress={handleKeyPress} className="space-y-8">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              {/* Personal Information Section */}
-              <div className="space-y-4">
-                <h3 className="text-lg font-semibold text-indigo-900 dark:text-indigo-400 border-b border-indigo-200 dark:border-indigo-500/20 pb-2">
-                  About You
-                </h3>
+
+          {/* Form steps indicator */}
+          <div className="flex items-center justify-center mb-8">
+            <div
+              className={`h-2 w-2 rounded-full ${
+                formStep >= 0
+                  ? "bg-indigo-600 dark:bg-indigo-400"
+                  : "bg-gray-300 dark:bg-gray-600"
+              }`}
+            ></div>
+            <div
+              className={`h-1 w-10 ${
+                formStep >= 1
+                  ? "bg-indigo-600 dark:bg-indigo-400"
+                  : "bg-gray-300 dark:bg-gray-600"
+              }`}
+            ></div>
+            <div
+              className={`h-2 w-2 rounded-full ${
+                formStep >= 1
+                  ? "bg-indigo-600 dark:bg-indigo-400"
+                  : "bg-gray-300 dark:bg-gray-600"
+              }`}
+            ></div>
+            <div
+              className={`h-1 w-10 ${
+                formStep >= 2
+                  ? "bg-indigo-600 dark:bg-indigo-400"
+                  : "bg-gray-300 dark:bg-gray-600"
+              }`}
+            ></div>
+            <div
+              className={`h-2 w-2 rounded-full ${
+                formStep >= 2
+                  ? "bg-indigo-600 dark:bg-indigo-400"
+                  : "bg-gray-300 dark:bg-gray-600"
+              }`}
+            ></div>
+          </div>
+
+          {/* Step 1: Roll Number Verification */}
+          {formStep === 0 && (
+            <div className="space-y-6">
+              <h3 className="text-lg font-semibold text-indigo-900 dark:text-indigo-400 border-b border-indigo-200 dark:border-indigo-500/20 pb-2">
+                Step 1: Roll Number Verification
+              </h3>
+              <p className="text-gray-700 dark:text-gray-300">
+                Enter your college roll number to begin the verification
+                process.
+              </p>
+              <form
+                onSubmit={handleVerificationSubmit(verifyRollNumber)}
+                onKeyPress={handleKeyPress}
+              >
                 <div className="space-y-4">
                   <div>
                     <label
@@ -437,44 +484,84 @@ const SignUp = () => {
                     <div className="absolute inset-0 bg-gradient-to-r from-indigo-500/0 via-indigo-500/30 to-indigo-500/0 translate-x-[-100%] hover:translate-x-[100%] transition-transform duration-1000 ease-in-out"></div>
                   </button>
                 </div>
-              </div>
+              </form>
+            </div>
+          )}
 
-              {/* Academic Information Section */}
+          {/* Step 2: OTP Verification */}
+          {formStep === 1 && (
+            <div className="space-y-6">
+              <h3 className="text-lg font-semibold text-indigo-900 dark:text-indigo-400 border-b border-indigo-200 dark:border-indigo-500/20 pb-2">
+                Step 2: Verify Email
+              </h3>
+              <p className="text-gray-700 dark:text-gray-300 mb-4">
+                We've sent a verification code to your college registered email.
+                Please enter it below.
+              </p>
               <div className="space-y-4">
-                <h3 className="text-lg font-semibold text-indigo-900 dark:text-indigo-400 border-b border-indigo-200 dark:border-indigo-500/20 pb-2">
-                  College Details
-                </h3>
-                <div className="space-y-4">
-                  <div>
-                    <label htmlFor="rollNumber" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                      Your Roll Number
-                    </label>
-                    <input
-                      type="text"
-                      id="rollNumber"
-                      name="rollNumber"
-                      value={formData.rollNumber || ""}
-                      onChange={handleChange}
-                      placeholder="e.g., 2020/BCA/123"
-                      className="w-full px-4 py-3 bg-white/80 dark:bg-gray-800/80 border border-indigo-200 dark:border-indigo-500/20 rounded-lg text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 dark:focus:ring-indigo-500/30 transition-all duration-300"
-                      required
-                    />
-                  </div>
-                  <div>
-                    <label htmlFor="batch" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                      Your Batch
-                    </label>
-                    <input
-                      type="text"
-                      id="batch"
-                      name="batch"
-                      value={formData.batch}
-                      onChange={handleChange}
-                      placeholder="e.g., 2020-2024"
-                      className="w-full px-4 py-3 bg-white/80 dark:bg-gray-800/80 border border-indigo-200 dark:border-indigo-500/20 rounded-lg text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 dark:focus:ring-indigo-500/30 transition-all duration-300"
-                      required
-                    />
-                  </div>
+                <div>
+                  <label
+                    htmlFor="otp"
+                    className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                  >
+                    Verification Code
+                  </label>
+                  <input
+                    type="text"
+                    id="otp"
+                    value={verificationOTP}
+                    onChange={(e) => setVerificationOTP(e.target.value)}
+                    placeholder="Enter 4-digit code"
+                    className="w-full px-4 py-3 bg-white/80 dark:bg-gray-800/80 border border-indigo-200 dark:border-indigo-500/20 rounded-lg text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 dark:focus:ring-indigo-500/30 transition-all duration-300 text-center tracking-widest text-lg"
+                    maxLength={6}
+                    minLength={4}
+                  />
+                </div>
+                <div className="flex items-center justify-between">
+                  <button
+                    type="button"
+                    onClick={() => setFormStep(0)}
+                    className="text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 transition-colors duration-300"
+                  >
+                    Back
+                  </button>
+                  <button
+                    type="button"
+                    onClick={verifyOTP}
+                    disabled={isVerifying}
+                    className="px-6 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-lg shadow-md transition-all duration-300 transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed relative overflow-hidden group"
+                  >
+                    <span className="relative z-10">
+                      {isVerifying ? (
+                        <div className="flex items-center justify-center">
+                          <svg
+                            className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                          >
+                            <circle
+                              className="opacity-25"
+                              cx="12"
+                              cy="12"
+                              r="10"
+                              stroke="currentColor"
+                              strokeWidth="4"
+                            ></circle>
+                            <path
+                              className="opacity-75"
+                              fill="currentColor"
+                              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                            ></path>
+                          </svg>
+                          Verifying...
+                        </div>
+                      ) : (
+                        "Verify Code"
+                      )}
+                    </span>
+                    <div className="absolute inset-0 bg-gradient-to-r from-indigo-500/0 via-indigo-500/30 to-indigo-500/0 translate-x-[-100%] hover:translate-x-[100%] transition-transform duration-1000 ease-in-out"></div>
+                  </button>
                 </div>
               </div>
             </div>

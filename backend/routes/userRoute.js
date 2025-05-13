@@ -9,12 +9,12 @@ import {
   logoutUser,
   addUserJobInfo,
   addUserSkills,
-  updateUserSkills,
+  // updateUserSkills,
   verifyCode,
   verify_roll,
   verify_Roll_Code,
   addExtraInfo,
-  verifyCode
+  // verifyCode
 } from "../controller/userController.js";
 
 // admin controllers
