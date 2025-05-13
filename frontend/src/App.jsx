@@ -23,6 +23,8 @@ import AskQuestion from "./Query/AskQuestion";
 import Question from "./Query/Question";
 import Profiles from "./Profiles";
 import PrivateRoute from "./components/PrivateRoute";
+import AddStudent from "./admin/AddStudent";
+import Student from "./admin/Student";
 
 function App() {
   const [isDarkTheme, setIsDarkTheme] = useState(() => {
@@ -57,6 +59,7 @@ function App() {
             />
           }
         >
+
           <Route index element={<Home />} />
 
           <Route path="/about" element={<AboutUs />} />
@@ -69,7 +72,7 @@ function App() {
             path="/donation/verify"
             element={<VerifyDonation isDarkTheme={isDarkTheme} />}
           />
-
+        
           <Route path="/login" element={<Login />} />
 
           <Route path="/verify/:email" element={<Verify />} />
@@ -99,6 +102,8 @@ function App() {
             path="/jobDetail/:jobId"
             element={<JobDetails isDarkTheme={isDarkTheme} />}
           />
+          <Route path="/admin/add-edit-Student" element={<AddStudent/>}/>
+          <Route path="/admin/student" element={<Student/>}/>
         </Route>
 
         {/* Protected Routes - leaving empty as we moved them to public routes */}
