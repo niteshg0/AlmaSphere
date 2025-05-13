@@ -6,6 +6,7 @@ import generateToken from "../utils/createToken.js";
 import nodemailer from "nodemailer";
 import JobInfo from "../model/User/jobInfo.js";
 import ExtraInfo from "../model/User/extraInfo.js";
+import College_data from "../model/College_data.js";
 
 async function sendVerificationEmail(email, code) {
   console.log(email, code);
@@ -55,19 +56,26 @@ async function sendVerificationEmail(email, code) {
 }
 
 const createUser = async (req, res) => {
-  const { rollNumber, fullName, email, password, role, gender, batch } =
+  const { rollNumber, fullName, email, password, gender, batch, course, branch, cgpa } =
     req.body;
-  if (!rollNumber || !fullName || !email || !password || !gender || !batch) {
-    return res.status(400).json({ message: "All inputs are required." });
+
+  const college_user= await College_data.findOne({rollNumber})
+  
+  if (rollNumber!=college_user.rollNumber && fullName!= college_user.fullName && email!=college_user.email) {
+    return res.status(400).json({ message: "Data is not correct" });
   }
+
+  const batchYear= Number(batch.slice(-4));
+  let currentYear = new Date().getFullYear();
+  const role= (currentYear>=batchYear)? "Alumni": "Student";
 
   // Checking the user exist or not
-  const checkUserExists = await User.findOne({ email });
+  const checkUserExists = await User.findOne({ rollNumber});
   console.log("Existing User:", checkUserExists);
 
-  if (checkUserExists) {
-    return res.status(409).send("User already exists.");
-  }
+  // if (checkUserExists) {
+  //   return res.status(409).send("User already exists.");
+  // }
 
   // Hashing password....
   const salt = await bcrypt.genSalt(10);
@@ -75,24 +83,28 @@ const createUser = async (req, res) => {
 
   // Creating a new User ...
   const newUser = new User({
-    rollNumber,
-    fullName,
-    email,
+    rollNumber: college_user.rollNumber,
+    fullName: college_user.fullName,
+    email: college_user.email,
     password: hashPassword,
     role,
-    gender,
-    batch,
+    gender: college_user.gender,
+    batch: college_user.batch,
+    course: college_user.course,
+    branch: college_user.branch,
+    cgpa: college_user.cgpa,
+    isVerified: college_user.isVerified,
   });
 
-  newUser.verifyCode = Math.floor(Math.random() * 9000 + 1000);
-  newUser.codeExpiry = new Date(Date.now() + 3600000);
+  // newUser.verifyCode = Math.floor(Math.random() * 9000 + 1000);
+  // newUser.codeExpiry = new Date(Date.now() + 3600000);
 
   try {
     const savedUser = await newUser.save();
 
-    await sendVerificationEmail(savedUser.email, savedUser.verifyCode);
+    // await sendVerificationEmail(savedUser.email, savedUser.verifyCode);
     // generating token
-    await generateToken(res, savedUser._id);
+    generateToken(res, savedUser._id);
     return res.status(201).json({
       _id: savedUser._id,
       rollNumber: savedUser.rollNumber,
@@ -108,12 +120,110 @@ const createUser = async (req, res) => {
   }
 };
 
+const verify_roll= async( req, res)=>{
+    try {
+      const {rollNumber}= req.params;
+      
+  
+      const rollExist= await College_data.findOne({rollNumber})
+
+      if(!rollExist){
+        return res.status(500).json({message: "RollNumber Does Not Exist"})
+      }
+
+      const is_registered= await User.findOne({rollNumber});
+
+      if(is_registered){
+        return res.status(500).json({message: "RollNumber already Registered"})
+      }
+
+      rollExist.verifyCode = Math.floor(Math.random() * 9000 + 1000);
+      rollExist.codeExpiry = new Date(Date.now() + 3600000);
+
+      const savedUser= await rollExist.save();
+
+      // const { verifyCode, codeExpiry, ...user } = savedUser.toObject();
+      // console.log(user);
+      
+
+      await sendVerificationEmail(savedUser.email, savedUser.verifyCode);
+
+      return res.status(200).json({
+        message: "RollNumber Exist",
+        data: {}
+      })
+
+    } catch (error) {
+      console.error("Login error:", error);
+      return res.status(500).json({ message: "Internal server error in Verifying Roll Number" });
+    }
+}
+
+const verify_Roll_Code = async (req, res) => {
+  const { code } = req.body;
+  // console.log("code", code, req);
+  
+  const {rollNumber } = req.params;
+
+  try {
+    const foundUser = await College_data.findOne({ rollNumber});
+
+
+    if (!foundUser) {
+      return res.status(404).json({ message: "RollNumber Not Exist..." });
+    }
+
+    const {verifyCode, codeExpiry, isVerified, ...userData}= foundUser.toObject();
+
+    const foundUserVerifyCode = foundUser.verifyCode;
+    const foundUserexpiry = foundUser.codeExpiry;
+
+    const isnotExpired = foundUserexpiry > Date.now();
+
+    const codeVerification = code == foundUserVerifyCode;
+
+    if (codeVerification && isnotExpired) {
+
+      foundUser.isVerified = true;
+      console.log(foundUser.isVerified );
+      
+      await foundUser.save();
+
+      return res.status(200).json(
+        { message: "User verified successfully.",
+          data: userData
+       });
+    } else {
+      if (!isnotExpired) {
+        return res.status(400).json({ message: "Code Expired" });
+      } else {
+        return res.status(400).json({ message: "Incorrect Verification Code" });
+      }
+    }
+  } catch (error) {
+    return res.status(500).json({ message: "could not run verify-code" });
+  }
+};
+
 const loginUser = async (req, res) => {
   try {
-    const { rollNumber, password } = req.body;
+    const { rollNumberOrEmail, password } = req.body;
+    // let email, rollNumber
+
+    let findUser
+
+    if(isNaN(Number(rollNumberOrEmail))){
+      const email= rollNumberOrEmail
+      findUser = await User.findOne({email});
+
+    } else{
+
+      const rollNumber= rollNumberOrEmail
+      findUser = await User.findOne({rollNumber});
+    }
 
     // Find the user by roll number
-    const findUser = await User.findOne({ rollNumber });
+   
 
     // If user is not found
     if (!findUser) {
@@ -131,7 +241,7 @@ const loginUser = async (req, res) => {
     }
 
     // Generate token and return user data
-    generateToken(res, findUser._id);
+    const token = generateToken(res, findUser._id);
     return res.status(200).json({
       rollNumber: findUser.rollNumber,
       fullName: findUser.fullName,
@@ -139,6 +249,7 @@ const loginUser = async (req, res) => {
       role: findUser.role,
       gender: findUser.gender,
       batch: findUser.batch,
+      token: token,
     });
   } catch (error) {
     console.error("Login error:", error);
@@ -149,8 +260,9 @@ const loginUser = async (req, res) => {
 const logoutUser = async (req, res) => {
   res.clearCookie("authToken", {
     httpOnly: true, // Ensures client-side JS cannot access it
-    // secure: process.env.NODE_ENV === 'production', // Ensures it's only cleared over HTTPS in production
-    sameSite: "strict",
+    secure: true, // Always use secure cookies
+    sameSite: "none", // Allow cross-site cookie clearing
+    path: "/", // Match the cookie path when clearing
   });
   res.status(200).json({ message: "logout successfully..." });
 };
@@ -386,4 +498,6 @@ export {
   getProfile,
   addUserJobInfo,
   addExtraInfo,
+  verify_roll,
+  verify_Roll_Code,
 };

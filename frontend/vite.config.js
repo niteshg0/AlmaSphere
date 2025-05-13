@@ -10,17 +10,24 @@ export default defineConfig(({ mode }) => {
     // plugins: [react(), tailwindcss()],
     plugins: [react()],
     server: {
-      proxy:{
-        "/api/":`http://localhost:${env.VITE_BACKEND_PORT}`,
+      proxy: {
+        "/api/":`http://localhost:${env.VITE_BACKEND_PORT}`
         // "/api/":`http://localhost:8000`,
 
         // "/api/": {
-        //   target: env.VITE_BACKEND_URL, // New backend URL
+        //   target: env.VITE_BACKEND_URL,
         //   changeOrigin: true,
-        //   secure: true, // Enable if backend uses HTTPS
+        //   secure: true,
+        //   cookieDomainRewrite: {
+        //     "*": "", // This allows cookies to be sent to the current domain
+        //   },
+        //   headers: {
+        //     "Access-Control-Allow-Origin": "*",
+        //     "Access-Control-Allow-Credentials": "true",
+        //   },
         // },
       },
-      port: parseInt(env.VITE_PORT)  // Read from .env, fallback to 5173
+      port: parseInt(env.VITE_PORT) || 5173, // Read from .env, fallback to 5173
     },
   };
 });

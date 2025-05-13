@@ -5,8 +5,12 @@ import { TbFilterSearch } from "react-icons/tb";
 import { FaSearch, FaPlus, FaHome } from "react-icons/fa";
 import Select from "react-select";
 import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
+
+import { ToastContainer, toast } from "react-toastify";
 
 const JobPortal = ({ isDarkTheme }) => {
+  const { user, token } = useSelector((state) => state.auth);
   const { data, isLoading, error } = useGetAllJobsQuery();
   const [value, setValue] = useState("");
   const [salary, setSalary] = useState(0);
@@ -197,25 +201,19 @@ const JobPortal = ({ isDarkTheme }) => {
       </div>
     );
 
-  if (error){   
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-indigo-50 to-indigo-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
-        <div className="max-w-md p-8 bg-white dark:bg-gray-800 rounded-lg shadow-lg">
-          <h2 className="text-2xl font-bold text-red-600 dark:text-red-400 mb-4">
-            Error Loading Jobs
-          </h2>
-          <p className="text-gray-700 dark:text-gray-300 mb-6">
-            {error.data.message || "Something went wrong. Please try again."}
-          </p>
-          <button
-            onClick={() => window.location.reload()}
-            className="inline-block px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
-          >
-            Retry
-          </button>
-        </div>
-      </div>
-    );
+  if (error) {
+      toast(error || "Error in Loading Job Detail", {
+        style: {
+          background: "linear-gradient(to right, #fee2e2, #fecaca)",
+          color: "#991b1b",
+          border: "1px solid #f87171",
+          boxShadow: "0px 4px 10px rgba(239, 68, 68, 0.2)",
+        },
+        icon: "❌",
+        className:
+          "dark:!bg-gradient-to-r dark:!from-red-950/90 dark:!to-red-900/90 dark:!text-red-100 dark:!border-red-800 dark:!shadow-[0px_4px_10px_rgba(239,68,68,0.3)]",
+      });
+    return;
   }
 
   return (
@@ -234,13 +232,23 @@ const JobPortal = ({ isDarkTheme }) => {
               Job Portal
             </h1>
           </div>
-          <Link
-            to="/createJob"
-            className="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg transition-colors duration-300"
-          >
-            <FaPlus size={14} />
-            <span>Post a Job</span>
-          </Link>
+          {user && token ? (
+            <Link
+              to="/createJob"
+              className="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg transition-colors duration-300"
+            >
+              <FaPlus size={14} />
+              <span>Post a Job</span>
+            </Link>
+          ) : (
+            <Link
+              to="/login"
+              className="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg transition-colors duration-300"
+            >
+              <FaPlus size={14} />
+              <span>Login to Post</span>
+            </Link>
+          )}
         </div>
 
         {/* Mobile filter toggle */}
@@ -261,7 +269,6 @@ const JobPortal = ({ isDarkTheme }) => {
               isFilterOpen ? "block" : "hidden"
             } md:block md:w-80 bg-white dark:bg-gray-800 shadow-lg rounded-xl p-6 h-fit sticky top-4 z-10`}
           >
-            
             <div className="mb-6">
               <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">
                 Search
@@ -369,8 +376,6 @@ const JobPortal = ({ isDarkTheme }) => {
                 </p>
               </div>
 
-              
-
               <div className="flex justify-between pt-4">
                 <button
                   className="text-indigo-600 dark:text-indigo-400 text-sm font-medium hover:text-indigo-800 dark:hover:text-indigo-300 transition-colors"
@@ -437,6 +442,24 @@ const JobPortal = ({ isDarkTheme }) => {
           </div>
         </div>
       </div>
+      <ToastContainer
+          position="top-right"
+          autoClose={3000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="dark"
+          toastStyle={{
+            borderRadius: "10px",
+            padding: "12px 16px",
+            fontSize: "14px",
+            fontWeight: "500",
+          }}
+      />
     </div>
   );
 };

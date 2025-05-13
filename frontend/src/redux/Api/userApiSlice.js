@@ -9,6 +9,14 @@ export const userApiSlice = apiSlice.injectEndpoints({
         method: "POST",
         body: data,
       }),
+      transformResponse: (response) => {
+        console.log("Raw login response:", response);
+        return response;
+      },
+      transformErrorResponse: (response) => {
+        console.error("Login error response:", response);
+        return response;
+      },
     }),
     getProfile: builder.query({
       query: (rollNumber) => ({
@@ -55,7 +63,20 @@ export const userApiSlice = apiSlice.injectEndpoints({
         method: "POST",
         body: { code },
       }),
-    })
+    }),
+    verify_roll: builder.mutation({
+      query: ({ rollNumber }) => ({
+        url: `${USERS_URL}/verify/${rollNumber}`,
+        method: "POST"
+      }),
+    }),
+    verify_Roll_Code: builder.mutation({
+      query: ({ rollNumber, code }) => ({
+        url: `${USERS_URL}/verify/${rollNumber}/code`,
+        method: "POST",
+        body: { code },
+      }),
+    }),
   }),
 });
 
@@ -66,6 +87,8 @@ export const {
   useVerifyMutation,
   useGetProfileQuery,
   useUserProfileQuery,
+  useVerify_rollMutation,
+  useVerify_Roll_CodeMutation,
   useAddSkillsMutation,
   useUpdateSkillsMutation
 } = userApiSlice;

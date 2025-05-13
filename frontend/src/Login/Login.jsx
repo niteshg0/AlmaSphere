@@ -2,25 +2,56 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { useLoginMutation } from "../redux/Api/userApiSlice.js";
-import { setUserInfo } from "../redux/features/authSlice.js";
+import { setUserInfo, setTokenInfo } from "../redux/features/authSlice.js";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import {z} from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 const Login = () => {
-  const [rollNumber, setRollNumber] = useState("");
-  const [password, setPassword] = useState("");
+  // const [rollNumber, setRollNumber] = useState("");
+  // const [password, setPassword] = useState("");
+  // const navigate= useNavigate();
+
+   const [loggingIn, setLoggingIn] = useState(false);
+
+  const formSchema = z.object({
+  rollNumberOrEmail: z.union([
+    z.string()
+      .min(10, "Roll number must be at least 10 digits")
+      .regex(/^\d+$/, "Roll number must contain only digits")
+      .transform((val) => Number(val)),
+    z.string()
+      .email("Invalid email address")
+      .regex(/^[^\s@]+@[^\s@]+\.[^\s@]+$/, "Incorrect Email Format")
+  ]),
+  password: z.string()
+    .min(8, "Password must be at least 8 characters"),
+});
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: zodResolver(formSchema),
+  });
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [login] = useLoginMutation();
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+   const onsubmit = async (data) => {
+    // e.preventDefault();
     try {
-      const res = await login({ rollNumber, password });
+      setLoggingIn(true);
+       const { rollNumberOrEmail, password } = data;
+    const res = await login({ rollNumberOrEmail, password });
       console.log(res);
       if (res.error) {
         const errorMessage =
           res.error.data?.message || "Login failed. Please try again.";
+        // console.error("Login error:", res.error);
         toast(errorMessage, {
           style: {
             background: "linear-gradient(to right, #fee2e2, #fecaca)",
@@ -35,7 +66,32 @@ const Login = () => {
         return;
       }
 
-      dispatch(setUserInfo({ ...res }));
+      // Check if data exists in the response
+      if (!res.data) {
+        console.error("Login response has no data:", res);
+        toast("Login response is missing data", {
+          style: {
+            background: "linear-gradient(to right, #fee2e2, #fecaca)",
+            color: "#991b1b",
+          },
+          icon: "❌",
+        });
+        return;
+      }
+
+      // Store user info
+      dispatch(setUserInfo({ ...res.data }));
+
+      // Store auth token if it exists in the response
+      if (res.data.token) {
+        // Store the token for auth purposes
+        dispatch(setTokenInfo(res.data.token));
+      }
+
+      setLoggingIn(false);
+      // Check if cookies are set after login
+      // console.log("Cookies after login:", document.cookie);
+
       toast("Login successful! Redirecting...", {
         style: {
           background: "linear-gradient(to right, #e0e7ff, #c7d2fe)",
@@ -45,11 +101,13 @@ const Login = () => {
         },
         icon: "✅",
         className:
-          "dark:!bgCreating your account...-gradient-to-r dark:!from-indigo-950/90 dark:!to-indigo-900/90 dark:!text-indigo-100 dark:!border-indigo-800 dark:!shadow-[0px_4px_10px_rgba(99,102,241,0.3)]",
+          "dark:!bg-gradient-to-r dark:!from-indigo-950/90 dark:!to-indigo-900/90 dark:!text-indigo-100 dark:!border-indigo-800 dark:!shadow-[0px_4px_10px_rgba(99,102,241,0.3)]",
       });
-      setRollNumber("");
-      setPassword("");
+
+      navigate(-1)
+     
     } catch (error) {
+      console.error("Login exception:", error);
       toast("Login failed. Please try again.", {
         style: {
           background: "linear-gradient(to right, #fee2e2, #fecaca)",
@@ -61,10 +119,9 @@ const Login = () => {
         className:
           "dark:!bg-gradient-to-r dark:!from-red-950/90 dark:!to-red-900/90 dark:!text-red-100 dark:!border-red-800 dark:!shadow-[0px_4px_10px_rgba(239,68,68,0.3)]",
       });
+    } finally {
+      setLoggingIn(false);
     }
-    setTimeout(() => {
-      navigate("/");
-    }, 1500);
   };
 
   return (
@@ -91,23 +148,25 @@ const Login = () => {
           <p className="text-center text-gray-600 dark:text-gray-400 mb-8">
             Access your alumni account
           </p>
-          <form onSubmit={handleSubmit} method="POST">
+          <form onSubmit={handleSubmit(onsubmit)} method="POST">
             <div className="mb-6">
               <label
                 htmlFor="rollNumber"
                 className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
               >
-                Alumni ID
+                Email Id / RollNumber
               </label>
               <input
                 type="text"
                 id="rollNumber"
-                value={rollNumber}
-                onChange={(e) => setRollNumber(e.target.value)}
-                placeholder="Enter your alumni ID"
+               {...register("rollNumberOrEmail")}
+                placeholder="Enter your Email Id or RollNumber"
                 className="w-full px-4 py-3 bg-white/80 dark:bg-gray-800/80 border border-indigo-200 dark:border-indigo-500/20 rounded-lg text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 dark:focus:ring-indigo-500/30 transition-all duration-300"
-                required
+               
               />
+               {errors.rollNumber && (
+                      <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.rollNumber.message}</p>
+                    )}
             </div>
             <div className="mb-6">
               <label
@@ -119,18 +178,22 @@ const Login = () => {
               <input
                 type="password"
                 id="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
+              {...register("password")}
                 placeholder="Enter your password"
                 className="w-full px-4 py-3 bg-white/80 dark:bg-gray-800/80 border border-indigo-200 dark:border-indigo-500/20 rounded-lg text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 dark:focus:ring-indigo-500/30 transition-all duration-300"
-                required
+               
               />
+               {errors.password && (
+                    <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.password.message}</p>
+                  )}
             </div>
             <button
               type="submit"
+              onClick={handleSubmit(onsubmit)}
               className="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-lg shadow-md transition-all duration-300 transform hover:scale-[1.02] relative overflow-hidden group"
+              disabled={loggingIn}
             >
-              <span className="relative z-10">Log In</span>
+              <span className="relative z-10">{!loggingIn? "Log In": "Logging In"}</span>
               <div className="absolute inset-0 bg-gradient-to-r from-indigo-500/20 to-purple-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
             </button>
           </form>

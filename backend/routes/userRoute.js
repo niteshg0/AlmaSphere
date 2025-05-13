@@ -9,6 +9,10 @@ import {
   logoutUser,
   addUserJobInfo,
   addUserSkills,
+  updateUserSkills,
+  verifyCode,
+  verify_roll,
+  verify_Roll_Code,
   addExtraInfo,
   verifyCode
 } from "../controller/userController.js";
@@ -31,6 +35,10 @@ import { editAchievements, editExtraCurricular } from "../controller/EditSection
 const router = Router();
 
 // creating user
+router.route("/").post(createUser)
+router.post("/verify/:rollNumber", verify_roll)
+router.post("/verify/:rollNumber/code", verify_Roll_Code)
+router.route("/profile").get(authentication, getUserProfile);
 router.route("/profile").post(createUser).get(authentication, getUserProfile);
 router.put("/updateUserProfile",authentication,editUserInfo)
 

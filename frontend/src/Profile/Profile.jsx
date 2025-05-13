@@ -16,7 +16,11 @@ import {
   FaEdit,
   FaPlus,
   FaTimes,
+<<<<<<< HEAD
   FaAd,
+=======
+  FaLock,
+>>>>>>> a6e37a87d0a02608ea3e21cc587d249c3d42124c
 } from "react-icons/fa";
 import {
   useUserProfileQuery,
@@ -29,7 +33,17 @@ import { useNavigate, Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../redux/features/authSlice.js";
 
+<<<<<<< HEAD
 const Profile = () => {
+=======
+
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
+
+const Profile = () => {
+  const { user, token } = useSelector((state) => state.auth);
+>>>>>>> a6e37a87d0a02608ea3e21cc587d249c3d42124c
   const { data, isLoading, error } = useUserProfileQuery();
   const [userData, setUserData] = useState(null);
   const [formData, setFormData] = useState({});
@@ -38,7 +52,11 @@ const Profile = () => {
   const navigate = useNavigate();
 
   const [logoutApiCall] = useLogoutMutation();
+<<<<<<< HEAD
   const [toast, setToast] = useState(null);
+=======
+  // const [toast, setToast] = useState(null);
+>>>>>>> a6e37a87d0a02608ea3e21cc587d249c3d42124c
 
   const [loading, setLoading] = useState(true);
   const [activeModal, setActiveModal] = useState(null);
@@ -61,16 +79,36 @@ const Profile = () => {
     setLoading(false);
   }, [data]);
 
+<<<<<<< HEAD
+=======
+  // if (!user || !token) {
+  //   navigate("/login")
+  // }
+
+>>>>>>> a6e37a87d0a02608ea3e21cc587d249c3d42124c
   const logoutHandler = async () => {
     try {
+      // debugger
       await logoutApiCall().unwrap();
       dispatch(logout());
+<<<<<<< HEAD
       setToast({ type: "success", message: "Logout successful..." });
+=======
+      // setToast({ type: "success", message: "Logout successful..." });
+      toast.success("Logout Successfully ...", {
+                className:
+                  "dark:!bg-gradient-to-r dark:!from-indigo-950/90 dark:!to-indigo-900/90 dark:!text-indigo-100",
+              });
+>>>>>>> a6e37a87d0a02608ea3e21cc587d249c3d42124c
 
       setTimeout(() => {
         navigate("/");
         setUserData(null);
+<<<<<<< HEAD
       }, 2000);
+=======
+      }, 1000);
+>>>>>>> a6e37a87d0a02608ea3e21cc587d249c3d42124c
     } catch (error) {
       console.log(error?.data?.message || error?.message);
 
@@ -109,6 +147,9 @@ const Profile = () => {
       [name]: value,
     }));
   };
+
+  // Guest view for when user is not logged in
+  
 
   if (error) {
     return (
@@ -393,7 +434,7 @@ const Profile = () => {
     );
   };
 
-  if (isLoading) {
+  if (loading || isLoading) {
     return (
       <div className="flex justify-center items-center min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-indigo-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
         <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-600 dark:border-indigo-400"></div>
@@ -880,8 +921,30 @@ const Profile = () => {
           </div>
         </div>
       </div>
+<<<<<<< HEAD
 
       {toast && <ToastComp toastType={toast.type} message={toast.message} />}
+=======
+                <ToastContainer
+                        position="top-right"
+                        autoClose={3000}
+                        hideProgressBar={false}
+                        newestOnTop={false}
+                        closeOnClick
+                        rtl={false}
+                        pauseOnFocusLoss
+                        draggable
+                        pauseOnHover
+                        theme="dark"
+                        toastStyle={{
+                          borderRadius: "10px",
+                          padding: "12px 16px",
+                          fontSize: "14px",
+                          fontWeight: "500",
+                        }}
+                      />
+      {/* {toast && <ToastComp toastType={toast.type} message={toast.message} />} */}
+>>>>>>> a6e37a87d0a02608ea3e21cc587d249c3d42124c
     </div>
   );
 };

@@ -22,6 +22,7 @@ import Query from "./Query/Query";
 import AskQuestion from "./Query/AskQuestion";
 import Question from "./Query/Question";
 import Profiles from "./Profiles";
+import PrivateRoute from "./components/PrivateRoute";
 
 function App() {
   const [isDarkTheme, setIsDarkTheme] = useState(() => {
@@ -43,136 +44,9 @@ function App() {
     setIsDarkTheme(!isDarkTheme);
   };
 
-  // const router = createBrowserRouter([
-  //   {
-  //     path: "/",
-  //     element: (
-  //       <>
-
-  //       <Layout isDarkTheme={isDarkTheme} toggleTheme={toggleTheme}>
-  //         <Home />
-  //       </Layout>
-  //       </>
-  //     ),
-  //   },
-  //   {
-  //     path: "/jobs",
-  //     element: (
-  //       <>
-  //         <Layout isDarkTheme={isDarkTheme} toggleTheme={toggleTheme}>
-  //         <JobPortal />
-  //       </Layout>
-  //       </>
-  //     ),
-  //   },
-  //   {
-  //     path: "/about",
-  //     element: (
-  //       <>
-  //         <Layout isDarkTheme={isDarkTheme} toggleTheme={toggleTheme}>
-  //         <AboutUs />
-  //       </Layout>
-  //       </>
-  //     ),
-  //   },
-  //   {
-  //     path: "/contact",
-  //     element: (
-  //       <>
-  //          <Layout isDarkTheme={isDarkTheme} toggleTheme={toggleTheme}>
-  //         <ContactUs />
-  //       </Layout>
-  //       </>
-  //     ),
-  //   },
-  //   {
-  //     path: "/createJob",
-  //     element: (
-  //       <>
-  //         <Layout isDarkTheme={isDarkTheme} toggleTheme={toggleTheme}>
-  //         <CreateJob />
-  //       </Layout>
-  //       </>
-  //     ),
-  //   },
-  //   {
-  //     path: "/donation",
-  //     element: (
-  //       <>
-  //         <Layout isDarkTheme={isDarkTheme} toggleTheme={toggleTheme}>
-  //         <Donation />
-  //       </Layout>
-  //       </>
-  //     )
-  //   },
-  //   {
-  //     path: "/donation/verify",
-  //     element: (
-  //       <>
-  //          <Layout isDarkTheme={isDarkTheme} toggleTheme={toggleTheme}>
-  //         <VerifyDonation />
-  //       </Layout>
-  //       </>
-  //     )
-  //   },
-  //   {
-  //     path: "/login",
-  //     element: (
-  //       <Layout isDarkTheme={isDarkTheme} toggleTheme={toggleTheme}>
-  //         <Login />
-  //       </Layout>
-  //     ),
-  //   },
-  //   {
-  //     path:"/jobDetail/:jobId",
-  //     element:(
-  //       <Layout isDarkTheme={isDarkTheme} toggleTheme={toggleTheme}>
-  //         <JobDetails />
-  //       </Layout>
-  //     ),
-  //   },
-  //   {
-  //     path: "/verify/:email",
-  //     element:(
-  //       <Layout isDarkTheme={isDarkTheme} toggleTheme={toggleTheme}>
-  //         <Verify />
-  //       </Layout>
-  //     ),
-  //   },
-  //   {
-  //     path: "/signup",
-  //     element: (
-  //       <Layout isDarkTheme={isDarkTheme} toggleTheme={toggleTheme}>
-  //         <SignUp />
-  //       </Layout>
-  //     ),
-  //   },
-  //   {
-  //     path: "/profile",
-  //     element: (
-  //       <Layout isDarkTheme={isDarkTheme} toggleTheme={toggleTheme}>
-  //         <Profile />
-  //       </Layout>
-  //     ),
-  //   },
-  // ]);
-
   const router = createBrowserRouter(
     createRoutesFromElements(
       <>
-        {/* <Route
-          path="/"
-          element={
-            <Layout
-              isDarkTheme={isDarkTheme}
-              toggleTheme={toggleTheme}
-              NavBar={"fixed"}
-            />
-          }
-        >
-          <Route index element={<Home />} />
-        </Route> */}
-
         <Route
           path="/"
           element={
@@ -185,43 +59,51 @@ function App() {
         >
           <Route index element={<Home />} />
 
-          <Route path="/about" element={<AboutUs />}/>
+          <Route path="/about" element={<AboutUs />} />
 
-          <Route path="/contact" element={<ContactUs />}/>
+          <Route path="/contact" element={<ContactUs />} />
 
-          <Route path="/profiles/:rollNumber" element={<Profiles />}/>
+          <Route path="/profiles/:rollNumber" element={<Profiles />} />
 
-          <Route path="/donation/verify" element={<VerifyDonation isDarkTheme={isDarkTheme}  />}/>
+          <Route
+            path="/donation/verify"
+            element={<VerifyDonation isDarkTheme={isDarkTheme} />}
+          />
 
-          <Route path="/login" element={<Login />}/>
+          <Route path="/login" element={<Login />} />
 
-          <Route path="/verify/:email" element={<Verify />}/>
+          <Route path="/verify/:email" element={<Verify />} />
 
-          <Route path="/signup" element={<SignUp />}/>
+          <Route path="/signup" element={<SignUp />} />
 
-          <Route path="/query" element= {<Query />} />
-        
+          <Route path="/query" element={<Query />} />
+
           <Route path="/query/askQuestion" element={<AskQuestion />} />
           <Route path="/query/:questionId" element={<Question />} />
 
+          {/* Moved from protected routes to public routes */}
+          <Route path="/profile" element={<Profile />} />
+          <Route
+            path="/donation"
+            element={<Donation isDarkTheme={isDarkTheme} />}
+          />
+          <Route
+            path="/jobs"
+            element={<JobPortal isDarkTheme={isDarkTheme} />}
+          />
+          <Route
+            path="/createJob"
+            element={<CreateJob isDarkTheme={isDarkTheme} />}
+          />
+          <Route
+            path="/jobDetail/:jobId"
+            element={<JobDetails isDarkTheme={isDarkTheme} />}
+          />
         </Route>
 
-        <Route path="/profile" element={<Profile />}/>
-
-        <Route path="/donation" element={<Donation isDarkTheme={isDarkTheme}  />}/>
-        
-        <Route
-          path="/jobs"
-          element={<JobPortal isDarkTheme={isDarkTheme} />}
-        />
-        <Route
-          path="/createJob"
-          element={<CreateJob isDarkTheme={isDarkTheme} />}
-        />
-        <Route
-          path="/jobDetail/:jobId"
-          element={<JobDetails isDarkTheme={isDarkTheme} />}
-        />
+        {/* Protected Routes - leaving empty as we moved them to public routes */}
+        {/* <Route element={<PrivateRoute />}>
+        </Route> */}
       </>
     )
   );
