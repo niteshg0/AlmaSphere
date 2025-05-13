@@ -14,14 +14,12 @@ const editExtraCurricular = async (req, res) => {
 
     const { extracurriculars } = req.body;
 
-    if (!Array.isArray(extracurriculars)) {
-      return res
-        .status(400)
-        .json({ message: "extracurriculars must be an array." });
-    }
+    const extracurricularsArray = Array.isArray(extracurriculars)
+    ? extracurriculars
+    : [extracurriculars];
 
     // Append new extracurriculars
-    extraInfo.extracurriculars.push(...extracurriculars);
+    extraInfo.extracurriculars.push(...extracurricularsArray);
 
     const updatedExtraInfo = await extraInfo.save();
 
@@ -51,14 +49,15 @@ const editAchievements = async (req, res) => {
 
     const { achievements } = req.body;
 
-    if (!Array.isArray(achievements)) {
-      return res
-        .status(400)
-        .json({ message: "achievements must be an array." });
-    }
+
+  const achievementsArray = Array.isArray(achievements)
+    ? achievements
+    : [achievements];
+
+
 
     // Append new achievements
-    extraInfo.achievements.push(...achievements);
+    extraInfo.achievements.push(...achievementsArray);
 
     const updatedExtraInfo = await extraInfo.save();
 
