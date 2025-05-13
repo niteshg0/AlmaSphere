@@ -118,7 +118,7 @@ const Login = () => {
       
 
       setTimeout(()=>{
-          navigate(-1);
+          navigate("/");
       }, 1000)
 
       

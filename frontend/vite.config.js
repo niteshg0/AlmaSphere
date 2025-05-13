@@ -26,6 +26,8 @@ export default defineConfig(({ mode }) => {
             "Access-Control-Allow-Credentials": "true",
           },
         },
+
+        
       },
       port: parseInt(env.VITE_PORT) || 5173, // Read from .env, fallback to 5173
     },
