@@ -1,27 +1,25 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { z } from "zod";
-import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import {
-  useSignupMutation,
-  useVerify_Roll_CodeMutation,
-  useVerify_rollMutation,
-} from "../redux/Api/userApiSlice";
-import { setUserInfo } from "../redux/features/authSlice";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-import { Form, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+
 function AddStudent() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const [signup] = useSignupMutation();
 
   const registrationSchema = z.object({
-    fullName: z.string().min(2, "Name is required"),
-    email: z.string().email("Invalid email address"),
+    fullName: z.string().trim().min(2, "Name is required").regex(/^[A-Za-z\s]+$/, "Name must contain only letters and spaces"),
+   email: z
+  .string().trim()
+  .email("Invalid email address")
+  .regex(
+      /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+      "Email must be a valid format"
+    ),
     rollNumber: z
       .string()
       .min(10, "Roll number is required")
@@ -32,13 +30,13 @@ function AddStudent() {
       invalid_type_error: "Gender not selected",
     }),
     batch: z
-      .string()
+      .string().trim()
       .regex(
         /^\d{4}-\d{4}$/,
         "Batch must be in format YYYY-YYYY (e.g. 2020-2024)"
       ),
-    branch: z.string().min(2, "Branch is required"),
-    course: z.string().min(2, "Course is required"),
+    branch: z.string().trim().min(2, "Branch is required"),
+    course: z.string().trim().min(2, "Course is required"),
     cgpa: z
       .string()
       .regex(
@@ -46,22 +44,6 @@ function AddStudent() {
         "CGPA must be between 0 and 10, with up to 2 decimal places"
       )
       .transform((val) => Number(val)),
-    password: z
-      .string()
-      .min(8, "Password must be at least 8 characters")
-      .regex(
-        /^(?=.*[a-z])/,
-        "Password must contain at least one lowercase letter"
-      )
-      .regex(
-        /^(?=.*[A-Z])/,
-        "Password must contain at least one uppercase letter"
-      )
-      .regex(/^(?=.*\d)/, "Password must contain at least one number")
-      .regex(
-        /^(?=.*[!@#$%^&*])/,
-        "Password must contain at least one special character (!@#$%^&*)"
-      ),
   });
 
   const {
@@ -75,12 +57,11 @@ function AddStudent() {
       rollNumber: "",
       fullName: "",
       email: "",
-      gender: "",
+      gender: "Male",
       batch: "",
       branch: "",
       course: "",
       cgpa: "",
-      password: "",
     },
   });
 
@@ -89,14 +70,14 @@ function AddStudent() {
 
     setIsSubmitting(true);
     try {
-      const data = formData;
-      const res = await signup(data);
+      // Here you would call your API to add the student
+      // Example: const res = await addStudent(formData);
 
-      if (res.error) {
-        // console.log(res);
-        const errorMessage =
-          res.error?.data?.message || "SignUp failed. Please try again.";
+      // For now, mock a successful response
+      const res = { success: true };
 
+      if (!res.success) {
+        const errorMessage = "Failed to add student. Please try again.";
         toast.error(errorMessage, {
           className:
             "dark:!bg-gradient-to-r dark:!from-red-950/90 dark:!to-red-900/90 dark:!text-red-100 dark:!border-red-800 dark:!shadow-[0px_4px_10px_rgba(239,68,68,0.3)]",
@@ -104,19 +85,18 @@ function AddStudent() {
         return;
       }
 
-      dispatch(setUserInfo({ ...res }));
-
-      toast.success("Account created successfully!", {
+      toast.success("Student added successfully!", {
         className:
           "dark:!bg-gradient-to-r dark:!from-indigo-950/90 dark:!to-indigo-900/90 dark:!text-indigo-100 dark:!border-indigo-800 dark:!shadow-[0px_4px_10px_rgba(99,102,241,0.3)]",
       });
 
+      // Clear form or navigate
       setTimeout(() => {
-        navigate("/login");
+        navigate("/admin/students");
       }, 1000);
     } catch (error) {
-      console.log(error);
-      toast.error("SignUp failed. Please try again.", {
+      console.error(error);
+      toast.error("Failed to add student. Please try again.", {
         className:
           "dark:!bg-gradient-to-r dark:!from-red-950/90 dark:!to-red-900/90 dark:!text-red-100 dark:!border-red-800 dark:!shadow-[0px_4px_10px_rgba(239,68,68,0.3)]",
       });
@@ -130,22 +110,20 @@ function AddStudent() {
       e.preventDefault(); // Prevent form submission on Enter key
     }
   };
+
   return (
     <div className="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 bg-gray-50 dark:bg-gray-900">
       <div className="max-w-3xl w-full space-y-6 bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-lg">
         <h3 className="text-lg font-semibold text-indigo-900 dark:text-indigo-400 border-b border-indigo-200 dark:border-indigo-500/20 pb-2">
-         Add Student / Alumni
+          Add Student / Alumni
         </h3>
 
         <form
           onSubmit={handleRegistrationSubmit(onSubmit)}
           onKeyPress={handleKeyPress}
         >
-          {/* Prefilled Student Information Section */}
+          {/* Student Information Section */}
           <div className="space-y-6 mb-8">
-            
-           
-
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* Personal Information */}
               <div className="space-y-4">
@@ -160,10 +138,14 @@ function AddStudent() {
                     type="text"
                     id="fullName"
                     {...registerRegistration("fullName")}
-                    // readOnly
-                    placeholder="Enter your full name"
-                    className="w-full px-4 py-3 bg-gray-100/80 dark:bg-gray-700/80 border border-indigo-200 dark:border-indigo-500/20 rounded-lg text-gray-900 dark:text-gray-100 focus:outline-none transition-all duration-300 cursor-not-allowed"
+                    placeholder="Enter student's full name"
+                    className="w-full px-4 py-3 bg-white dark:bg-gray-700 border border-indigo-200 dark:border-indigo-500/20 rounded-lg text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 transition-all duration-300"
                   />
+                  {registrationErrors.fullName && (
+                    <p className="text-red-500 text-sm mt-1">
+                      {registrationErrors.fullName.message}
+                    </p>
+                  )}
                 </div>
 
                 <div>
@@ -176,39 +158,55 @@ function AddStudent() {
                   <input
                     type="email"
                     id="email"
-                    placeholder="Enter your email address"
+                    placeholder="Enter student's email address"
                     {...registerRegistration("email")}
-                    // readOnly
-                    className="w-full px-4 py-3 bg-gray-100/80 dark:bg-gray-700/80 border border-indigo-200 dark:border-indigo-500/20 rounded-lg text-gray-900 dark:text-gray-100 focus:outline-none transition-all duration-300 cursor-not-allowed"
+                    className="w-full px-4 py-3 bg-white dark:bg-gray-700 border border-indigo-200 dark:border-indigo-500/20 rounded-lg text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 transition-all duration-300"
                   />
+                  {registrationErrors.email && (
+                    <p className="text-red-500 text-sm mt-1">
+                      {registrationErrors.email.message}
+                    </p>
+                  )}
                 </div>
 
                 <div>
-                  <select
-                id="selectLoginType"
-                {...registerRegistration("gender")}
-                defaultValue=""
-                className="appearance-none w-full px-4 py-3 bg-white/80 dark:bg-gray-800/80 border border-indigo-200 dark:border-indigo-500/20 rounded-lg text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 dark:focus:ring-indigo-500/30 transition-all duration-300"
-              >
-                <option value="Male">Male</option>
-                <option value="Female">Female</option>
-                <option value="Transgender">Transgender</option>
-              </select>
-              <div className="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
-                <svg
-                  className="w-4 h-4 text-gray-400"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M19 9l-7 7-7-7"
-                  />
-                </svg>
-              </div>
+                  <label
+                    htmlFor="gender"
+                    className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                  >
+                    Gender
+                  </label>
+                  <div className="relative">
+                    <select
+                      id="gender"
+                      {...registerRegistration("gender")}
+                      className="appearance-none w-full px-4 py-3 bg-white dark:bg-gray-700 border border-indigo-200 dark:border-indigo-500/20 rounded-lg text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 dark:focus:ring-indigo-500/30 transition-all duration-300"
+                    >
+                      <option value="Male">Male</option>
+                      <option value="Female">Female</option>
+                      <option value="Other">Other</option>
+                    </select>
+                    <div className="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
+                      <svg
+                        className="w-4 h-4 text-gray-400"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                          d="M19 9l-7 7-7-7"
+                        />
+                      </svg>
+                    </div>
+                  </div>
+                  {registrationErrors.gender && (
+                    <p className="text-red-500 text-sm mt-1">
+                      {registrationErrors.gender.message}
+                    </p>
+                  )}
                 </div>
               </div>
 
@@ -225,10 +223,14 @@ function AddStudent() {
                     type="text"
                     id="rollNumber"
                     {...registerRegistration("rollNumber")}
-                    // readOnly
-                    placeholder="Enter your roll number"
-                    className="w-full px-4 py-3 bg-gray-100/80 dark:bg-gray-700/80 border border-indigo-200 dark:border-indigo-500/20 rounded-lg text-gray-900 dark:text-gray-100 focus:outline-none transition-all duration-300"
+                    placeholder="Enter student's roll number"
+                    className="w-full px-4 py-3 bg-white dark:bg-gray-700 border border-indigo-200 dark:border-indigo-500/20 rounded-lg text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 transition-all duration-300"
                   />
+                  {registrationErrors.rollNumber && (
+                    <p className="text-red-500 text-sm mt-1">
+                      {registrationErrors.rollNumber.message}
+                    </p>
+                  )}
                 </div>
 
                 <div>
@@ -242,10 +244,14 @@ function AddStudent() {
                     type="text"
                     id="course"
                     {...registerRegistration("course")}
-                    // readOnly
-                    placeholder="Enter your course"
-                    className="w-full px-4 py-3 bg-gray-100/80 dark:bg-gray-700/80 border border-indigo-200 dark:border-indigo-500/20 rounded-lg text-gray-900 dark:text-gray-100 focus:outline-none transition-all duration-300 "
+                    placeholder="Enter student's course"
+                    className="w-full px-4 py-3 bg-white dark:bg-gray-700 border border-indigo-200 dark:border-indigo-500/20 rounded-lg text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 transition-all duration-300"
                   />
+                  {registrationErrors.course && (
+                    <p className="text-red-500 text-sm mt-1">
+                      {registrationErrors.course.message}
+                    </p>
+                  )}
                 </div>
 
                 <div>
@@ -259,10 +265,14 @@ function AddStudent() {
                     type="text"
                     id="batch"
                     {...registerRegistration("batch")}
-                    // readOnly
-                    placeholder="Enter your batch (e.g. 2020-2024)"
-                    className="w-full px-4 py-3 bg-gray-100/80 dark:bg-gray-700/80 border border-indigo-200 dark:border-indigo-500/20 rounded-lg text-gray-900 dark:text-gray-100 focus:outline-none transition-all duration-300 "
+                    placeholder="Enter batch (e.g. 2020-2024)"
+                    className="w-full px-4 py-3 bg-white dark:bg-gray-700 border border-indigo-200 dark:border-indigo-500/20 rounded-lg text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 transition-all duration-300"
                   />
+                  {registrationErrors.batch && (
+                    <p className="text-red-500 text-sm mt-1">
+                      {registrationErrors.batch.message}
+                    </p>
+                  )}
                 </div>
               </div>
             </div>
@@ -279,10 +289,14 @@ function AddStudent() {
                   type="text"
                   id="branch"
                   {...registerRegistration("branch")}
-                //   readOnly
-                placeholder="Enter your branch/specialization"
-                  className="w-full px-4 py-3 bg-gray-100/80 dark:bg-gray-700/80 border border-indigo-200 dark:border-indigo-500/20 rounded-lg text-gray-900 dark:text-gray-100 focus:outline-none transition-all duration-300 "
+                  placeholder="Enter branch/specialization"
+                  className="w-full px-4 py-3 bg-white dark:bg-gray-700 border border-indigo-200 dark:border-indigo-500/20 rounded-lg text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 transition-all duration-300"
                 />
+                {registrationErrors.branch && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {registrationErrors.branch.message}
+                  </p>
+                )}
               </div>
 
               <div>
@@ -296,10 +310,14 @@ function AddStudent() {
                   type="text"
                   id="cgpa"
                   {...registerRegistration("cgpa")}
-                //   readOnly
-                    placeholder="Enter your CGPA"
-                  className="w-full px-4 py-3 bg-gray-100/80 dark:bg-gray-700/80 border border-indigo-200 dark:border-indigo-500/20 rounded-lg text-gray-900 dark:text-gray-100 focus:outline-none transition-all duration-300 "
+                  placeholder="Enter CGPA (e.g. 8.5)"
+                  className="w-full px-4 py-3 bg-white dark:bg-gray-700 border border-indigo-200 dark:border-indigo-500/20 rounded-lg text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 transition-all duration-300"
                 />
+                {registrationErrors.cgpa && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {registrationErrors.cgpa.message}
+                  </p>
+                )}
               </div>
             </div>
           </div>

@@ -10,4 +10,12 @@ const getAllUser = async (req, res) => {
   }
 };
 
+// const addDetail= async (req, res)=>{
+//     try {
+      
+//     } catch (error) {
+      
+//     }
+// }
+
 export { getAllUser };
