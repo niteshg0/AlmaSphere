@@ -11,9 +11,15 @@ import "react-toastify/dist/ReactToastify.css";
 
 // Zod schema
 const contactSchema = z.object({
-  name: z.string().min(2, "Name is required"),
-  email: z.string().email("Invalid email address"),
-  message: z.string().min(10, "Message must be at least 10 characters"),
+  name: z.string().trim().min(2, "Name is required") .regex(/^[A-Za-z\s]+$/, "Name must contain only letters and spaces"),
+  email: z
+  .string().trim()
+  .email("Invalid email address")
+  .regex(
+      /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+      "Email must be a valid format"
+    ),
+  message: z.string().trim().min(10, "Message must be at least 10 characters"),
 });
 
 const Contact = () => {
