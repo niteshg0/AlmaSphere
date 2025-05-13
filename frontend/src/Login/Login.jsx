@@ -117,10 +117,13 @@ const Login = () => {
 
       
 
-      setTimeout(()=>{
+     setTimeout(() => {
+        if (res.data.role === "Admin") {
+          navigate("/admin/add-edit-Student");
+        } else {
           navigate("/");
-      }, 1000)
-
+        }
+      }, 1000);
       
     } catch (error) {
       console.error("Login exception:", error);
