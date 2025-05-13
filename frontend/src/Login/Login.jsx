@@ -58,6 +58,7 @@ const Login = () => {
          
       const res = await login({ rollNumberOrEmail, password , role : selectLoginType});
       console.log(res);
+
       if (res.error) {
         const errorMessage =
           res.error.data?.message || "Login failed. Please try again.";
@@ -92,17 +93,7 @@ const Login = () => {
       // Store user info
       dispatch(setUserInfo({ ...res.data }));
 
-      // Store auth token if it exists in the response
-      if (res.data.token) {
-        // Store the token for auth purposes
-        dispatch(setTokenInfo(res.data.token));
-      }
-
-      setLoggingIn(false);
-      // Check if cookies are set after login
-      // console.log("Cookies after login:", document.cookie);
-
-      toast("Login successful! Redirecting...", {
+      toast( res.data.message || "Login successful! Redirecting...", {
         style: {
           background: "linear-gradient(to right, #e0e7ff, #c7d2fe)",
           color: "#312e81",
@@ -114,7 +105,23 @@ const Login = () => {
           "dark:!bg-gradient-to-r dark:!from-indigo-950/90 dark:!to-indigo-900/90 dark:!text-indigo-100 dark:!border-indigo-800 dark:!shadow-[0px_4px_10px_rgba(99,102,241,0.3)]",
       });
 
-      navigate(-1);
+      // Store auth token if it exists in the response
+      if (res.data.token) {
+        // Store the token for auth purposes
+        dispatch(setTokenInfo(res.data.token));
+      }
+
+      setLoggingIn(false);
+      // Check if cookies are set after login
+      // console.log("Cookies after login:", document.cookie);
+
+      
+
+      setTimeout(()=>{
+          navigate(-1);
+      }, 1000)
+
+      
     } catch (error) {
       console.error("Login exception:", error);
       toast("Login failed. Please try again.", {

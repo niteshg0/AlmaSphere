@@ -210,7 +210,17 @@ const loginUser = async (req, res) => {
   try {
     const { rollNumberOrEmail, password, role } = req.body;
 
+    console.log("login", role);
+    
+
     if(role === "Admin") {
+
+      if(!isNaN(rollNumberOrEmail)){
+        return res.status(404).json({
+          message: "Login Through Email Only"
+        })
+      }
+
       const email = rollNumberOrEmail;
       const adminUser = await Admin.findOne({ email });
       
@@ -226,6 +236,7 @@ const loginUser = async (req, res) => {
 
       const token = generateToken(res, adminUser._id);
       return res.status(200).json({
+        message: "Admin LoggedIn Successfully",
         rollNumber: adminUser.rollNumber || "2023071049",
         fullName: adminUser.fullName,
         email: adminUser.email,
@@ -249,7 +260,9 @@ const loginUser = async (req, res) => {
     }
 
     const token = generateToken(res, findUser._id);
+    
     return res.status(200).json({
+      message: "User LoggedIn Successfully",
       rollNumber: findUser.rollNumber,
       fullName: findUser.fullName,
       email: findUser.email,
