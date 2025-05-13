@@ -1,10 +1,12 @@
 import JobPortal from "../model/jobPortalModel.js";
-import User from "../model/userModel.js";
+import AnalyticsInfo from "../model/User/analyticsInfo.js";
+import User from "../model/User/userInfo.js";
+// import User from "../model/User/userInfo.js";
 
 const createJobs = async (req, res) => {
   const userId = await req.user?._id;
   if (!userId) {
-    return res.status(402).json({ message: "not authrize to create jobs.." });
+    return res.status(402).json({ message: "Not Authorize to create job.." });
   }
   const {
     title,
@@ -19,7 +21,7 @@ const createJobs = async (req, res) => {
     contact_phone,
     requirements,
     location,
-    yearOfExperience
+    yearOfExperience,
   } = req.body;
   if (
     !title ||
@@ -51,11 +53,28 @@ const createJobs = async (req, res) => {
     contact_phone,
     location,
     requirements,
-    yearOfExperience
+    yearOfExperience,
   });
 
   try {
     const saveDetails = await jobDetail.save();
+
+    if (saveDetails) {
+      const user = await User.findById(userId);
+
+      const analytics = await AnalyticsInfo.findOneAndUpdate(
+        { userId: userId },
+        { $inc: { jobPosted: 1 } },
+        { new: true, upsert: true, setDefaultsOnInsert: true }
+      );
+
+      if (!user.analyticsId) {
+        user.analyticsId = analytics._id;
+        await user.save();
+      }
+    }
+
+    
 
     return res.status(202).json({
       id: saveDetails._id,
@@ -71,8 +90,8 @@ const createJobs = async (req, res) => {
       contact_email: saveDetails.contact_email,
       contact_phone: saveDetails.contact_phone,
       requirements: saveDetails.requirements,
-      location:saveDetails.location,
-      yearOfExperience:saveDetails.yearOfExperience
+      location: saveDetails.location,
+      yearOfExperience: saveDetails.yearOfExperience,
     });
   } catch (error) {
     console.log(error);
@@ -85,7 +104,7 @@ const getAllJobsDetails = async (req, res) => {
     const allJobDetails = await JobPortal.find({}).populate(
       "userId",
       "fullName -_id"
-    );
+    ).sort({ createdAt: -1 }); // Sort by date descending (newest first);
 
     // Return the job details
     res.status(200).json(allJobDetails);
@@ -93,9 +112,7 @@ const getAllJobsDetails = async (req, res) => {
     // Log the error for debugging
     console.error("Error fetching job details:", error);
 
-    res
-      .status(500)
-      .json({ message: "Failed to fetch job details", error: error.message });
+    res.status(500).json({ message: error.message });
   }
 };
 
