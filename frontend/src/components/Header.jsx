@@ -78,7 +78,7 @@ const Header = ({ isDarkTheme, toggleTheme, NavBar }) => {
     {
       name : "Add Student",
       id : 5,
-      link : "/admin/add-student",
+      link : "/admin/add-edit-Student",
       role : "admin",
     },
     {

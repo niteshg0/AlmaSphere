@@ -7,8 +7,11 @@ import { FaHome } from "react-icons/fa";
 import {string, z} from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useSelector } from "react-redux";
 
 const CreateJob = ({ isDarkTheme }) => {
+
+  const { user, token } = useSelector((state) => state.auth);
   
   
   

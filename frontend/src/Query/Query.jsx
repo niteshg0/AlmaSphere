@@ -9,7 +9,7 @@ import { useSelector } from "react-redux";
 const Query = () => {
   const { data: queryData, isLoading, error } = useShowAllQueryQuery();
   const navigate = useNavigate();
-
+  const {refetch}= useShowAllQueryQuery();
   const {user}= useSelector((state)=> state.auth)
 
   const [allQueries, setAllQueries] = useState([]);
@@ -23,7 +23,13 @@ const Query = () => {
   const categories = ["All", "Career", "Technical", "Academic", "General"];
   const statuses = ["All", "Open", "Resolved", "In Progress"];
 
-  useEffect(() => {
+  useEffect( () => {
+    
+     const res= async ()=>{
+      await refetch()
+     }
+     res();
+
     if (queryData) {
       let filteredQueries = queryData
         .filter((q) => {

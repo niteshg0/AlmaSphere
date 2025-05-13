@@ -134,7 +134,7 @@ const AnswerCard = ({ answer, userId }) => {
           <div className="ml-3">
             <p className="font-medium dark:text-white">
               {answer.answeredBy
-                ? answer.answeredBy.fullName || "Unknown User"
+                ? answer.answeredBy?.fullName || "Unknown User"
                 : "Anonymous"}
             </p>
             <p className="text-xs text-gray-500 dark:text-gray-400">

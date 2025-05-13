@@ -23,6 +23,7 @@ import AskQuestion from "./Query/AskQuestion";
 import Question from "./Query/Question";
 import Profiles from "./Profiles";
 import PrivateRoute from "./components/PrivateRoute";
+import AdminRoute from "./components/AdminRoute";
 import AddStudent from "./admin/AddStudent";
 import Student from "./admin/Student";
 
@@ -59,7 +60,6 @@ function App() {
             />
           }
         >
-
           <Route index element={<Home />} />
 
           <Route path="/about" element={<AboutUs />} />
@@ -72,7 +72,7 @@ function App() {
             path="/donation/verify"
             element={<VerifyDonation isDarkTheme={isDarkTheme} />}
           />
-        
+
           <Route path="/login" element={<Login />} />
 
           <Route path="/verify/:email" element={<Verify />} />
@@ -102,13 +102,41 @@ function App() {
             path="/jobDetail/:jobId"
             element={<JobDetails isDarkTheme={isDarkTheme} />}
           />
-          <Route path="/admin/add-edit-Student" element={<AddStudent/>}/>
-          <Route path="/admin/student" element={<Student/>}/>
+
+          {/* Admin Protected Routes */}
+          <Route element={<AdminRoute />}>
+            <Route path="/admin/add-edit-Student" element={<AddStudent />} />
+            <Route path="/admin/student" element={<Student />} />
+          </Route>
         </Route>
 
-        {/* Protected Routes - leaving empty as we moved them to public routes */}
-        {/* <Route element={<PrivateRoute />}>
-        </Route> */}
+        {/* Student/Alumni Protected Routes */}
+        <Route element={<PrivateRoute allowedRoles={["Student / Alumni"]} />}>
+          <Route path="/profile" element={<Profile />} />
+          <Route
+            path="/donation"
+            element={<Donation isDarkTheme={isDarkTheme} />}
+          />
+          <Route
+            path="/createJob"
+            element={<CreateJob isDarkTheme={isDarkTheme} />}
+          />
+          <Route path="/query/askQuestion" element={<AskQuestion />} />
+        </Route>
+
+        {/* Routes accessible by both Admin and Student/Alumni */}
+        <Route
+          element={
+            <PrivateRoute allowedRoles={["Admin", "Student / Alumni"]} />
+          }
+        >
+          <Route
+            path="/jobs"
+            element={<JobPortal isDarkTheme={isDarkTheme} />}
+          />
+          <Route path="/query" element={<Query />} />
+          <Route path="/query/:questionId" element={<Question />} />
+        </Route>
       </>
     )
   );

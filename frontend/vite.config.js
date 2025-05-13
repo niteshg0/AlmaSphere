@@ -11,7 +11,7 @@ export default defineConfig(({ mode }) => {
     plugins: [react()],
     server: {
       proxy: {
-        "/api/":`http://localhost:${env.VITE_BACKEND_PORT}`
+        "/api/":`http://localhost:${env.VITE_BACKEND_PORT}`,
         // "/api/":`http://localhost:8000`,
 
         // "/api/": {
@@ -26,6 +26,8 @@ export default defineConfig(({ mode }) => {
         //     "Access-Control-Allow-Credentials": "true",
         //   },
         // },
+
+        
       },
       port: parseInt(env.VITE_PORT) || 5173, // Read from .env, fallback to 5173
     },
