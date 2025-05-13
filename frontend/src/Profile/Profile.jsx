@@ -16,7 +16,11 @@ import {
   FaEdit,
   FaPlus,
   FaTimes,
+<<<<<<< HEAD
+  FaAd,
+=======
   FaLock,
+>>>>>>> a6e37a87d0a02608ea3e21cc587d249c3d42124c
 } from "react-icons/fa";
 import {
   useUserProfileQuery,
@@ -29,8 +33,17 @@ import { useNavigate, Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../redux/features/authSlice.js";
 
+<<<<<<< HEAD
+const Profile = () => {
+=======
+
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
+
 const Profile = () => {
   const { user, token } = useSelector((state) => state.auth);
+>>>>>>> a6e37a87d0a02608ea3e21cc587d249c3d42124c
   const { data, isLoading, error } = useUserProfileQuery();
   const [userData, setUserData] = useState(null);
   const [formData, setFormData] = useState({});
@@ -39,7 +52,11 @@ const Profile = () => {
   const navigate = useNavigate();
 
   const [logoutApiCall] = useLogoutMutation();
+<<<<<<< HEAD
   const [toast, setToast] = useState(null);
+=======
+  // const [toast, setToast] = useState(null);
+>>>>>>> a6e37a87d0a02608ea3e21cc587d249c3d42124c
 
   const [loading, setLoading] = useState(true);
   const [activeModal, setActiveModal] = useState(null);
@@ -62,16 +79,36 @@ const Profile = () => {
     setLoading(false);
   }, [data]);
 
+<<<<<<< HEAD
+=======
+  // if (!user || !token) {
+  //   navigate("/login")
+  // }
+
+>>>>>>> a6e37a87d0a02608ea3e21cc587d249c3d42124c
   const logoutHandler = async () => {
     try {
+      // debugger
       await logoutApiCall().unwrap();
       dispatch(logout());
+<<<<<<< HEAD
       setToast({ type: "success", message: "Logout successful..." });
+=======
+      // setToast({ type: "success", message: "Logout successful..." });
+      toast.success("Logout Successfully ...", {
+                className:
+                  "dark:!bg-gradient-to-r dark:!from-indigo-950/90 dark:!to-indigo-900/90 dark:!text-indigo-100",
+              });
+>>>>>>> a6e37a87d0a02608ea3e21cc587d249c3d42124c
 
       setTimeout(() => {
         navigate("/");
         setUserData(null);
+<<<<<<< HEAD
       }, 2000);
+=======
+      }, 1000);
+>>>>>>> a6e37a87d0a02608ea3e21cc587d249c3d42124c
     } catch (error) {
       console.log(error?.data?.message || error?.message);
 
@@ -112,36 +149,7 @@ const Profile = () => {
   };
 
   // Guest view for when user is not logged in
-  if (!user || !token) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-indigo-50 to-indigo-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
-        <div className="max-w-md p-8 bg-white dark:bg-gray-800 rounded-lg shadow-lg text-center">
-          <FaLock className="mx-auto h-16 w-16 text-indigo-500 mb-6" />
-          <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-4">
-            Profile Access
-          </h2>
-          <p className="text-gray-600 dark:text-gray-300 mb-8">
-            To view and manage your personal profile, please log in or create an
-            account.
-          </p>
-          <div className="flex flex-col sm:flex-row justify-center gap-4">
-            <Link
-              to="/login"
-              className="px-6 py-3 rounded-lg font-medium transition-all duration-300 transform hover:scale-105 bg-indigo-600 hover:bg-indigo-700 text-white"
-            >
-              Log In
-            </Link>
-            <Link
-              to="/signup"
-              className="px-6 py-3 rounded-lg font-medium transition-all duration-300 transform hover:scale-105 bg-white hover:bg-gray-50 text-indigo-900 border border-indigo-200 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-gray-200 dark:border-gray-600"
-            >
-              Sign Up
-            </Link>
-          </div>
-        </div>
-      </div>
-    );
-  }
+  
 
   if (error) {
     return (
@@ -671,14 +679,25 @@ const Profile = () => {
                 Skills
               </h2>
               <div className="flex gap-2">
-                <button
-                  onClick={() =>
-                    handleOpenModal(MODAL_TYPES.SKILLS, userData.skillId)
-                  }
-                  className="p-2 rounded-lg bg-white dark:bg-gray-700 text-indigo-600 dark:text-indigo-400 shadow-sm border border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors"
-                >
-                  <FaEdit className="h-5 w-5" />
-                </button>
+                {userData.skillId ? (
+                  <button
+                    onClick={() =>
+                      handleOpenModal(MODAL_TYPES.SKILLS, userData.skillId)
+                    }
+                    className="p-2 rounded-lg bg-white dark:bg-gray-700 text-indigo-600 dark:text-indigo-400 shadow-sm border border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors"
+                  >
+                    <FaEdit className="h-5 w-5" />
+                  </button>
+                ) : (
+                  <button
+                    onClick={() =>
+                      handleOpenModal(MODAL_TYPES.SKILLS, userData.skillId)
+                    }
+                    className="p-2 rounded-lg bg-white dark:bg-gray-700 text-indigo-600 dark:text-indigo-400 shadow-sm border border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors"
+                  >
+                    <FaPlus className="h-5 w-5" />
+                  </button>
+                )}
               </div>
             </div>
 
@@ -902,8 +921,30 @@ const Profile = () => {
           </div>
         </div>
       </div>
+<<<<<<< HEAD
 
       {toast && <ToastComp toastType={toast.type} message={toast.message} />}
+=======
+                <ToastContainer
+                        position="top-right"
+                        autoClose={3000}
+                        hideProgressBar={false}
+                        newestOnTop={false}
+                        closeOnClick
+                        rtl={false}
+                        pauseOnFocusLoss
+                        draggable
+                        pauseOnHover
+                        theme="dark"
+                        toastStyle={{
+                          borderRadius: "10px",
+                          padding: "12px 16px",
+                          fontSize: "14px",
+                          fontWeight: "500",
+                        }}
+                      />
+      {/* {toast && <ToastComp toastType={toast.type} message={toast.message} />} */}
+>>>>>>> a6e37a87d0a02608ea3e21cc587d249c3d42124c
     </div>
   );
 };

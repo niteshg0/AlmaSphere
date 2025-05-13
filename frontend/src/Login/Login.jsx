@@ -12,12 +12,24 @@ import { zodResolver } from "@hookform/resolvers/zod";
 const Login = () => {
   // const [rollNumber, setRollNumber] = useState("");
   // const [password, setPassword] = useState("");
+  // const navigate= useNavigate();
+
+   const [loggingIn, setLoggingIn] = useState(false);
+
   const formSchema = z.object({
-    rollNumber: z.string().min(10, "Roll number is required")
+  rollNumberOrEmail: z.union([
+    z.string()
+      .min(10, "Roll number must be at least 10 digits")
       .regex(/^\d+$/, "Roll number must contain only digits")
-        .transform((val) => Number(val)),
-        password: z.string().min(6, "Password must be at least 6 characters"),
-  });
+      .transform((val) => Number(val)),
+    z.string()
+      .email("Invalid email address")
+      .regex(/^[^\s@]+@[^\s@]+\.[^\s@]+$/, "Incorrect Email Format")
+  ]),
+  password: z.string()
+    .min(8, "Password must be at least 8 characters"),
+});
+
   const {
     register,
     handleSubmit,
@@ -32,8 +44,9 @@ const Login = () => {
    const onsubmit = async (data) => {
     // e.preventDefault();
     try {
-       const { rollNumber, password } = data;
-  const res = await login({ rollNumber, password });
+      setLoggingIn(true);
+       const { rollNumberOrEmail, password } = data;
+    const res = await login({ rollNumberOrEmail, password });
       console.log(res);
       if (res.error) {
         const errorMessage =
@@ -90,6 +103,8 @@ const Login = () => {
         className:
           "dark:!bg-gradient-to-r dark:!from-indigo-950/90 dark:!to-indigo-900/90 dark:!text-indigo-100 dark:!border-indigo-800 dark:!shadow-[0px_4px_10px_rgba(99,102,241,0.3)]",
       });
+
+      navigate(-1)
      
     } catch (error) {
       console.error("Login exception:", error);
@@ -139,13 +154,13 @@ const Login = () => {
                 htmlFor="rollNumber"
                 className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
               >
-                Alumni ID
+                Email Id / RollNumber
               </label>
               <input
                 type="text"
                 id="rollNumber"
-               {...register("rollNumber")}
-                placeholder="Enter your alumni ID"
+               {...register("rollNumberOrEmail")}
+                placeholder="Enter your Email Id or RollNumber"
                 className="w-full px-4 py-3 bg-white/80 dark:bg-gray-800/80 border border-indigo-200 dark:border-indigo-500/20 rounded-lg text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 dark:focus:ring-indigo-500/30 transition-all duration-300"
                
               />

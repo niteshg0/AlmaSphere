@@ -6,6 +6,7 @@ import generateToken from "../utils/createToken.js";
 import nodemailer from "nodemailer";
 import JobInfo from "../model/User/jobInfo.js";
 import ExtraInfo from "../model/User/extraInfo.js";
+import College_data from "../model/College_data.js";
 
 async function sendVerificationEmail(email, code) {
   console.log(email, code);
@@ -55,19 +56,26 @@ async function sendVerificationEmail(email, code) {
 }
 
 const createUser = async (req, res) => {
-  const { rollNumber, fullName, email, password, role, gender, batch } =
+  const { rollNumber, fullName, email, password, gender, batch, course, branch, cgpa } =
     req.body;
-  if (!rollNumber || !fullName || !email || !password || !gender || !batch) {
-    return res.status(400).json({ message: "All inputs are required." });
+
+  const college_user= await College_data.findOne({rollNumber})
+  
+  if (rollNumber!=college_user.rollNumber && fullName!= college_user.fullName && email!=college_user.email) {
+    return res.status(400).json({ message: "Data is not correct" });
   }
+
+  const batchYear= Number(batch.slice(-4));
+  let currentYear = new Date().getFullYear();
+  const role= (currentYear>=batchYear)? "Alumni": "Student";
 
   // Checking the user exist or not
-  const checkUserExists = await User.findOne({ email });
+  const checkUserExists = await User.findOne({ rollNumber});
   console.log("Existing User:", checkUserExists);
 
-  if (checkUserExists) {
-    return res.status(409).send("User already exists.");
-  }
+  // if (checkUserExists) {
+  //   return res.status(409).send("User already exists.");
+  // }
 
   // Hashing password....
   const salt = await bcrypt.genSalt(10);
@@ -75,24 +83,28 @@ const createUser = async (req, res) => {
 
   // Creating a new User ...
   const newUser = new User({
-    rollNumber,
-    fullName,
-    email,
+    rollNumber: college_user.rollNumber,
+    fullName: college_user.fullName,
+    email: college_user.email,
     password: hashPassword,
     role,
-    gender,
-    batch,
+    gender: college_user.gender,
+    batch: college_user.batch,
+    course: college_user.course,
+    branch: college_user.branch,
+    cgpa: college_user.cgpa,
+    isVerified: college_user.isVerified,
   });
 
-  newUser.verifyCode = Math.floor(Math.random() * 9000 + 1000);
-  newUser.codeExpiry = new Date(Date.now() + 3600000);
+  // newUser.verifyCode = Math.floor(Math.random() * 9000 + 1000);
+  // newUser.codeExpiry = new Date(Date.now() + 3600000);
 
   try {
     const savedUser = await newUser.save();
 
-    await sendVerificationEmail(savedUser.email, savedUser.verifyCode);
+    // await sendVerificationEmail(savedUser.email, savedUser.verifyCode);
     // generating token
-    await generateToken(res, savedUser._id);
+    generateToken(res, savedUser._id);
     return res.status(201).json({
       _id: savedUser._id,
       rollNumber: savedUser.rollNumber,
@@ -108,12 +120,110 @@ const createUser = async (req, res) => {
   }
 };
 
+const verify_roll= async( req, res)=>{
+    try {
+      const {rollNumber}= req.params;
+      
+  
+      const rollExist= await College_data.findOne({rollNumber})
+
+      if(!rollExist){
+        return res.status(500).json({message: "RollNumber Does Not Exist"})
+      }
+
+      const is_registered= await User.findOne({rollNumber});
+
+      if(is_registered){
+        return res.status(500).json({message: "RollNumber already Registered"})
+      }
+
+      rollExist.verifyCode = Math.floor(Math.random() * 9000 + 1000);
+      rollExist.codeExpiry = new Date(Date.now() + 3600000);
+
+      const savedUser= await rollExist.save();
+
+      // const { verifyCode, codeExpiry, ...user } = savedUser.toObject();
+      // console.log(user);
+      
+
+      await sendVerificationEmail(savedUser.email, savedUser.verifyCode);
+
+      return res.status(200).json({
+        message: "RollNumber Exist",
+        data: {}
+      })
+
+    } catch (error) {
+      console.error("Login error:", error);
+      return res.status(500).json({ message: "Internal server error in Verifying Roll Number" });
+    }
+}
+
+const verify_Roll_Code = async (req, res) => {
+  const { code } = req.body;
+  // console.log("code", code, req);
+  
+  const {rollNumber } = req.params;
+
+  try {
+    const foundUser = await College_data.findOne({ rollNumber});
+
+
+    if (!foundUser) {
+      return res.status(404).json({ message: "RollNumber Not Exist..." });
+    }
+
+    const {verifyCode, codeExpiry, isVerified, ...userData}= foundUser.toObject();
+
+    const foundUserVerifyCode = foundUser.verifyCode;
+    const foundUserexpiry = foundUser.codeExpiry;
+
+    const isnotExpired = foundUserexpiry > Date.now();
+
+    const codeVerification = code == foundUserVerifyCode;
+
+    if (codeVerification && isnotExpired) {
+
+      foundUser.isVerified = true;
+      console.log(foundUser.isVerified );
+      
+      await foundUser.save();
+
+      return res.status(200).json(
+        { message: "User verified successfully.",
+          data: userData
+       });
+    } else {
+      if (!isnotExpired) {
+        return res.status(400).json({ message: "Code Expired" });
+      } else {
+        return res.status(400).json({ message: "Incorrect Verification Code" });
+      }
+    }
+  } catch (error) {
+    return res.status(500).json({ message: "could not run verify-code" });
+  }
+};
+
 const loginUser = async (req, res) => {
   try {
-    const { rollNumber, password } = req.body;
+    const { rollNumberOrEmail, password } = req.body;
+    // let email, rollNumber
+
+    let findUser
+
+    if(isNaN(Number(rollNumberOrEmail))){
+      const email= rollNumberOrEmail
+      findUser = await User.findOne({email});
+
+    } else{
+
+      const rollNumber= rollNumberOrEmail
+      findUser = await User.findOne({rollNumber});
+    }
 
     // Find the user by roll number
-    const findUser = await User.findOne({ rollNumber });
+   
 
     // If user is not found
     if (!findUser) {
@@ -176,24 +286,7 @@ const getUserProfile = async (req, res) => {
   }
 };
 
-const updateUserInfo = async (req, res) => {
-  try {
-    const user = await User.findById(req.user._id);
-    if (user) {
-      user.fullName = req.body.fullName || user.fullName;
-      user.rollNumber = req.body.rollNumber || user.rollNumber;
-      user.email = req.body.email || user.email;
-      if (req.body.password) {
-        const salt = await bcrypt.genSalt(10);
-        const hashPassword = await bcrypt.hash(req.body.password, salt);
-        user.password = hashPassword;
-      }
-    }
-    return res.status(201).json(user);
-  } catch (error) {
-    console.log("error : ", error.message);
-  }
-};
+
 
 const addUserSkills = async (req, res) => {
   const userId = req.user._id;
@@ -242,31 +335,7 @@ const addUserSkills = async (req, res) => {
   }
 };
 
-const updateUserSkills = async (req, res) => {
-  try {
-    const userId = req.user._id;
-    if (!userId) {
-      return res.status(402).json({ message: "please login..." });
-    }
-    const skills = await SkillInfo.findOne({ userId });
-    if (!skills) {
-      return res.status(403).json({ message: "skill not founded..." });
-    }
-    if (req.body.technicalSkill && Array.isArray(req.body.technicalSkill)) {
-      skills.technicalSkill.push(...req.body.technicalSkill);
-    }
-    if (skills.nonTechnicalSkill && Array.isArray(req.body.nonTechnicalSkill)) {
-      skills.nonTechnicalSkill.push(...req.body.nonTechnicalSkill);
-    }
-    await skills.save();
-    return res
-      .status(202)
-      .json({ message: "skill added successfully", skills });
-  } catch (err) {
-    console.log(err.message);
-    return res.status(403).json({ message: "server error..." });
-  }
-};
+
 
 const addUserJobInfo = async (req, res) => {
   const userId = req.user._id;
@@ -312,43 +381,6 @@ const addUserJobInfo = async (req, res) => {
   }
 };
 
-const updateJobInfo = async (req, res) => {
-  try {
-    const userId = req.user._id;
-    if (!userId) {
-      return res.status(402).json({ message: "please login..." });
-    }
-    const job = await JobInfo.findOne({ userId });
-    if (!job) {
-      return res.status(403).json({ message: "jobinfo not founded..." });
-    }
-    const previous = {
-      companyName: job.companyName,
-      position: job.position,
-      duration: job.duration,
-    };
-    job.previousCompany.push(previous);
-
-    const { companyName, position, duration, location } = req.body;
-    if (companyName) {
-      job.companyName = companyName;
-    }
-    if (position) {
-      job.position = position;
-    }
-    if (duration) {
-      job.duration = duration;
-    }
-    if (location) {
-      job.location = location;
-    }
-    await job.save();
-    return res.status(202).json({ message: "jobInfo added successfully", job });
-  } catch (error) {
-    console.log(error);
-    return res.status(403).json({ message: "server error..." });
-  }
-};
 
 const addExtraInfo = async (req, res) => {
   const userId = req.user._id;
@@ -461,12 +493,11 @@ export {
   loginUser,
   getUserProfile,
   logoutUser,
-  updateUserInfo,
   verifyCode,
-  updateUserSkills,
   addUserSkills,
   getProfile,
   addUserJobInfo,
-  updateJobInfo,
   addExtraInfo,
+  verify_roll,
+  verify_Roll_Code,
 };

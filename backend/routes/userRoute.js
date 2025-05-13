@@ -7,12 +7,13 @@ import {
   getUserProfile,
   getProfile,
   logoutUser,
-  updateUserInfo,
-  addExtraInfo,
   addUserJobInfo,
-  updateJobInfo,
   addUserSkills,
   updateUserSkills,
+  verifyCode,
+  verify_roll,
+  verify_Roll_Code,
+  addExtraInfo,
   verifyCode
 } from "../controller/userController.js";
 
@@ -25,19 +26,38 @@ import authentication from "../middleware/authentication.js";
 // autherization
 import { authrizeAlumni, authrizeAdmin } from "../middleware/authrizeRole.js";
 
+// edit
+import { editJobInfo } from "../controller/EditSection/editJobs.js";
+import { editUserSkills } from "../controller/EditSection/editSkills.js";
+import { editUserInfo } from "../controller/EditSection/editProfile.js";
+import { editAchievements, editExtraCurricular } from "../controller/EditSection/editExtra.js";
+
 const router = Router();
 
 // creating user
+router.route("/").post(createUser)
+router.post("/verify/:rollNumber", verify_roll)
+router.post("/verify/:rollNumber/code", verify_Roll_Code)
+router.route("/profile").get(authentication, getUserProfile);
 router.route("/profile").post(createUser).get(authentication, getUserProfile);
+router.put("/updateUserProfile",authentication,editUserInfo)
+
 // login and logout
 router.route("/auth").post(loginUser);
 router.post("/logout", logoutUser);
-router.put("/updateSkills",authentication,updateUserSkills)
-router.post("/addUserSkills",authentication,addUserSkills)
-router.post("/addUserJobInfo",authentication,addUserJobInfo)
-router.put("/updateJobInfo",authentication,updateJobInfo)
-router.post("/extraInfo",authentication,addExtraInfo)
 
+// extra carricular
+router.post("/addExtraInfo",authentication,addExtraInfo)
+router.put("/updateAchievement",authentication,editAchievements)
+router.put("/updateExtracarricular",authentication,editExtraCurricular)
+
+// job info
+router.post("/addUserJobInfo",authentication,addUserJobInfo)
+router.put("/updateJobInfo",authentication,editJobInfo)
+
+// user skills
+router.post("/addUserSkills",authentication,addUserSkills)
+router.put("/updateSkills",authentication,editUserSkills)
 
 // verify-code
 // router.route("/verify/:email")

@@ -43,9 +43,36 @@ export const userApiSlice = apiSlice.injectEndpoints({
         body: data,
       }),
     }),
+    addSkills : builder.mutation({
+      query: (data) => ({
+        url: `${USERS_URL}/addUserSkills`,
+        method:"POST",
+        body:data,
+      })
+    }),
+    updateSkills : builder.mutation({
+      query:(data) => ({
+        url:`${USERS_URL}/updateSkills`,
+        method:"PUT",
+        body:data,
+      })
+    }),
     verify: builder.mutation({
       query: ({ email, code }) => ({
         url: `${USERS_URL}/verify/${email}`,
+        method: "POST",
+        body: { code },
+      }),
+    }),
+    verify_roll: builder.mutation({
+      query: ({ rollNumber }) => ({
+        url: `${USERS_URL}/verify/${rollNumber}`,
+        method: "POST"
+      }),
+    }),
+    verify_Roll_Code: builder.mutation({
+      query: ({ rollNumber, code }) => ({
+        url: `${USERS_URL}/verify/${rollNumber}/code`,
         method: "POST",
         body: { code },
       }),
@@ -60,4 +87,8 @@ export const {
   useVerifyMutation,
   useGetProfileQuery,
   useUserProfileQuery,
+  useVerify_rollMutation,
+  useVerify_Roll_CodeMutation,
+  useAddSkillsMutation,
+  useUpdateSkillsMutation
 } = userApiSlice;

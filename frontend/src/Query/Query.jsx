@@ -4,10 +4,13 @@ import { FaQuestion, FaFilter, FaSearch } from "react-icons/fa";
 import { formatDistanceToNow } from "date-fns";
 import QueryCard from "./QueryCard";
 import { useShowAllQueryQuery } from "../redux/Api/queryApiSlice";
+import { useSelector } from "react-redux";
 
 const Query = () => {
   const { data: queryData, isLoading, error } = useShowAllQueryQuery();
   const navigate = useNavigate();
+
+  const {user}= useSelector((state)=> state.auth)
 
   const [allQueries, setAllQueries] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
@@ -63,6 +66,12 @@ const Query = () => {
     setSelectedStatus,
   ]);
 
+
+  const handleAsk= ()=>{
+    if(!user) navigate("/login")
+    else navigate("/query/askQuestion")
+  }
+
   if (isLoading)
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-indigo-50 to-indigo-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
@@ -108,13 +117,13 @@ const Query = () => {
             Query Portal
           </h1>
 
-          <Link
-            to="/query/askQuestion"
+          <button
             className="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg transition-colors duration-300"
+            onClick={handleAsk}
           >
             <FaQuestion size={14} />
             <span>Ask a Question</span>
-          </Link>
+          </button>
         </div>
 
         <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md p-4 mb-6">
