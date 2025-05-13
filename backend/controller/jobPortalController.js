@@ -105,7 +105,7 @@ const getAllJobsDetails = async (req, res) => {
     const allJobDetails = await JobPortal.find({}).populate(
       "userId",
       "fullName -_id"
-    );
+    ).sort({ createdAt: -1 }); // Sort by date descending (newest first);
 
     // Return the job details
     res.status(200).json(allJobDetails);

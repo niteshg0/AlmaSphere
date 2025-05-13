@@ -5,7 +5,7 @@ import { usePostQuestionMutation } from "../redux/Api/queryApiSlice";
 import { useNavigate } from "react-router";
 
 const AskQuestion = () => {
-//   const { user } = useSelector((state) => state.auth);
+  const { user } = useSelector((state) => state.auth);
   const [postQuestion, { isLoading, error }] = usePostQuestionMutation();
   const navigate = useNavigate();
   const [selectedCategory, setSelectedCategory] = useState("General");
@@ -46,6 +46,10 @@ const AskQuestion = () => {
     { value: "Academic", label: "Academic", icon: "🏆" },
     { value: "General", label: "General", icon: "🔍" },
   ];
+  
+  // if(!user){
+  //   navigate("/")
+  // }
 
   if (error){
     console.log(error);

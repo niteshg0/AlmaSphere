@@ -93,7 +93,7 @@ const createUser = async (req, res) => {
     course: college_user.course,
     branch: college_user.branch,
     cgpa: college_user.cgpa,
-    isVerifiend: true,
+    isVerified: college_user.isVerified,
   });
 
   // newUser.verifyCode = Math.floor(Math.random() * 9000 + 1000);
@@ -142,15 +142,15 @@ const verify_roll= async( req, res)=>{
 
       const savedUser= await rollExist.save();
 
-      const { verifyCode, codeExpiry, ...user } = savedUser.toObject();
-      console.log(user);
+      // const { verifyCode, codeExpiry, ...user } = savedUser.toObject();
+      // console.log(user);
       
 
       await sendVerificationEmail(savedUser.email, savedUser.verifyCode);
 
       return res.status(200).json({
         message: "RollNumber Exist",
-        data: user
+        data: {}
       })
 
     } catch (error) {
@@ -161,14 +161,19 @@ const verify_roll= async( req, res)=>{
 
 const verify_Roll_Code = async (req, res) => {
   const { code } = req.body;
+  // console.log("code", code, req);
+  
   const {rollNumber } = req.params;
 
   try {
     const foundUser = await College_data.findOne({ rollNumber});
 
+
     if (!foundUser) {
       return res.status(404).json({ message: "RollNumber Not Exist..." });
     }
+
+    const {verifyCode, codeExpiry, isVerified, ...userData}= foundUser.toObject();
 
     const foundUserVerifyCode = foundUser.verifyCode;
     const foundUserexpiry = foundUser.codeExpiry;
@@ -178,9 +183,16 @@ const verify_Roll_Code = async (req, res) => {
     const codeVerification = code == foundUserVerifyCode;
 
     if (codeVerification && isnotExpired) {
+
       foundUser.isVerified = true;
+      console.log(foundUser.isVerified );
+      
       await foundUser.save();
-      return res.status(200).json({ message: "User verified successfully." });
+
+      return res.status(200).json(
+        { message: "User verified successfully.",
+          data: userData
+       });
     } else {
       if (!isnotExpired) {
         return res.status(400).json({ message: "Code Expired" });
@@ -195,10 +207,23 @@ const verify_Roll_Code = async (req, res) => {
 
 const loginUser = async (req, res) => {
   try {
-    const { rollNumber, password } = req.body;
+    const { rollNumberOrEmail, password } = req.body;
+    // let email, rollNumber
+
+    let findUser
+
+    if(isNaN(Number(rollNumberOrEmail))){
+      const email= rollNumberOrEmail
+      findUser = await User.findOne({email});
+
+    } else{
+
+      const rollNumber= rollNumberOrEmail
+      findUser = await User.findOne({rollNumber});
+    }
 
     // Find the user by roll number
-    const findUser = await User.findOne({ rollNumber });
+   
 
     // If user is not found
     if (!findUser) {

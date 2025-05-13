@@ -39,13 +39,14 @@ const SignUp = () => {
     if (!password) return 0;
 
     // Length check
-    if (password.length >= 8) score += 1;
-    if (password.length >= 12) score += 1;
+    
+    // if (password.length >= 12) score += 1;
 
     // Character type checks
     if (/[a-z]/.test(password)) score += 1; // lowercase
     if (/[A-Z]/.test(password)) score += 1; // uppercase
     if (/\d/.test(password)) score += 1; // digits
+    if (password.length >= 8) score += 1;
     if (/[!@#$%^&*]/.test(password)) score += 1; // special chars
 
     return Math.min(score, 5); // Max score is 5
@@ -212,14 +213,14 @@ const SignUp = () => {
         console.log((details));
         
         setPrefilledData({
-          rollNumber: details.rollNumber,
-          fullName: details.fullName,
-          email: details.email,
-          gender: details.gender,
-          batch: details.batch,
-          branch: details.branch,
-          course: details.course,
-          cgpa: details.cgpa,
+          rollNumber
+          // fullName: details.fullName,
+          // email: details.email,
+          // gender: details.gender,
+          // batch: details.batch,
+          // branch: details.branch,
+          // course: details.course,
+          // cgpa: details.cgpa,
         });
 
         setFormStep(1);
@@ -259,23 +260,40 @@ const SignUp = () => {
       const code = verificationOTP;
       const res = await verify_Roll_code({ rollNumber, code });
       // In production, replace with actual API call
-      console.log(res);
+      // console.log(res);
 
       if(res.error){
          toast.error("Invalid verification code. Please try again.");
         return 
       }
 
+      console.log(res.data);
+      
+
       if (res.data) {
-        toast.success("Email verified successfully!", {
+        toast.success(res.data?.message || `Email verified successfully!`, {
           className:
             "dark:!bg-gradient-to-r dark:!from-green-950/90 dark:!to-green-900/90 dark:!text-green-100",
+        });
+
+        const details= res.data.data;
+        console.log("Details", details);
+        
+        setPrefilledData({
+          rollNumber,
+          fullName: details.fullName,
+          email: details.email,
+          gender: details.gender,
+          batch: details.batch,
+          branch: details.branch,
+          course: details.course,
+          cgpa: details.cgpa,
         });
 
         setTimeout(() => {
           setIsVerified(true);
           setFormStep(2);
-        }, 1500);
+        }, 1000);
       }
     } catch (error) {
       toast.error("Invalid verification code. Please try again.");
@@ -292,6 +310,7 @@ const SignUp = () => {
     try {
       const data= formData;
       const res = await signup(data);
+
       if (res.error) {
         // console.log(res);
         const errorMessage =
@@ -301,8 +320,10 @@ const SignUp = () => {
           className:
             "dark:!bg-gradient-to-r dark:!from-red-950/90 dark:!to-red-900/90 dark:!text-red-100 dark:!border-red-800 dark:!shadow-[0px_4px_10px_rgba(239,68,68,0.3)]",
         });
-      } else {
-        dispatch(setUserInfo({ ...res }));
+        return
+      } 
+      
+      dispatch(setUserInfo({ ...res }));
 
         toast.success("Account created successfully!", {
           className:
@@ -310,9 +331,9 @@ const SignUp = () => {
         });
 
         setTimeout(() => {
-          navigate("/");
-        }, 1500);
-      }
+          navigate("/login");
+        }, 1000);
+      
     } catch (error) {
       console.log(error);
       toast.error("SignUp failed. Please try again.", {

@@ -58,7 +58,7 @@ export const userApiSlice = apiSlice.injectEndpoints({
     }),
     verify_Roll_Code: builder.mutation({
       query: ({ rollNumber, code }) => ({
-        url: `${USERS_URL}/verify/${rollNumber}`,
+        url: `${USERS_URL}/verify/${rollNumber}/code`,
         method: "POST",
         body: { code },
       }),

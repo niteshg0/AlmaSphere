@@ -19,7 +19,10 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import PostAnswer from "./PostAnswer";
 
+import { ToastContainer, toast } from "react-toastify";
+
 const Question = () => {
+  const {user}= useSelector((state)=> state.auth)
   const { questionId } = useParams();
   const {data: question, isLoading, error, refetch,} = useShowAllAnswerQuery(questionId);
   const [upvotes] = useUpvotesMutation();
@@ -56,25 +59,23 @@ const Question = () => {
     );
   }
 
+  if(!user){
+    navigate("/login")  
+  }
+
   if(error){
-    return(
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-indigo-50 to-indigo-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
-        <div className="max-w-md p-8 bg-white dark:bg-gray-800 rounded-lg shadow-lg">
-          <h2 className="text-2xl font-bold text-red-600 dark:text-red-400 mb-4">
-            Error Loading Question
-          </h2>
-          <p className="text-gray-700 dark:text-gray-300 mb-6">
-            {error.data.message || "An error occurred while loading the question."}
-          </p>
-          <button
-            onClick={() => navigate(-1)}
-            className="inline-block px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
-          >
-            Go back
-          </button>
-        </div>
-      </div>
-    );
+      toast(error || "Error in Loading Question", {
+        style: {
+          background: "linear-gradient(to right, #fee2e2, #fecaca)",
+          color: "#991b1b",
+          border: "1px solid #f87171",
+          boxShadow: "0px 4px 10px rgba(239, 68, 68, 0.2)",
+        },
+        icon: "❌",
+        className:
+          "dark:!bg-gradient-to-r dark:!from-red-950/90 dark:!to-red-900/90 dark:!text-red-100 dark:!border-red-800 dark:!shadow-[0px_4px_10px_rgba(239,68,68,0.3)]",
+      });
+    return;
   }
 
   
@@ -243,7 +244,26 @@ const Question = () => {
 
         {/* Answer Form - Can be added later */}
       </div>
+      <ToastContainer
+          position="top-right"
+          autoClose={3000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="dark"
+          toastStyle={{
+            borderRadius: "10px",
+            padding: "12px 16px",
+            fontSize: "14px",
+            fontWeight: "500",
+          }}
+      />
     </div>
+    
   );
 };
 
