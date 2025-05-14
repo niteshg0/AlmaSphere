@@ -55,7 +55,7 @@ const Login = () => {
       setLoggingIn(true);
       let { rollNumberOrEmail, password , selectLoginType} = data;
         //  console.log(data);
-      rollNumberOrEmail= rollNumberOrEmail.toLowerCase();
+      // rollNumberOrEmail= rollNumberOrEmail.toLowerCase();
       const res = await login({ rollNumberOrEmail, password , role : selectLoginType});
       console.log(res);
 

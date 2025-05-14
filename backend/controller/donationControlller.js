@@ -8,7 +8,6 @@ const { validateWebhookSignature } = pkg;
 export const create_donation = async (req, res) => {
   try {
     const { rollNumber, amount, donationType, message } = req.body;
-    
 
     const options = {
       amount: Number(amount) * 100, //to convert in paise
@@ -94,6 +93,8 @@ export const verify_donation = async (req, res) => {
         { new: true }
       );
 
+      console.log("Donation", verifiedDonation);
+
       const amt = verifiedDonation.donations.filter(
         (don) => don.razorpay_order_id === razorpay_order_id
       );
@@ -101,7 +102,8 @@ export const verify_donation = async (req, res) => {
       // console.log("VD", amt[0].amount);
       // const amt= await findOne({"donations."})
 
-      const userId = req.user._id;
+      // const userId = req.user._id;
+      const userId = verifiedDonation.donor;
 
       const analytics = await AnalyticsInfo.findOneAndUpdate(
         { userId: userId },
@@ -111,10 +113,13 @@ export const verify_donation = async (req, res) => {
 
       if (verifiedDonation) {
         const user = await User.findById(userId).select("analyticsId");
+        console.log("user", user);
 
-        if (!user.analyticsId) {
+        if (user) {
           user.analyticsId = analytics._id;
           await user.save();
+        } else {
+          console.log("User not found for donation:", verifiedDonation._id);
         }
       }
 
@@ -122,7 +127,6 @@ export const verify_donation = async (req, res) => {
       // console.log("Payment verification successful");
 
       // console.log(`${process.env.VITE_FRONTEND_URL}/donation/verify?reference=${razorpay_payment_id}`);
-      
 
       res.redirect(
         `${process.env.VITE_FRONTEND_URL}/donation/verify?reference=${razorpay_payment_id}`

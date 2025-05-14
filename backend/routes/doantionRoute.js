@@ -8,6 +8,6 @@ donationRouter.route("/")
     .post(authentication, create_donation)
 
 donationRouter.route("/verify")
-    .post( verify_donation)
+    .post(  verify_donation)
 
 export default donationRouter;
