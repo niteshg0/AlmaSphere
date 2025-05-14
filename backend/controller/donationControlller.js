@@ -124,8 +124,11 @@ export const verify_donation = async (req, res) => {
       // console.log(`${process.env.VITE_FRONTEND_URL}/donation/verify?reference=${razorpay_payment_id}`);
       
 
+      // res.redirect(
+      //   `${process.env.VITE_FRONTEND_URL}/donation/verify?reference=${razorpay_payment_id}`
+      // );
       res.redirect(
-        `${process.env.VITE_FRONTEND_URL}/donation/verify?reference=${razorpay_payment_id}`
+        `${process.env.VITE_FRONTEND_URL}`
       );
     } else {
       res.status(400).json({ status: "verification_failed" });

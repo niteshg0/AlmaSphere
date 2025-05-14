@@ -53,9 +53,9 @@ const Login = () => {
     // e.preventDefault();
     try {
       setLoggingIn(true);
-      const { rollNumberOrEmail, password , selectLoginType} = data;
+      let { rollNumberOrEmail, password , selectLoginType} = data;
         //  console.log(data);
-         
+      rollNumberOrEmail= rollNumberOrEmail.toLowerCase();
       const res = await login({ rollNumberOrEmail, password , role : selectLoginType});
       console.log(res);
 
