@@ -122,7 +122,7 @@ function Table({title, college_data}) {
     : [];
 
   return (
-    <div className="p-6 bg-gray-50 dark:bg-gray-900 min-h-screen">
+    <div className="p-6 bg-gray-50 dark:bg-gray-900 ">
       <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 border-b border-gray-200 dark:border-gray-700 pb-4">
           <h1 className=" text-2xl font-semibold text-indigo-900 dark:text-indigo-400  border-indigo-200 dark:border-indigo-500/20 pb-2">
