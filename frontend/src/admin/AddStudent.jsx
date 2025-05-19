@@ -7,6 +7,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { usePostCollege_dataMutation } from "../redux/Api/adminApiSlice";
+import ExcelUpload from "./ExcelUpload";
 
 function AddStudent() {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -115,8 +116,15 @@ function AddStudent() {
   };
 
   return (
+    <>
+    
+    
     <div className="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 bg-gray-50 dark:bg-gray-900">
+
+      
       <div className="max-w-3xl w-full space-y-6 bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-lg">
+        
+        
         <h3 className="text-lg font-semibold text-indigo-900 dark:text-indigo-400 border-b border-indigo-200 dark:border-indigo-500/20 pb-2">
           Add Student / Alumni
         </h3>
@@ -348,7 +356,10 @@ function AddStudent() {
         pauseOnHover
         theme="dark"
       />
+
+      <ExcelUpload />
     </div>
+    </>
   );
 }
 

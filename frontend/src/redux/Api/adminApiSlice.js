@@ -16,11 +16,22 @@ export const adminApiSlice = apiSlice.injectEndpoints({
             method: "POST",
             body: data,
         })
-     })
+    }),
+
+    upload_Excel : builder.mutation({
+        query: (formData)=>({
+           url: `${ADMIN_URL}/upload-excel`,
+           method: "POST",
+           body: formData,
+           formData: true
+        })
+    })
+
   }),
 });
 
 export const {
     useGetCollege_dataQuery,
-    usePostCollege_dataMutation
+    usePostCollege_dataMutation,
+    useUpload_ExcelMutation,
 } = adminApiSlice;
