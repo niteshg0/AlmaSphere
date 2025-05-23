@@ -2,7 +2,7 @@ import User from "../../model/User/userInfo.js";
 
 const searchUsers = async (req, res) => {
   try {
-    const { query } = req.query;
+    const { query } = req.body; // Changed from req.query to req.body
 
     if (!query) {
       return res.status(400).json({
@@ -41,4 +41,4 @@ const searchUsers = async (req, res) => {
   }
 };
 
-export  { searchUsers };
+export { searchUsers };

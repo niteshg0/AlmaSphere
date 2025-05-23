@@ -3,10 +3,11 @@ import { SEARCH_URL } from "../constants.js";
 
 export const searchApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
-    search: builder.query({
-      query: (searchQuery) => ({
-        url: `${SEARCH_URL}?query=${encodeURIComponent(searchQuery)}`,
-        method: "GET",
+    search: builder.mutation({  // Changed from builder.query to builder.mutation
+      query: (query) => ({
+        url: SEARCH_URL,
+        method: "POST",  // Changed from GET to POST
+        body: { query: query },  // Send query in the request body
       }),
       // Cache search results for 5 minutes
       keepUnusedDataFor: 300,
@@ -26,4 +27,4 @@ export const searchApiSlice = apiSlice.injectEndpoints({
   }),
 });
 
-export const { useSearchQuery } = searchApiSlice;
+export const { useSearchMutation } = searchApiSlice;  // Changed from usequery to useSearchMutation

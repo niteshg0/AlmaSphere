@@ -1,9 +1,9 @@
 import { Router } from "express";
-
 import { searchUsers } from "../controller/SearchSection/searchController.js";
 
-const router = Router()
+const router = Router();
 
-router.get("/",searchUsers)
+// Change from GET to POST since the query is now in the request body
+router.post("/", searchUsers);
 
-export default router
+export default router;
