@@ -18,7 +18,7 @@ import {
 } from "../controller/userController.js";
 
 // admin controllers
-import { getAllUser } from "../controller/adminController.js";
+// import { getAllUser } from "../controller/adminController.js";
 
 // authentication
 import authentication from "../middleware/authentication.js";

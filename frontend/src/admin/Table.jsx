@@ -2,15 +2,8 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { useGetCollege_dataQuery } from "../redux/Api/adminApiSlice";
 
-function Student() {
-  const {
-    data: college_data,
-    error,
-    isLoading: isApiLoading,
-  } = useGetCollege_dataQuery();
-  const{refetch}= useGetCollege_dataQuery();
+function Table({title, college_data}) {
   const [students, setStudents] = useState([]);
   const [filteredStudents, setFilteredStudents] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -20,12 +13,12 @@ function Student() {
     direction: "ascending",
   });
 
+  console.log(college_data);
+  
+
   // Set students data when college_data is available
   useEffect(() => {
-    const ap= async()=>{
-      await refetch();
-    }
-    ap();
+    
     if (college_data) {
       // Ensure college_data is an array before setting
       const studentsArray = Array.isArray(college_data)
@@ -88,40 +81,40 @@ function Student() {
   };
 
   // Error handling
-  if (error) {
-    toast.error(error?.data?.message || "Error loading student data", {
-      className:
-        "dark:!bg-gradient-to-r dark:!from-red-950/90 dark:!to-red-900/90 dark:!text-red-100 dark:!border-red-800 dark:!shadow-[0px_4px_10px_rgba(239,68,68,0.3)]",
-    });
-    return (
-      <div className="p-6 flex justify-center items-center h-screen bg-gray-50 dark:bg-gray-900">
-        <div className="text-center">
-          <h2 className="text-xl font-semibold text-red-600 dark:text-red-400">
-            Failed to load student data
-          </h2>
-          <p className="text-gray-500 dark:text-gray-400 mt-2">
-            Please try again later
-          </p>
-          <button
-            onClick={() => window.location.reload()}
-            className="mt-4 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-lg transition-colors duration-300"
-          >
-            Retry
-          </button>
-        </div>
-      </div>
-    );
-  }
+//   if (error) {
+//     toast.error(error?.data?.message || "Error loading student data", {
+//       className:
+//         "dark:!bg-gradient-to-r dark:!from-red-950/90 dark:!to-red-900/90 dark:!text-red-100 dark:!border-red-800 dark:!shadow-[0px_4px_10px_rgba(239,68,68,0.3)]",
+//     });
+//     return (
+//       <div className="p-6 flex justify-center items-center h-screen bg-gray-50 dark:bg-gray-900">
+//         <div className="text-center">
+//           <h2 className="text-xl font-semibold text-red-600 dark:text-red-400">
+//             Failed to load student data
+//           </h2>
+//           <p className="text-gray-500 dark:text-gray-400 mt-2">
+//             Please try again later
+//           </p>
+//           <button
+//             onClick={() => window.location.reload()}
+//             className="mt-4 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-lg transition-colors duration-300"
+//           >
+//             Retry
+//           </button>
+//         </div>
+//       </div>
+//     );
+//   }
 
   // For debugging
-  if (college_data && !isLoading && !isApiLoading) {
-    console.log("College data type:", typeof college_data);
-    console.log("Filtered students type:", typeof filteredStudents);
-    console.log(
-      "Is filteredStudents an array:",
-      Array.isArray(filteredStudents)
-    );
-  }
+//   if (college_data && !isLoading && !isApiLoading) {
+//     console.log("College data type:", typeof college_data);
+//     console.log("Filtered students type:", typeof filteredStudents);
+//     console.log(
+//       "Is filteredStudents an array:",
+//       Array.isArray(filteredStudents)
+//     );
+//   }
 
   // Safely ensure filteredStudents is an array
   const safeFilteredStudents = Array.isArray(filteredStudents)
@@ -129,12 +122,12 @@ function Student() {
     : [];
 
   return (
-    <div className="p-6 bg-gray-50 dark:bg-gray-900 min-h-screen">
+    <div className="p-6 bg-gray-50 dark:bg-gray-900 ">
       <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 border-b border-gray-200 dark:border-gray-700 pb-4">
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-4 sm:mb-0">
-            Student Management
-          </h1>
+          <h1 className=" text-2xl font-semibold text-indigo-900 dark:text-indigo-400  border-indigo-200 dark:border-indigo-500/20 pb-2">
+          {title}
+        </h1>
           <div className="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-3 w-full sm:w-auto">
             <div className="relative w-full sm:w-64">
               <input
@@ -158,16 +151,11 @@ function Student() {
                 />
               </svg>
             </div>
-            <Link
-              to="/admin/add-edit-Student"
-              className="w-full sm:w-auto px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-lg text-center transition-colors duration-300"
-            >
-              Add New Student
-            </Link>
+            
           </div>
         </div>
 
-        {isLoading || isApiLoading ? (
+        {isLoading  ? (
           <div className="flex flex-col justify-center items-center h-64">
             <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-500 mb-4"></div>
             <p className="text-gray-500 dark:text-gray-400">
@@ -202,6 +190,16 @@ function Student() {
             <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
               <thead className="bg-gray-50 dark:bg-gray-700">
                 <tr>
+                    <th
+                    scope="col"
+                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600"
+                    
+                  >
+                    <div className="flex items-center">
+                      Row
+                      
+                    </div>
+                  </th>
                   <th
                     scope="col"
                     className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600"
@@ -294,6 +292,9 @@ function Student() {
                     key={student._id || student.id || index}
                     className="hover:bg-gray-50 dark:hover:bg-gray-700"
                   >
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
+                      {student.row || "N/A"}
+                    </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="text-sm font-medium text-gray-900 dark:text-white">
                         {student.fullName || "N/A"}
@@ -364,4 +365,4 @@ function Student() {
   );
 }
 
-export default Student;
+export default Table;

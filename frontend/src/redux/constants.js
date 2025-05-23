@@ -6,5 +6,6 @@ export const JOBDETAIL_URL = `${BASE_URL}/api/jobDetail`;
 export const DONATION_URL = `${BASE_URL}/api/donation`;
 export const QUERY_URL = `${BASE_URL}/api/query`;
 export const CONNECTUSER_URL = `${BASE_URL}/api/connectUser`;
-
+export const ADMIN_URL = `${BASE_URL}/api/admin`
 export const CONTACT_US_URL = `${BASE_URL}/api/contactus`
+export const SEARCH_URL = `${BASE_URL}/api/search`
