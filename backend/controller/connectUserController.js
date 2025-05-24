@@ -101,9 +101,26 @@ const getAllConnection = async (req, res) => {
   }
 };
 
+
+const getAllUsers = async (req,res) => {
+  try{
+    const users = await User.find({})
+    if(!users){
+      return res.status(402).json({message:"some error happens"})
+    }
+
+    return res.status(202).json(users)
+  }catch(err){
+    console.log(err)
+    return res.status(500).json({message:err.message})
+  }
+}
+
+
 export {
   createConnection,
   acceptConnection,
   rejectConnection,
   getAllConnection,
+  getAllUsers
 };
