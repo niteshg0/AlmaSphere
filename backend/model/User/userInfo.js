@@ -80,6 +80,7 @@ const userInfo = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "Analytics",
     },
+    connections: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
   },
   { timestamps: true }
 );

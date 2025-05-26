@@ -6,6 +6,7 @@ import queryRouter from "./routes/queryRoute.js";
 import adminRouter from "./routes/adminRoute.js";
 import contactRouter from "./routes/contactRoute.js"
 import searchRouter from "./routes/searchRout.js"
+import connectUserRouter from "./routes/connectUserRout.js";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
@@ -53,6 +54,7 @@ app.use("/api/query", queryRouter);
 app.use("/api/admin", adminRouter)
 app.use("/api/search",searchRouter)
 app.use("/api/contactus", contactRouter)
+app.use("/api/connectUser",connectUserRouter)
 
 app.use("/", (req, res) => {
   return res.status(200).json("Welcome to Backend");

@@ -1,4 +1,6 @@
 import { useState, useEffect } from "react";
+import { MdNotificationAdd } from "react-icons/md";
+import { IoIosNotifications } from "react-icons/io";
 import {
   FaUserCircle,
   FaFileAlt,
@@ -40,6 +42,7 @@ import {
   useEditJobInfoMutation,
   useEditSkillsMutation,
 } from "../redux/Api/editProfileApiSlice.js";
+import { useGetConnectionRequestsQuery } from "../redux/Api/connectUserApiSlice.js";
 
 const Profile = () => {
   const { user, token } = useSelector((state) => state.auth);
@@ -55,6 +58,8 @@ const Profile = () => {
 
   const [loading, setLoading] = useState(true);
   const [activeModal, setActiveModal] = useState(null);
+
+   const { data: connectionData, refetch: refetchStatus } = useGetConnectionRequestsQuery()
 
   // Modal types
   const MODAL_TYPES = {
@@ -72,7 +77,8 @@ const Profile = () => {
       console.log(data);
     }
     setLoading(false);
-  }, [data]);
+    refetchStatus()
+  }, [data,connectionData]);
 
   const logoutHandler = async () => {
     try {
@@ -528,10 +534,14 @@ const Profile = () => {
               <div className="flex-1 space-y-4">
                 {/* Name and Status */}
                 <div className="flex flex-col md:flex-row md:justify-between md:space-x-4">
-                  <div className="px-4 py-2 rounded-lg bg-indigo-50 dark:bg-indigo-900/30 border border-indigo-100 dark:border-indigo-800/50">
+                  <div className="flex align-middle">
+                    <div className="px-4 py-2 rounded-lg bg-indigo-50 dark:bg-indigo-900/30 border border-indigo-100 dark:border-indigo-800/50">
                     <span className="text-indigo-700 dark:text-indigo-300 font-medium">
                       {userData.fullName}
                     </span>
+                  </div>
+                  {connectionData>0 ? <Link to={"/network"}><MdNotificationAdd className="scale-150 mt-3 ml-4 text-indigo-700 dark:text-indigo-300"/></Link> : 
+                  <Link to={"/network"}><IoIosNotifications className="scale-150 mt-3 ml-4 text-indigo-700 dark:text-indigo-300"/></Link>}
                   </div>
                   <div className="px-4 py-2 rounded-lg bg-blue-50 dark:bg-blue-900/30 border border-blue-100 dark:border-blue-800/50">
                     <span className="text-blue-700 dark:text-blue-300">
@@ -626,9 +636,9 @@ const Profile = () => {
                   </div>
                 </div>
                 <div className="px-4 py-2 rounded-lg bg-indigo-50 dark:bg-indigo-900/30 border border-indigo-100 dark:border-indigo-800/50">
-                  <span className="text-indigo-700 dark:text-indigo-300">
-                    Connections: 108
-                  </span>
+                  <Link to={"/connectedUser"}><span className="text-indigo-700 dark:text-indigo-300">
+                    Connections : {userData.connections.length}
+                  </span></Link>
                 </div>
               </div>
             </div>

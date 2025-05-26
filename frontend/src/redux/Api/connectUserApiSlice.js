@@ -3,37 +3,74 @@ import { CONNECTUSER_URL } from "../constants.js";
 
 export const connectUserApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
-    getConnectedUser: builder.query({
+    // Connection Requests
+    createConnection: builder.mutation({
       query: (userId) => ({
-        url: `${CONNECTUSER_URL}/connection/${userId}`,
+        url: `${CONNECTUSER_URL}/connect/${userId}`,
+        method: "POST",
+      }),
+      invalidatesTags: ['ConnectionRequests', 'ConnectionStatus'],
+    }),
+    
+    getConnectionRequests: builder.query({
+      query: () => ({
+        url: `${CONNECTUSER_URL}/requests`,
         method: "GET",
       }),
+      providesTags: ['ConnectionRequests'],
     }),
-    createConnection: builder.mutation({
-      query: (data) => ({
-        url: `${CONNECTUSER_URL}/connect`,
-        method: "POST",
-        body: data,
-      }),
-    }),
+    
     acceptConnection: builder.mutation({
-      query: (id) => ({
-        url: `${CONNECTUSER_URL}/accept/${id}`,
+      query: (requestId) => ({
+        url: `${CONNECTUSER_URL}/accept/${requestId}`,
         method: "PUT",
       }),
+      invalidatesTags: ['ConnectionRequests', 'Connections', 'ConnectionStatus'],
     }),
+    
     rejectConnection: builder.mutation({
-      query: (id) => ({
-        url: `${CONNECTUSER_URL}/reject/${id}`,
+      query: (requestId) => ({
+        url: `${CONNECTUSER_URL}/reject/${requestId}`,
         method: "PUT",
       }),
+      invalidatesTags: ['ConnectionRequests', 'ConnectionStatus'],
+    }),
+
+    // Connection Management
+    getConnectionStatus: builder.query({
+      query: (userId) => ({
+        url: `${CONNECTUSER_URL}/getStatus/${userId}`,
+        method: "GET",
+      }),
+      providesTags: (result, error, userId) => 
+        [{ type: 'ConnectionStatus', id: userId }],
+    }),
+    
+    removeConnection: builder.mutation({
+      query: (userId) => ({
+        url: `${CONNECTUSER_URL}/remove/${userId}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ['Connections', 'ConnectionStatus'],
+    }),
+
+    // User Connections
+    getUserConnections: builder.query({
+      query: () => ({
+        url: CONNECTUSER_URL,
+        method: "GET",
+      }),
+      providesTags: ['Connections'],
     }),
   }),
 });
 
 export const {
-  useAcceptConnectionMutation,
   useCreateConnectionMutation,
-  useGetConnectedUserQuery,
+  useGetConnectionRequestsQuery,
+  useAcceptConnectionMutation,
   useRejectConnectionMutation,
+  useGetConnectionStatusQuery,
+  useRemoveConnectionMutation,
+  useGetUserConnectionsQuery,
 } = connectUserApiSlice;

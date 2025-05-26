@@ -21,6 +21,7 @@ import axios from "axios";
 import { useSelector } from "react-redux";
 import { useGetProfileQuery } from "./redux/Api/userApiSlice";
 import { useParams } from "react-router";
+import ConnectionButton from "./components/ConnectionComponents/ConnectionButton";
 
 const Profiles = () => {
   const { rollNumber } = useParams();
@@ -505,7 +506,7 @@ const Profiles = () => {
                 </div>
                 <div className="px-4 py-2 rounded-lg bg-indigo-50 dark:bg-indigo-900/30 border border-indigo-100 dark:border-indigo-800/50">
                   <span className="text-indigo-700 dark:text-indigo-300">
-                    Connections: 108
+                    <ConnectionButton userId={userData?._id}/>
                   </span>
                 </div>
               </div>

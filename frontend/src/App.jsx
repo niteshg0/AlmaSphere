@@ -26,6 +26,8 @@ import PrivateRoute from "./components/PrivateRoute";
 import AdminRoute from "./components/AdminRoute";
 import AddStudent from "./admin/AddStudent";
 import Student from "./admin/Student";
+import Network from "./Network/Network";
+import ConnectedUsers from "./Network/ConnectedUsers";
 
 function App() {
   const [isDarkTheme, setIsDarkTheme] = useState(() => {
@@ -103,6 +105,9 @@ function App() {
             element={<JobDetails isDarkTheme={isDarkTheme} />}
           />
 
+          <Route path="/network" element={<Network />}/>
+          <Route path="/connectedUser" element ={<ConnectedUsers />}/>
+
           {/* Admin Protected Routes */}
           <Route element={<AdminRoute />}>
             <Route path="/admin/add-edit-Student" element={<AddStudent />} />
@@ -123,6 +128,8 @@ function App() {
           />
           <Route path="/query/askQuestion" element={<AskQuestion />} />
         </Route>
+
+        
 
         {/* Routes accessible by both Admin and Student/Alumni */}
         <Route
