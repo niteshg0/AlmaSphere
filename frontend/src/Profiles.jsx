@@ -17,29 +17,21 @@ import {
   FaPlus,
   FaTimes,
 } from "react-icons/fa";
-import axios from "axios";
 import { useSelector } from "react-redux";
 import { useGetProfileQuery } from "./redux/Api/userApiSlice";
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import ConnectionButton from "./components/ConnectionComponents/ConnectionButton";
 
 const Profiles = () => {
+  const { user } = useSelector((state) => state.auth);
+  const navigate= useNavigate();
   const { rollNumber } = useParams();
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [activeModal, setActiveModal] = useState(null);
-  // const [formData, setFormData] = useState({});
-  const { data, isLoading, isError, error } = useGetProfileQuery(rollNumber);
 
-  // // Modal types
-  // const MODAL_TYPES = {
-  //   PROFILE: "profile",
-  //   JOB: "job",
-  //   SKILLS: "skills",
-  //   ACHIEVEMENT: "achievement",
-  //   EXTRACURRICULAR: "extracurricular",
-  //   ANALYTICS: "analytics",
-  // };
+  const { data, isLoading } = useGetProfileQuery(rollNumber);
+
+
 
   useEffect(() => {
     if (data) {
@@ -49,316 +41,11 @@ const Profiles = () => {
     setLoading(false);
   }, [data]);
 
-  // if (isError) {
-  //   return <ErrorMessage error={error} />;
-  // }
-
-  // const handleOpenModal = (type, data = null) => {
-  //   setActiveModal(type);
-  //   if (data) {
-  //     setFormData(data);
-  //   } else {
-  //     setFormData({});
-  //   }
-  // };
-
-  // const handleCloseModal = () => {
-  //   setActiveModal(null);
-  //   setFormData({});
-  // };
-
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
-  //   try {
-  //     console.log("Submitting form data:", formData);
-  //     handleCloseModal();
-  //   } catch (error) {
-  //     console.error("Error submitting form:", error);
-  //   }
-  // };
-
-  // const handleInputChange = (e) => {
-  //   const { name, value } = e.target;
-  //   setFormData((prev) => ({
-  //     ...prev,
-  //     [name]: value,
-  //   }));
-  // };
-
-  if (error) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-indigo-50 to-indigo-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
-        <div className="max-w-md p-8 bg-white dark:bg-gray-800 rounded-lg shadow-lg">
-          <h2 className="text-2xl font-bold text-red-600 dark:text-red-400 mb-4">
-            Error
-          </h2>
-          <p className="text-gray-700 dark:text-gray-300 mb-6">
-            {error.data.message || "An error occurred while loading the profile."}
-          </p>
-          <button
-            onClick={() => navigate(-1)}
-            className="inline-block px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
-          >
-            Go back
-          </button>
-        </div>
-      </div>
-    );
+  if(!user){
+    navigate("/login")
   }
 
-  // const renderModal = () => {
-  //   if (!activeModal) return null;
-
-  //   return (
-  //     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-  //       <div className="bg-white dark:bg-gray-800 rounded-xl shadow-2xl w-full max-w-md max-h-[90vh] overflow-y-auto">
-  //         <div className="sticky top-0 bg-white dark:bg-gray-800 p-4 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
-  //           <h3 className="text-xl font-bold text-indigo-600 dark:text-indigo-400">
-  //             {activeModal === MODAL_TYPES.PROFILE && "Edit Profile"}
-  //             {activeModal === MODAL_TYPES.JOB && "Add/Edit Job"}
-  //             {activeModal === MODAL_TYPES.SKILLS && "Edit Skills"}
-  //             {activeModal === MODAL_TYPES.ACHIEVEMENT && "Add Achievement"}
-  //             {activeModal === MODAL_TYPES.EXTRACURRICULAR && "Add Extracurricular"}
-  //             {activeModal === MODAL_TYPES.ANALYTICS && "Update Analytics"}
-  //           </h3>
-  //           <button
-  //             onClick={handleCloseModal}
-  //             className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-colors"
-  //           >
-  //             <FaTimes className="h-5 w-5" />
-  //           </button>
-  //         </div>
-
-  //         <form onSubmit={handleSubmit} className="p-6 space-y-4">
-  //           {activeModal === MODAL_TYPES.PROFILE && (
-  //             <>
-  //               <div className="space-y-1">
-  //                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-  //                   Full Name
-  //                 </label>
-  //                 <input
-  //                   type="text"
-  //                   name="fullName"
-  //                   value={formData.fullName || userData?.fullName || ""}
-  //                   onChange={handleInputChange}
-  //                   className="mt-1 p-2 block w-full rounded-md border border-gray-300 dark:border-gray-600 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-gray-200 transition-all"
-  //                 />
-  //               </div>
-  //               <div className="space-y-1">
-  //                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-  //                   Roll Number
-  //                 </label>
-  //                 <input
-  //                   type="text"
-  //                   name="rollNumber"
-  //                   value={formData.rollNumber || userData?.rollNumber || ""}
-  //                   onChange={handleInputChange}
-  //                   className="mt-1 p-2 block w-full rounded-md border border-gray-300 dark:border-gray-600 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-gray-200 transition-all"
-  //                 />
-  //               </div>
-  //               <div className="space-y-1">
-  //                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-  //                   Branch
-  //                 </label>
-  //                 <input
-  //                   type="text"
-  //                   name="branch"
-  //                   value={formData.branch || userData?.branch || ""}
-  //                   onChange={handleInputChange}
-  //                   className="mt-1 p-2 block w-full rounded-md border border-gray-300 dark:border-gray-600 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-gray-200 transition-all"
-  //                 />
-  //               </div>
-  //             </>
-  //           )}
-
-  //           {activeModal === MODAL_TYPES.JOB && (
-  //             <>
-  //               <div className="space-y-1">
-  //                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-  //                   Company Name
-  //                 </label>
-  //                 <input
-  //                   type="text"
-  //                   name="companyName"
-  //                   value={formData.companyName || userData?.jobId?.companyName || ""}
-  //                   onChange={handleInputChange}
-  //                   className="mt-1 p-2 block w-full rounded-md border border-gray-300 dark:border-gray-600 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-gray-200 transition-all"
-  //                 />
-  //               </div>
-  //               <div className="space-y-1">
-  //                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-  //                   Position
-  //                 </label>
-  //                 <input
-  //                   type="text"
-  //                   name="position"
-  //                   value={formData.position || userData?.jobId?.position || ""}
-  //                   onChange={handleInputChange}
-  //                   className="mt-1 p-2 block w-full rounded-md border border-gray-300 dark:border-gray-600 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-gray-200 transition-all"
-  //                 />
-  //               </div>
-  //               <div className="space-y-1">
-  //                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-  //                   Duration
-  //                 </label>
-  //                 <input
-  //                   type="text"
-  //                   name="duration"
-  //                   value={formData.duration || userData?.jobId?.duration || ""}
-  //                   onChange={handleInputChange}
-  //                   className="mt-1 p-2 block w-full rounded-md border border-gray-300 dark:border-gray-600 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-gray-200 transition-all"
-  //                 />
-  //               </div>
-  //               <div className="space-y-1">
-  //                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-  //                   Location
-  //                 </label>
-  //                 <input
-  //                   type="text"
-  //                   name="location"
-  //                   value={formData.location || userData?.jobId?.location || ""}
-  //                   onChange={handleInputChange}
-  //                   className="mt-1 p-2 block w-full rounded-md border border-gray-300 dark:border-gray-600 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-gray-200 transition-all"
-  //                 />
-  //               </div>
-  //             </>
-  //           )}
-
-  //           {activeModal === MODAL_TYPES.SKILLS && (
-  //             <>
-  //               <div className="space-y-1">
-  //                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-  //                   Technical Skills (comma-separated)
-  //                 </label>
-  //                 <textarea
-  //                   name="technicalSkill"
-  //                   value={
-  //                     formData.technicalSkill || userData?.skillId?.technicalSkill || ""
-  //                   }
-  //                   onChange={handleInputChange}
-  //                   rows="3"
-  //                   className="mt-1 p-2 block w-full rounded-md border border-gray-300 dark:border-gray-600 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-gray-200 transition-all"
-  //                 />
-  //               </div>
-  //               <div className="space-y-1">
-  //                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-  //                   Non-Technical Skills (comma-separated)
-  //                 </label>
-  //                 <textarea
-  //                   name="nonTechnicalSkill"
-  //                   value={
-  //                     formData.nonTechnicalSkill || userData?.skillId?.nonTechnicalSkill || ""
-  //                   }
-  //                   onChange={handleInputChange}
-  //                   rows="3"
-  //                   className="mt-1 p-2 block w-full rounded-md border border-gray-300 dark:border-gray-600 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-gray-200 transition-all"
-  //                 />
-  //               </div>
-  //             </>
-  //           )}
-
-  //           {activeModal === MODAL_TYPES.ACHIEVEMENT && (
-  //             <>
-  //               <div className="space-y-1">
-  //                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-  //                   Title
-  //                 </label>
-  //                 <input
-  //                   type="text"
-  //                   name="title"
-  //                   value={formData.title || ""}
-  //                   onChange={handleInputChange}
-  //                   className="mt-1 p-2 block w-full rounded-md border border-gray-300 dark:border-gray-600 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-gray-200 transition-all"
-  //                 />
-  //               </div>
-  //               <div className="space-y-1">
-  //                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-  //                   Description
-  //                 </label>
-  //                 <textarea
-  //                   name="description"
-  //                   value={formData.description || ""}
-  //                   onChange={handleInputChange}
-  //                   rows="3"
-  //                   className="mt-1 p-2 block w-full rounded-md border border-gray-300 dark:border-gray-600 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-gray-200 transition-all"
-  //                 />
-  //               </div>
-  //               <div className="space-y-1">
-  //                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-  //                   Date
-  //                 </label>
-  //                 <input
-  //                   type="date"
-  //                   name="date"
-  //                   value={formData.date || ""}
-  //                   onChange={handleInputChange}
-  //                   className="mt-1 p-2 block w-full rounded-md border border-gray-300 dark:border-gray-600 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-gray-200 transition-all"
-  //                 />
-  //               </div>
-  //             </>
-  //           )}
-
-  //           {activeModal === MODAL_TYPES.EXTRACURRICULAR && (
-  //             <>
-  //               <div className="space-y-1">
-  //                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-  //                   Activity
-  //                 </label>
-  //                 <input
-  //                   type="text"
-  //                   name="activity"
-  //                   value={formData.activity || ""}
-  //                   onChange={handleInputChange}
-  //                   className="mt-1 p-2 block w-full rounded-md border border-gray-300 dark:border-gray-600 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-gray-200 transition-all"
-  //                 />
-  //               </div>
-  //               <div className="space-y-1">
-  //                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-  //                   Description
-  //                 </label>
-  //                 <textarea
-  //                   name="description"
-  //                   value={formData.description || ""}
-  //                   onChange={handleInputChange}
-  //                   rows="3"
-  //                   className="mt-1 p-2 block w-full rounded-md border border-gray-300 dark:border-gray-600 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-gray-200 transition-all"
-  //                 />
-  //               </div>
-  //               <div className="space-y-1">
-  //                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-  //                   Duration
-  //                 </label>
-  //                 <input
-  //                   type="text"
-  //                   name="duration"
-  //                   value={formData.duration || ""}
-  //                   onChange={handleInputChange}
-  //                   className="mt-1 p-2 block w-full rounded-md border border-gray-300 dark:border-gray-600 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-gray-200 transition-all"
-  //                 />
-  //               </div>
-  //             </>
-  //           )}
-
-  //           <div className="flex justify-end space-x-3 pt-4 border-t border-gray-200 dark:border-gray-700">
-  //             <button
-  //               type="button"
-  //               onClick={handleCloseModal}
-  //               className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all"
-  //             >
-  //               Cancel
-  //             </button>
-  //             <button
-  //               type="submit"
-  //               className="px-4 py-2 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all"
-  //             >
-  //               Save Changes
-  //             </button>
-  //           </div>
-  //         </form>
-  //       </div>
-  //     </div>
-  //   );
-  // };
+ 
 
   if (isLoading) {
     return (
@@ -377,6 +64,9 @@ const Profiles = () => {
       </div>
     );
   }
+
+
+  
 
   // Process skills into arrays for better display 
   const technicalSkills = userData.skillId?.technicalSkill || [];
@@ -401,12 +91,6 @@ const Profiles = () => {
                 <FaUserCircle className="mr-2" />
                 Profile
               </h2>
-              {/* <button
-                onClick={() => handleOpenModal(MODAL_TYPES.PROFILE, userData)}
-                className="p-2 rounded-lg bg-white dark:bg-gray-700 text-indigo-600 dark:text-indigo-400 shadow-sm border border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors"
-              >
-                <FaEdit className="h-5 w-5" />
-              </button> */}
             </div>
             <div className="flex flex-col md:flex-row">
               {/* Left Side - Basic Info */}
@@ -523,20 +207,6 @@ const Profiles = () => {
                 Job History
               </h2>
               <div className="flex gap-2">
-                {/* <button
-                  onClick={() => handleOpenModal(MODAL_TYPES.JOB)}
-                  className="p-2 rounded-lg bg-white dark:bg-gray-700 text-indigo-600 dark:text-indigo-400 shadow-sm border border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors"
-                >
-                  <FaPlus className="h-5 w-5" />
-                </button>
-                <button
-                  onClick={() =>
-                    handleOpenModal(MODAL_TYPES.JOB, userData.jobId)
-                  }
-                  className="p-2 rounded-lg bg-white dark:bg-gray-700 text-indigo-600 dark:text-indigo-400 shadow-sm border border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors"
-                >
-                  <FaEdit className="h-5 w-5" />
-                </button> */}
               </div>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -595,14 +265,6 @@ const Profiles = () => {
                 Skills
               </h2>
               <div className="flex gap-2">
-                {/* <button
-                  onClick={() =>
-                    handleOpenModal(MODAL_TYPES.SKILLS, userData.skillId)
-                  }
-                  className="p-2 rounded-lg bg-white dark:bg-gray-700 text-indigo-600 dark:text-indigo-400 shadow-sm border border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors"
-                >
-                  <FaEdit className="h-5 w-5" />
-                </button> */}
               </div>
             </div>
 
@@ -672,14 +334,6 @@ const Profiles = () => {
                   <FaTrophy className="mr-2" />
                   Achievements
                 </h2>
-                {/* <div className="flex gap-2">
-                  <button
-                    onClick={() => handleOpenModal(MODAL_TYPES.ACHIEVEMENT)}
-                    className="p-2 rounded-lg bg-white dark:bg-gray-700 text-indigo-600 dark:text-indigo-400 shadow-sm border border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors"
-                  >
-                    <FaPlus className="h-5 w-5" />
-                  </button>
-                </div> */}
               </div>
               <div className="space-y-2">
                 {userData?.extraId?.achievements?.length > 0 ? (
@@ -718,15 +372,6 @@ const Profiles = () => {
                   <FaClipboardList className="mr-2" />
                   Extracurricular
                 </h2>
-                {/* <div className="flex gap-2">
-                  
-                  <button
-                    onClick={() => handleOpenModal(MODAL_TYPES.EXTRACURRICULAR)}
-                    className="p-2 rounded-lg bg-white dark:bg-gray-700 text-indigo-600 dark:text-indigo-400 shadow-sm border border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors"
-                  >
-                    <FaPlus className="h-5 w-5" />
-                  </button>
-                </div> */}
               </div>
               <div className="space-y-2">
                 {userData?.extraId?.extracurriculars?.length > 0 ? (

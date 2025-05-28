@@ -3,12 +3,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { useLogoutMutation } from "../redux/Api/userApiSlice";
 import { useSearchMutation } from "../redux/Api/searchApiSlice.js";
-
+import Notification from "./Notification.jsx";
 import { logout } from "../redux/features/authSlice.js";
-
-import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import ShowProfileCard from "./Card/ShowProfileCard.jsx";
 import SearchResultsDropdown from "./Card/SearchResultsDropdown.jsx";
 
 const Header = ({ isDarkTheme, toggleTheme, NavBar }) => {
@@ -215,7 +212,7 @@ const Header = ({ isDarkTheme, toggleTheme, NavBar }) => {
               </button>
             </div>
 
-            {/* Search Bar - Added here */}
+            {user?.role!= "Admin" && (
             <div className="relative w-full md:w-auto md:max-w-md">
               <form
                 onSubmit={handleSearch}
@@ -235,7 +232,7 @@ const Header = ({ isDarkTheme, toggleTheme, NavBar }) => {
                     setIsSearchFocused(false);
                     setTimeout(() => setShowResults(false), 200);
                   }}
-                  placeholder="Search alumni..."
+                  placeholder="search alumni/student"
                   className="w-full px-4 py-2 bg-transparent text-gray-700 dark:text-gray-300 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none rounded-full"
                 />
                 <button
@@ -260,6 +257,9 @@ const Header = ({ isDarkTheme, toggleTheme, NavBar }) => {
               {showResults &&  searchResults.length > 0 && 
                 <SearchResultsDropdown users={searchResults} onClose={() => setShowResults(false)} />}
             </div>
+            )}
+
+            
 
             {/* Navigation Links - Desktop */}
             <ul className="hidden md:flex gap-8 items-center">
@@ -368,6 +368,12 @@ const Header = ({ isDarkTheme, toggleTheme, NavBar }) => {
                   </div>
                 )}
               </div>
+
+              <div>
+                {user && (<Notification />)}
+              </div>
+
+              
             </div>
           </div>
 
@@ -378,38 +384,15 @@ const Header = ({ isDarkTheme, toggleTheme, NavBar }) => {
             }`}
           >
             <div className="px-4 py-6 bg-white/95 dark:bg-gray-800/95 border-t border-gray-200 dark:border-gray-700 rounded-b-2xl">
-              {/* Search Bar in Mobile Menu */}
-              <form onSubmit={handleSearch} className="mb-4">
-                <div className="relative flex items-center rounded-full bg-white/80 dark:bg-gray-800/80 border border-indigo-100 dark:border-indigo-500/20">
-                  <input
-                    type="text"
-                    value={query}
-                    onChange={(e) => setQuery(e.target.value)}
-                    placeholder="Search by name or roll number..."
-                    className="w-full px-4 py-2 bg-transparent text-gray-700 dark:text-gray-300 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none rounded-full"
-                  />
-                  <button
-                    type="submit"
-                    className="absolute right-2 p-1.5 rounded-full text-gray-500 hover:text-indigo-600 dark:text-gray-400 dark:hover:text-indigo-400"
-                  >
-                    <svg
-                      className="w-5 h-5"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                      />
-                    </svg>
-                  </button>
-                </div>
-              </form>
-
+              
               <ul className="space-y-4">
+                <li>
+                  <div
+                    className="block btn-link py-2 text-gray-700 hover:text-indigo-600 dark:text-gray-300 dark:hover:text-indigo-400"
+                  >
+                    {user && (<Notification />)}
+                  </div>
+                </li>
                 <li>
                   <Link
                     to="/about"
@@ -470,24 +453,8 @@ const Header = ({ isDarkTheme, toggleTheme, NavBar }) => {
           </div>
         </nav>
       </div>
-      {/* <ToastContainer
-              position="top-right"
-              autoClose={3000}
-              hideProgressBar={false}
-              newestOnTop={false}
-              closeOnClick
-              rtl={false}
-              pauseOnFocusLoss
-              draggable
-              pauseOnHover
-              theme="dark"
-              toastStyle={{
-                borderRadius: "10px",
-                padding: "12px 16px",
-                fontSize: "14px",
-                fontWeight: "500",
-              }}
-            /> */}
+
+      
     </div>
   );
 };

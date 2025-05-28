@@ -5,10 +5,11 @@ import ConnectedUserProfile from '../components/ConnectionComponents/ConnectedUs
 
 const ConnectedUsers = () => {
     const [allConnection , setAllConnection] = useState([])
-    const {data ,isLoading,refetch} =  useGetUserConnectionsQuery()
+    const {data , isLoading, refetch} =  useGetUserConnectionsQuery()
     
     useEffect(()=>{
         setAllConnection(data)
+        refetch();
     },[data])
 
     console.log(allConnection)

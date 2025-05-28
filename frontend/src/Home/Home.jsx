@@ -1,5 +1,5 @@
 import React from "react";
-import { Link, redirect, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 // Icons
 import EventIcon from "../icons/event-animated.svg";

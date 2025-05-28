@@ -11,7 +11,7 @@ const SearchResultsDropdown = ({ users, onClose }) => {
       style={{ minWidth: 340 }}
     >
       <div className="mb-2 px-2 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide">
-        Recommendations
+        Suggestion
       </div>
       <div className="flex flex-col gap-3">
         {users.map((user) => (
