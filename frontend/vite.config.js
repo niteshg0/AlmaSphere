@@ -2,6 +2,8 @@ import { defineConfig, loadEnv } from "vite";
 import react from "@vitejs/plugin-react";
 import path from "path";
 // import tailwindcss from "@tailwindcss/vite";
+import tailwindcss from "@tailwindcss/vite";
+// import tailwindcss from "@tailwindcss/vite";
 
 // Load environment variables
 export default defineConfig(({ mode }) => {
@@ -39,3 +41,4 @@ export default defineConfig(({ mode }) => {
     },
   };
 });
+
