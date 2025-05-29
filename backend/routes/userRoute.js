@@ -63,7 +63,7 @@ router.put("/updateSkills",authentication,editUserSkills)
 // router.route("/verify/:email")
 router.post("/verify/:email", verifyCode);
 
-router.get("/:rollNumber", authentication, getProfile);
+router.get("/:rollNumber", getProfile);
 
 
 

@@ -2,12 +2,7 @@ import jwt, { decode } from "jsonwebtoken";
 import User from "../model/User/userInfo.js";
 
 const authentication = async (req, res, next) => {
-  // Debug - log cookie headers in production
-  // console.log("Cookie headers:", req.headers.cookie);
-  // console.log("Auth cookie:", req.cookies);
-  // console.log("Authorization header:", req.headers.authorization);
-
-  // First try to get token from cookies
+  
   let token = req.cookies.authToken;
 
   // If no cookie token, check Authorization header

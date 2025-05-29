@@ -140,7 +140,7 @@ const Home = () => {
           </Link>
 
           {/* Galleries Card */}
-          <div className="group relative p-4 sm:p-6 md:p-8 rounded-3xl overflow-hidden transition-all duration-500 h-auto sm:h-[280px] flex flex-col bg-gradient-to-br from-white/95 via-blue-50/95 to-indigo-50/95 dark:from-gray-800/90 dark:via-gray-800/90 dark:to-gray-900/90 shadow-lg dark:shadow-gray-900/20">
+          <Link to={"/Memorylane"} className="group relative p-4 sm:p-6 md:p-8 rounded-3xl overflow-hidden transition-all duration-500 h-auto sm:h-[280px] flex flex-col bg-gradient-to-br from-white/95 via-blue-50/95 to-indigo-50/95 dark:from-gray-800/90 dark:via-gray-800/90 dark:to-gray-900/90 shadow-lg dark:shadow-gray-900/20">
             <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/5 to-purple-500/5 dark:from-indigo-500/20 dark:to-purple-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
             <div className="relative z-10 flex flex-col h-full">
               <div className="flex flex-col sm:flex-row sm:items-center mb-4 sm:mb-6">
@@ -159,7 +159,7 @@ const Home = () => {
               </p>
             </div>
             <div className="absolute bottom-0 left-0 w-full h-1 bg-indigo-600 dark:bg-indigo-500 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left" />
-          </div>
+          </Link>
 
           {/* About College Card */}
           <div className="group relative p-4 sm:p-6 md:p-8 rounded-3xl overflow-hidden transition-all duration-500 h-auto sm:h-[280px] flex flex-col bg-gradient-to-br from-white/95 via-blue-50/95 to-indigo-50/95 dark:from-gray-800/90 dark:via-gray-800/90 dark:to-gray-900/90 shadow-lg dark:shadow-gray-900/20">

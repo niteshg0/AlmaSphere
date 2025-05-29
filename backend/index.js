@@ -2,6 +2,7 @@ import express from "express";
 import router from "./routes/userRoute.js";
 // import academicRouter from "./routes/academicRout.js";
 import jobPortalRouter from "./routes/jobPortalRout.js";
+
 import queryRouter from "./routes/queryRoute.js";
 import adminRouter from "./routes/adminRoute.js";
 import mongoose from "mongoose";
@@ -9,6 +10,7 @@ import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import Razorpay from "razorpay";
 import cors from "cors";
+import Memoryrouter from "./routes/MemoryRoute.js"
 
 // db connection
 import connectDB from "./utils/DbConnection.js";
@@ -49,6 +51,7 @@ app.use("/api/jobDetail", jobPortalRouter);
 app.use("/api/donation", donationRouter);
 app.use("/api/query", queryRouter);
 app.use("/api/admin", adminRouter)
+app.use("/memory", Memoryrouter);
 
 app.use("/", (req, res) => {
   return res.status(200).json("Welcome to Backend");

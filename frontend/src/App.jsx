@@ -25,7 +25,9 @@ import Profiles from "./Profiles";
 import PrivateRoute from "./components/PrivateRoute";
 import AddStudent from "./admin/AddStudent";
 import Student from "./admin/Student";
-
+import Memorylane from "./MemoryLane//Memorylane"
+import Memoryform from "./MemoryLane/Memoryform";
+import MemoryGallery from "./MemoryLane/MemoryGallary";
 function App() {
   const [isDarkTheme, setIsDarkTheme] = useState(() => {
     const savedTheme = localStorage.getItem("theme");
@@ -59,6 +61,12 @@ function App() {
             />
           }
         >
+           <Route path="/Memorylane" element = {<Memorylane/>} />
+        
+           <Route path="/add-memory" element = {<Memoryform/>} />
+          <Route path="/memory/:id" element={<MemoryGallery />} />
+
+
 
           <Route index element={<Home />} />
 
@@ -67,6 +75,7 @@ function App() {
           <Route path="/contact" element={<ContactUs />} />
 
           <Route path="/profiles/:rollNumber" element={<Profiles />} />
+         
 
           <Route
             path="/donation/verify"
