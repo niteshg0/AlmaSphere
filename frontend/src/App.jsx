@@ -23,11 +23,15 @@ import AskQuestion from "./Query/AskQuestion";
 import Question from "./Query/Question";
 import Profiles from "./Profiles";
 import PrivateRoute from "./components/PrivateRoute";
+import AdminRoute from "./components/AdminRoute";
 import AddStudent from "./admin/AddStudent";
 import Student from "./admin/Student";
-import Memorylane from "./MemoryLane//Memorylane"
-import Memoryform from "./MemoryLane/Memoryform";
+import Network from "./Network/Network";
+import ConnectedUsers from "./Network/ConnectedUsers";
+import MemoryLane from "./MemoryLane/Memorylane";
+import MemoryForm from "./MemoryLane/Memoryform";
 import MemoryGallery from "./MemoryLane/MemoryGallary";
+
 function App() {
   const [isDarkTheme, setIsDarkTheme] = useState(() => {
     const savedTheme = localStorage.getItem("theme");
@@ -60,11 +64,11 @@ function App() {
               // NavBar={""}
             />
           }
-        >
-           <Route path="/Memorylane" element = {<Memorylane/>} />
+        >           <Route path="/Memorylane" element = {<MemoryLane/>} />
         
-           <Route path="/add-memory" element = {<Memoryform/>} />
+           <Route path="/add-memory" element = {<MemoryForm/>} />
           <Route path="/memory/:id" element={<MemoryGallery />} />
+
 
 
 
@@ -81,7 +85,7 @@ function App() {
             path="/donation/verify"
             element={<VerifyDonation isDarkTheme={isDarkTheme} />}
           />
-        
+
           <Route path="/login" element={<Login />} />
 
           <Route path="/verify/:email" element={<Verify />} />
@@ -111,13 +115,46 @@ function App() {
             path="/jobDetail/:jobId"
             element={<JobDetails isDarkTheme={isDarkTheme} />}
           />
-          <Route path="/admin/add-edit-Student" element={<AddStudent/>}/>
-          <Route path="/admin/student" element={<Student/>}/>
+
+          <Route path="/network" element={<Network />}/>
+          <Route path="/connectedUser" element ={<ConnectedUsers />}/>
+
+          {/* Admin Protected Routes */}
+          <Route element={<AdminRoute />}>
+            <Route path="/admin/add-edit-Student" element={<AddStudent />} />
+            <Route path="/admin/student" element={<Student />} />
+          </Route>
         </Route>
 
-        {/* Protected Routes - leaving empty as we moved them to public routes */}
-        {/* <Route element={<PrivateRoute />}>
-        </Route> */}
+        {/* Student/Alumni Protected Routes */}
+        <Route element={<PrivateRoute allowedRoles={["Student / Alumni"]} />}>
+          <Route path="/profile" element={<Profile />} />
+          <Route
+            path="/donation"
+            element={<Donation isDarkTheme={isDarkTheme} />}
+          />
+          <Route
+            path="/createJob"
+            element={<CreateJob isDarkTheme={isDarkTheme} />}
+          />
+          <Route path="/query/askQuestion" element={<AskQuestion />} />
+        </Route>
+
+        
+
+        {/* Routes accessible by both Admin and Student/Alumni */}
+        <Route
+          element={
+            <PrivateRoute allowedRoles={["Admin", "Student / Alumni"]} />
+          }
+        >
+          <Route
+            path="/jobs"
+            element={<JobPortal isDarkTheme={isDarkTheme} />}
+          />
+          <Route path="/query" element={<Query />} />
+          <Route path="/query/:questionId" element={<Question />} />
+        </Route>
       </>
     )
   );

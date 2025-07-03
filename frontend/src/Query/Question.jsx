@@ -120,17 +120,17 @@ const Question = () => {
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 mb-8">
           <div className="flex flex-wrap justify-between mb-4">
             <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-2 w-full">
-              {question.title}
+              {question?.title}
             </h1>
             <div className="flex items-center space-x-4 text-sm text-gray-600 dark:text-gray-400 mb-4">
               <div className="flex items-center">
                 <FaUserCircle className="mr-1" />
-                <span>{question.askedBy.fullName || "Anonymous"}</span>
+                <span>{question?.askedBy?.fullName || "Anonymous"}</span>
               </div>
               <div className="flex items-center">
                 <FaCalendarAlt className="mr-1" />
                 <span>
-                  {question.createdAt
+                  {question?.createdAt
                     ? format(new Date(question.createdAt), "dd MMM, yyyy")
                     : "Unknown date"}
                 </span>

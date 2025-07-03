@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 // Icons
 import EventIcon from "../icons/event-animated.svg";
@@ -8,12 +8,24 @@ import DonationIcon from "../icons/donation-animated.svg";
 import GalleryIcon from "../icons/gallery-animated.svg";
 import CollegeIcon from "../icons/college-animated.svg";
 import QueryIcon from "../icons/query-animated.svg";
+import { useSelector } from "react-redux";
 
 const Home = () => {
+
+   const {user} = useSelector((state) => state.auth);
+   const navigate= useNavigate()
+
+   if(user?.role==="Admin"){
+    navigate("/admin/add-edit-Student")
+    return 
+   }
+
   const scrollToCards = () => {
     const cardSection = document.getElementById("card-section");
     cardSection?.scrollIntoView({ behavior: "smooth" });
   };
+
+  
 
   return (
     <main className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-indigo-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 text-gray-900 dark:text-gray-200">
@@ -50,7 +62,7 @@ const Home = () => {
           </div>
         </div>
       </section>
-
+      
       {/* Features Section */}
       <section
         id="card-section"

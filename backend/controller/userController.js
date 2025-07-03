@@ -57,21 +57,34 @@ async function sendVerificationEmail(email, code) {
 }
 
 const createUser = async (req, res) => {
-  const { rollNumber, fullName, email, password, gender, batch, course, branch, cgpa } =
-    req.body;
+  const {
+    rollNumber,
+    fullName,
+    email,
+    password,
+    gender,
+    batch,
+    course,
+    branch,
+    cgpa,
+  } = req.body;
 
-  const college_user= await College_data.findOne({rollNumber})
-  
-  if (rollNumber!=college_user.rollNumber && fullName!= college_user.fullName && email!=college_user.email) {
+  const college_user = await College_data.findOne({ rollNumber });
+
+  if (
+    rollNumber != college_user.rollNumber &&
+    fullName != college_user.fullName &&
+    email != college_user.email
+  ) {
     return res.status(400).json({ message: "Data is not correct" });
   }
 
-  const batchYear= Number(batch.slice(-4));
+  const batchYear = Number(batch.slice(-4));
   let currentYear = new Date().getFullYear();
-  const role= (currentYear>=batchYear)? "Alumni": "Student";
+  const role = currentYear >= batchYear ? "Alumni" : "Student";
 
   // Checking the user exist or not
-  const checkUserExists = await User.findOne({ rollNumber});
+  const checkUserExists = await User.findOne({ rollNumber });
   console.log("Existing User:", checkUserExists);
 
   // if (checkUserExists) {
@@ -121,60 +134,59 @@ const createUser = async (req, res) => {
   }
 };
 
-const verify_roll= async( req, res)=>{
-    try {
-      const {rollNumber}= req.params;
-      
-  
-      const rollExist= await College_data.findOne({rollNumber})
+const verify_roll = async (req, res) => {
+  try {
+    const { rollNumber } = req.params;
 
-      if(!rollExist){
-        return res.status(500).json({message: "RollNumber Does Not Exist"})
-      }
+    const rollExist = await College_data.findOne({ rollNumber });
 
-      const is_registered= await User.findOne({rollNumber});
-
-      if(is_registered){
-        return res.status(500).json({message: "RollNumber already Registered"})
-      }
-
-      rollExist.verifyCode = Math.floor(Math.random() * 9000 + 1000);
-      rollExist.codeExpiry = new Date(Date.now() + 3600000);
-
-      const savedUser= await rollExist.save();
-
-      // const { verifyCode, codeExpiry, ...user } = savedUser.toObject();
-      // console.log(user);
-      
-
-      await sendVerificationEmail(savedUser.email, savedUser.verifyCode);
-
-      return res.status(200).json({
-        message: "RollNumber Exist",
-        data: {}
-      })
-
-    } catch (error) {
-      console.error("Login error:", error);
-      return res.status(500).json({ message: "Internal server error in Verifying Roll Number" });
+    if (!rollExist) {
+      return res.status(500).json({ message: "RollNumber Does Not Exist" });
     }
-}
+
+    const is_registered = await User.findOne({ rollNumber });
+
+    if (is_registered) {
+      return res.status(500).json({ message: "RollNumber already Registered" });
+    }
+
+    rollExist.verifyCode = Math.floor(Math.random() * 9000 + 1000);
+    rollExist.codeExpiry = new Date(Date.now() + 3600000);
+
+    const savedUser = await rollExist.save();
+
+    // const { verifyCode, codeExpiry, ...user } = savedUser.toObject();
+    // console.log(user);
+
+    await sendVerificationEmail(savedUser.email, savedUser.verifyCode);
+
+    return res.status(200).json({
+      message: "RollNumber Exist",
+      data: {},
+    });
+  } catch (error) {
+    console.error("Login error:", error);
+    return res
+      .status(500)
+      .json({ message: "Internal server error in Verifying Roll Number" });
+  }
+};
 
 const verify_Roll_Code = async (req, res) => {
   const { code } = req.body;
   // console.log("code", code, req);
-  
-  const {rollNumber } = req.params;
+
+  const { rollNumber } = req.params;
 
   try {
-    const foundUser = await College_data.findOne({ rollNumber});
-
+    const foundUser = await College_data.findOne({ rollNumber });
 
     if (!foundUser) {
       return res.status(404).json({ message: "RollNumber Not Exist..." });
     }
 
-    const {verifyCode, codeExpiry, isVerified, ...userData}= foundUser.toObject();
+    const { verifyCode, codeExpiry, isVerified, ...userData } =
+      foundUser.toObject();
 
     const foundUserVerifyCode = foundUser.verifyCode;
     const foundUserexpiry = foundUser.codeExpiry;
@@ -184,16 +196,14 @@ const verify_Roll_Code = async (req, res) => {
     const codeVerification = code == foundUserVerifyCode;
 
     if (codeVerification && isnotExpired) {
-
       foundUser.isVerified = true;
-      console.log(foundUser.isVerified );
-      
+      console.log(foundUser.isVerified);
+
       await foundUser.save();
 
-      return res.status(200).json(
-        { message: "User verified successfully.",
-          data: userData
-       });
+      return res
+        .status(200)
+        .json({ message: "User verified successfully.", data: userData });
     } else {
       if (!isnotExpired) {
         return res.status(400).json({ message: "Code Expired" });
@@ -211,25 +221,26 @@ const loginUser = async (req, res) => {
     const { rollNumberOrEmail, password, role } = req.body;
 
     console.log("login", role);
-    
 
-    if(role === "Admin") {
-
-      if(!isNaN(rollNumberOrEmail)){
+    if (role === "Admin") {
+      if (!isNaN(rollNumberOrEmail)) {
         return res.status(404).json({
-          message: "Login Through Email Only"
-        })
+          message: "Login Through Email Only",
+        });
       }
 
       const email = rollNumberOrEmail;
       const adminUser = await Admin.findOne({ email });
-      
+
       if (!adminUser) {
         return res.status(404).json({ message: "Admin not found" });
-      }   
+      }
 
       // Add password validation for admin
-      const isValidPassword = await bcrypt.compare(password, adminUser.password);
+      const isValidPassword = await bcrypt.compare(
+        password,
+        adminUser.password
+      );
       if (!isValidPassword) {
         return res.status(401).json({ message: "Invalid password" });
       }
@@ -241,12 +252,12 @@ const loginUser = async (req, res) => {
         fullName: adminUser.fullName,
         email: adminUser.email,
         role: adminUser.role,
-        token: token
+        token: token,
       });
     }
 
     // Rest of the code for regular user login
-    let findUser = isNaN(Number(rollNumberOrEmail)) 
+    let findUser = isNaN(Number(rollNumberOrEmail))
       ? await User.findOne({ email: rollNumberOrEmail })
       : await User.findOne({ rollNumber: rollNumberOrEmail });
 
@@ -260,7 +271,7 @@ const loginUser = async (req, res) => {
     }
 
     const token = generateToken(res, findUser._id);
-    
+
     return res.status(200).json({
       message: "User LoggedIn Successfully",
       rollNumber: findUser.rollNumber,
@@ -269,14 +280,13 @@ const loginUser = async (req, res) => {
       role: findUser.role,
       gender: findUser.gender,
       batch: findUser.batch,
-      token: token
+      token: token,
     });
-
   } catch (error) {
     console.error("Login error:", error);
-    return res.status(500).json({ 
+    return res.status(500).json({
       message: "Internal server error",
-      error: error.message 
+      error: error.message,
     });
   }
 };
@@ -310,8 +320,6 @@ const getUserProfile = async (req, res) => {
   }
 };
 
-
-
 const addUserSkills = async (req, res) => {
   const userId = req.user._id;
   if (!userId) {
@@ -327,7 +335,20 @@ const addUserSkills = async (req, res) => {
       .status(403)
       .json({ message: "you can only update the skill...." });
   }
-  const { technicalSkill, nonTechnicalSkill } = req.body;
+  let { technicalSkill, nonTechnicalSkill } = req.body;
+  if (typeof technicalSkill === "string") {
+    technicalSkill = technicalSkill
+      .split(",")
+      .map((skill) => skill.trim())
+      .filter((skill) => skill);
+  }
+  if (typeof nonTechnicalSkill === "string") {
+    nonTechnicalSkill = nonTechnicalSkill
+      .split(",")
+      .map((skill) => skill.trim())
+      .filter((skill) => skill);
+  }
+
   try {
     const newSkills = new SkillInfo({
       userId,
@@ -344,22 +365,13 @@ const addUserSkills = async (req, res) => {
     );
 
     return res.status(202).json({
-      user,
       savedSkills,
     });
-
-    // return res.status(202).json({
-    //   message: "new skills added..",
-    //   technicalSkill: savedSkills.technicalSkill,
-    //   nonTechnicalSkill: savedSkills.nonTechnicalSkill,
-    // });
   } catch (error) {
     console.log(error);
     res.status(502).json({ message: "error in saving skills.." });
   }
 };
-
-
 
 const addUserJobInfo = async (req, res) => {
   const userId = req.user._id;
@@ -405,7 +417,6 @@ const addUserJobInfo = async (req, res) => {
   }
 };
 
-
 const addExtraInfo = async (req, res) => {
   const userId = req.user._id;
   if (!userId) {
@@ -415,45 +426,42 @@ const addExtraInfo = async (req, res) => {
   if (!user) {
     return res.status(402).json({ message: "user not found.." });
   }
-  const extraInfo = await ExtraInfo.findOne({ userId });
-  const { achievements, extracurriculars } = req.body;
-  if (!extraInfo) {
-    try {
-      const newExtraInfo = new ExtraInfo({
-        userId,
-        achievements,
-        extracurriculars,
-      });
 
-      const saveExtraInfo = await newExtraInfo.save();
-      const user = await User.findByIdAndUpdate(
-        userId,
-        { extraId: saveExtraInfo._id },
-        { new: true, upsert: true }
-      );
-      return res.status(202).json({
-        saveExtraInfo,
-      });
-    } catch (error) {
-      console.log(error);
-      return res.status(502).json({ message: "some server error occure..." });
+  const { achievements, extracurriculars } = req.body;
+
+  const achievementsArray = Array.isArray(achievements)
+    ? achievements
+    : [achievements];
+
+  const extracurricularsArray = Array.isArray(extracurriculars)
+    ? extracurriculars
+    : [extracurriculars];
+
+  achievementsArray.forEach((achievement) => {
+    if (achievement.date && typeof achievement.date === "string") {
+      // Convert date string to Date object
+      achievement.date = new Date(achievement.date);
     }
-  } else {
-    try {
-      if (achievements && Array.isArray(achievements)) {
-        extraInfo.achievements.push(...achievements);
-      }
-      if (extracurriculars && Array.isArray(extracurriculars)) {
-        extraInfo.extracurriculars.push(...extracurriculars);
-      }
-      extraInfo.save();
-      return res
-        .status(202)
-        .json({ message: "ExtraInfo added successfully", extraInfo });
-    } catch (error) {
-      console.log(error);
-      return res.status(502).json({ message: "server error occure..." });
-    }
+  });
+  try {
+    const newExtraInfo = new ExtraInfo({
+      userId,
+      achievements: achievementsArray,
+      extracurriculars: extracurricularsArray,
+    });
+
+    const saveExtraInfo = await newExtraInfo.save();
+    const user = await User.findByIdAndUpdate(
+      userId,
+      { extraId: saveExtraInfo._id },
+      { new: true, upsert: true }
+    );
+    return res.status(202).json({
+      saveExtraInfo,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(502).json({ message: "some server error occure..." });
   }
 };
 

@@ -10,16 +10,27 @@ const editUserSkills = async (req, res) => {
     if (!skills) {
       return res.status(403).json({ message: "skill not founded..." });
     }
-    if (req.body.technicalSkill && Array.isArray(req.body.technicalSkill)) {
-      skills.technicalSkill.push(...req.body.technicalSkill);
+    let {technicalSkill,nonTechnicalSkill} = req.body
+    if (typeof technicalSkill === "string") {
+      technicalSkill = technicalSkill.split(",").map((skill) => skill.trim());
     }
-    if (skills.nonTechnicalSkill && Array.isArray(req.body.nonTechnicalSkill)) {
-      skills.nonTechnicalSkill.push(...req.body.nonTechnicalSkill);
+
+    if (typeof nonTechnicalSkill === "string") {
+      nonTechnicalSkill = nonTechnicalSkill.split(",").map((skill) => skill.trim());
     }
+
+     if (Array.isArray(technicalSkill)) {
+      skills.technicalSkill.push(...technicalSkill);
+    }
+
+    if (Array.isArray(nonTechnicalSkill)) {
+      skills.nonTechnicalSkill.push(...nonTechnicalSkill);
+    }
+
     await skills.save();
     return res
       .status(202)
-      .json({ message: "skill added successfully", skills });
+      .json({ skills });
   } catch (err) {
     console.log(err.message);
     return res.status(403).json({ message: "server error..." });

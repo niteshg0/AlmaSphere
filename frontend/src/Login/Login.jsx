@@ -53,9 +53,9 @@ const Login = () => {
     // e.preventDefault();
     try {
       setLoggingIn(true);
-      const { rollNumberOrEmail, password , selectLoginType} = data;
+      let { rollNumberOrEmail, password , selectLoginType} = data;
         //  console.log(data);
-         
+      // rollNumberOrEmail= rollNumberOrEmail.toLowerCase();
       const res = await login({ rollNumberOrEmail, password , role : selectLoginType});
       console.log(res);
 
@@ -117,10 +117,13 @@ const Login = () => {
 
       
 
-      setTimeout(()=>{
-          navigate(-1);
-      }, 1000)
-
+     setTimeout(() => {
+        if (res.data.role === "Admin") {
+          navigate("/admin/add-edit-Student");
+        } else {
+          navigate("/");
+        }
+      }, 1000);
       
     } catch (error) {
       console.error("Login exception:", error);

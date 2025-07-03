@@ -1,11 +1,26 @@
 import { Link, useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
+import { useLogoutMutation } from "../redux/Api/userApiSlice";
+import { useSearchMutation } from "../redux/Api/searchApiSlice.js";
+import Notification from "./Notification.jsx";
+import { logout } from "../redux/features/authSlice.js";
+import "react-toastify/dist/ReactToastify.css";
+import SearchResultsDropdown from "./Card/SearchResultsDropdown.jsx";
 
 const Header = ({ isDarkTheme, toggleTheme, NavBar }) => {
   const navigate = useNavigate();
   const { user } = useSelector((state) => state.auth);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [query, setQuery] = useState("");
+  const [isSearchFocused, setIsSearchFocused] = useState(false);
+  const [showDropDown, setShowDropDown] = useState(false);
+  const [searchResults, setSearchResults] = useState([]);
+  const [showResults, setShowResults] = useState(false);
+
+  //logout
+  const [logoutApiCall] = useLogoutMutation();
+  const dispatch = useDispatch();
 
   // Access fullName directly from user, not from user.data
   const existUser = user?.fullName;
@@ -16,6 +31,8 @@ const Header = ({ isDarkTheme, toggleTheme, NavBar }) => {
     navigate("/");
     setMobileMenuOpen(false);
   };
+
+  
 
   const profileClick = () => {
     navigate("/profile");
@@ -44,52 +61,86 @@ const Header = ({ isDarkTheme, toggleTheme, NavBar }) => {
 
   const navItem = [
     {
-      name : "About Us",
-      id : 1,
-      link : "/about",
-      role : "user",
-    } ,
+      name: "About Us",
+      id: 1,
+      link: "/about",
+      role: "user",
+    },
     {
-      name : "Contact Us",
-      id : 2,
-      link : "/contact",
-      role : "user",
-
-    } ,
+      name: "Contact Us",
+      id: 2,
+      link: "/contact",
+      role: "user",
+    },
     {
-      name : "Queries",
-      id : 3,
-      link : "/query",
-      role : "user",
-
-    } ,
+      name: "Queries",
+      id: 3,
+      link: "/query",
+      role: "user",
+    },
     {
-      name : "Job Portal",
-      id : 4,
-      link : "/jobs",
-      role : "user",
-
-    } ,
-    
-    
-  ]
+      name: "Job Portal",
+      id: 4,
+      link: "/jobs",
+      role: "user",
+    },
+  ];
 
   const navAdmin = [
     {
-      name : "Add Student",
-      id : 5,
-      link : "/admin/add-student",
-      role : "admin",
+      name: "Add Student",
+      id: 5,
+      link: "/admin/add-edit-Student",
+      role: "admin",
     },
     {
-      name : "Student",
-      id : 6,
-      link : "/admin/student",
-      role : "admin",
+      name: "Student",
+      id: 6,
+      link: "/admin/student",
+      role: "admin",
     },
-  ]
+  ];
 
+  const handleLogout = async () => {
+    try {
+      // debugger
+      await logoutApiCall().unwrap();
+      dispatch(logout());
+      // setToast({ type: "success", message: "Logout successful..." });
+      toast.success("Logout Successfully ...", {
+        className:
+          "dark:!bg-gradient-to-r dark:!from-indigo-950/90 dark:!to-indigo-900/90 dark:!text-indigo-100",
+      });
 
+      // setTimeout(() => {
+      navigate("/");
+      // setUserData(null);
+      // }, 1500);
+    } catch (error) {
+      console.log(error?.data?.message || error?.message);
+      toast.error("Logout failed ...", {
+        className:
+          "dark:!bg-gradient-to-r dark:!from-indigo-950/90 dark:!to-indigo-900/90 dark:!text-indigo-100",
+      });
+
+      // setToast({ type: "error", message: "Unable to logout..." });
+    }
+  };
+
+  const [searchUsers, { isError, isLoading }] = useSearchMutation();
+  let res = null;
+
+  
+  const handleSearch = async (e) => {
+    e.preventDefault();
+    if (query.trim()) {
+      res = await searchUsers(query);
+      setShowDropDown(true);
+      setQuery("");
+      setMobileMenuOpen(false);
+      setSearchResults(res?.data || []);
+    }
+  };
 
   return (
     <div
@@ -98,7 +149,7 @@ const Header = ({ isDarkTheme, toggleTheme, NavBar }) => {
       }`}
     >
       <div
-        className={`mx-2 sm:mx-4 rounded-2xl backdrop-blur-lg transition-all duration-300 relative overflow-hidden group 
+        className={`mx-2 sm:mx-4 rounded-2xl backdrop-blur-lg transition-all duration-300 relative group 
             ? "bg-white/95 dark:bg-gray-900/90"
             : "bg-white/95 dark:bg-gray-900/70"
         }`}
@@ -118,44 +169,127 @@ const Header = ({ isDarkTheme, toggleTheme, NavBar }) => {
         </div>
 
         <nav className="w-full relative">
-          <div className="container mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
+          <div className="container mx-auto px-4 sm:px-6 py-4 flex flex-col md:flex-row justify-between items-center gap-4">
             {/* Logo/Home Link */}
-            <h2
-              className="font-bold font-serif cursor-pointer text-xl sm:text-2xl bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-purple-600 dark:from-indigo-400 dark:to-purple-400"
-              onClick={handleClick}
-            >
-              AlumniHub
-            </h2>
+            <div className="flex items-center justify-between w-full md:w-auto">
+              <h2
+                className="font-bold font-serif cursor-pointer text-xl sm:text-2xl bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-purple-600 dark:from-indigo-400 dark:to-purple-400"
+                onClick={handleClick}
+              >
+                AlumniHub
+              </h2>
+
+              {/* Mobile Menu Button - Moved here for better layout */}
+              <button
+                className="menu-button md:hidden p-2 rounded-lg bg-white/80 text-gray-700 hover:text-indigo-600 border border-indigo-100 dark:bg-gray-800/50 dark:text-gray-300 dark:hover:text-white"
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                aria-label={
+                  mobileMenuOpen ? "Close mobile menu" : "Open mobile menu"
+                }
+              >
+                <svg
+                  className="w-6 h-6"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  {mobileMenuOpen ? (
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M6 18L18 6M6 6l12 12"
+                    />
+                  ) : (
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M4 6h16M4 12h16M4 18h16"
+                    />
+                  )}
+                </svg>
+              </button>
+            </div>
+
+            {user?.role!= "Admin" && (
+            <div className="relative w-full md:w-auto md:max-w-md">
+              <form
+                onSubmit={handleSearch}
+                className={`relative flex items-center transition-all duration-300 ${
+                  isSearchFocused ? "ring-2 ring-indigo-500/50" : ""
+                } rounded-full bg-white/80 dark:bg-gray-800/80 border border-indigo-100 dark:border-indigo-500/20`}
+              >
+                <input
+                  type="text"
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                  onFocus={() => {
+                    setIsSearchFocused(true);
+                    setShowResults(true);
+                  }}
+                  onBlur={() => {
+                    setIsSearchFocused(false);
+                    setTimeout(() => setShowResults(false), 200);
+                  }}
+                  placeholder="search alumni/student"
+                  className="w-full px-4 py-2 bg-transparent text-gray-700 dark:text-gray-300 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none rounded-full"
+                />
+                <button
+                  type="submit"
+                  className="absolute right-2 p-1.5 rounded-full text-gray-500 hover:text-indigo-600 dark:text-gray-400 dark:hover:text-indigo-400 transition-colors duration-200"
+                >
+                  <svg
+                    className="w-5 h-5"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                    />
+                  </svg>
+                </button>
+              </form>
+              {showResults &&  searchResults.length > 0 && 
+                <SearchResultsDropdown users={searchResults} onClose={() => setShowResults(false)} />}
+            </div>
+            )}
+
+            
 
             {/* Navigation Links - Desktop */}
             <ul className="hidden md:flex gap-8 items-center">
-              {(user?.role != "Admin") && navItem.map((item) => ( 
-                <Link
-                key={item.id}
-                to = {item.link}
-                className="text-base font-medium transition-all duration-300 hover:scale-105 relative group text-gray-700 hover:text-indigo-600 dark:text-gray-300 dark:hover:text-indigo-400"
-              >
-               {item.name}
-                <span className="absolute bottom-0 left-0 w-0 h-0.5 transition-all duration-300 group-hover:w-full bg-gradient-to-r from-indigo-600 to-purple-600 dark:from-indigo-400 dark:to-purple-400" />
-              </Link>
-              ))}
+              {user?.role != "Admin" &&
+                navItem.map((item) => (
+                  <Link
+                    key={item.id}
+                    to={item.link}
+                    className="text-base font-medium transition-all duration-300 hover:scale-105 relative group text-gray-700 hover:text-indigo-600 dark:text-gray-300 dark:hover:text-indigo-400"
+                  >
+                    {item.name}
+                    <span className="absolute bottom-0 left-0 w-0 h-0.5 transition-all duration-300 group-hover:w-full bg-gradient-to-r from-indigo-600 to-purple-600 dark:from-indigo-400 dark:to-purple-400" />
+                  </Link>
+                ))}
 
-              {(user?.role == "Admin") && navAdmin.map((item) => (
-                <Link
-                key={item.id}
-                to = {item.link}
-                className="text-base font-medium transition-all duration-300 hover:scale-105 relative group text-gray-700 hover:text-indigo-600 dark:text-gray-300 dark:hover:text-indigo-400"
-              >
-               {item.name}
-                <span className="absolute bottom-0 left-0 w-0 h-0.5 transition-all duration-300 group-hover:w-full bg-gradient-to-r from-indigo-600 to-purple-600 dark:from-indigo-400 dark:to-purple-400" />
-              </Link>
-              ))}
-                
-              
+              {user?.role == "Admin" &&
+                navAdmin.map((item) => (
+                  <Link
+                    key={item.id}
+                    to={item.link}
+                    className="text-base font-medium transition-all duration-300 hover:scale-105 relative group text-gray-700 hover:text-indigo-600 dark:text-gray-300 dark:hover:text-indigo-400"
+                  >
+                    {item.name}
+                    <span className="absolute bottom-0 left-0 w-0 h-0.5 transition-all duration-300 group-hover:w-full bg-gradient-to-r from-indigo-600 to-purple-600 dark:from-indigo-400 dark:to-purple-400" />
+                  </Link>
+                ))}
             </ul>
 
-            {/* Right Section (Theme Toggle + Login/Profile + Mobile Menu Button) */}
-            <div className="flex items-center gap-3 sm:gap-4">
+            {/* Right Section (Theme Toggle + Login/Profile) */}
+            <div className="hidden md:flex items-center gap-3 sm:gap-4">
               {/* Theme Toggle Button */}
               <button
                 onClick={toggleTheme}
@@ -214,6 +348,16 @@ const Header = ({ isDarkTheme, toggleTheme, NavBar }) => {
                       <div className="absolute inset-0 bg-gradient-to-r from-indigo-500/20 to-purple-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                     </button>
                   </Link>
+                ) : user?.role === "Admin" ? (
+                  <div>
+                    <button
+                      className="px-4 sm:px-6 py-2 rounded-full text-sm font-medium transition-all duration-300 transform hover:scale-105 relative overflow-hidden group bg-indigo-600 hover:bg-indigo-700 text-white"
+                      onClick={handleLogout}
+                    >
+                      <span className="relative z-10">Log Out</span>
+                      <div className="absolute inset-0 bg-gradient-to-r from-indigo-500/20 to-purple-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                    </button>
+                  </div>
                 ) : (
                   <div
                     className="px-4 sm:px-6 py-2 rounded-full text-sm font-medium cursor-pointer transition-all duration-300 transform hover:scale-105 relative overflow-hidden group bg-indigo-600 hover:bg-indigo-700 text-white"
@@ -225,37 +369,11 @@ const Header = ({ isDarkTheme, toggleTheme, NavBar }) => {
                 )}
               </div>
 
-              {/* Mobile Menu Button */}
-              <button
-                className="menu-button md:hidden p-2 rounded-lg bg-white/80 text-gray-700 hover:text-indigo-600 border border-indigo-100 dark:bg-gray-800/50 dark:text-gray-300 dark:hover:text-white"
-                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                aria-label={
-                  mobileMenuOpen ? "Close mobile menu" : "Open mobile menu"
-                }
-              >
-                <svg
-                  className="w-6 h-6"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  {mobileMenuOpen ? (
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M6 18L18 6M6 6l12 12"
-                    />
-                  ) : (
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M4 6h16M4 12h16M4 18h16"
-                    />
-                  )}
-                </svg>
-              </button>
+              <div>
+                {user && (<Notification />)}
+              </div>
+
+              
             </div>
           </div>
 
@@ -266,8 +384,15 @@ const Header = ({ isDarkTheme, toggleTheme, NavBar }) => {
             }`}
           >
             <div className="px-4 py-6 bg-white/95 dark:bg-gray-800/95 border-t border-gray-200 dark:border-gray-700 rounded-b-2xl">
-             
+              
               <ul className="space-y-4">
+                <li>
+                  <div
+                    className="block btn-link py-2 text-gray-700 hover:text-indigo-600 dark:text-gray-300 dark:hover:text-indigo-400"
+                  >
+                    {user && (<Notification />)}
+                  </div>
+                </li>
                 <li>
                   <Link
                     to="/about"
@@ -328,6 +453,8 @@ const Header = ({ isDarkTheme, toggleTheme, NavBar }) => {
           </div>
         </nav>
       </div>
+
+      
     </div>
   );
 };
