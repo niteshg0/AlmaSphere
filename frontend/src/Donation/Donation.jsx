@@ -16,11 +16,14 @@ import {
   FaInfo,
 } from "react-icons/fa";
 
+
 const Donation = ({ isDarkTheme }) => {
   const { user, token } = useSelector((state) => state.auth);
   const PORT = import.meta.env.VITE_BACKEND_PORT;
   const [activeTab, setActiveTab] = useState("donate");
   const navigate = useNavigate();
+
+  const { processPayment, isProcessing } = useRazorpayPayment();
 
   const [formData, setFormData] = useState({
     rollNumber: user?.rollNumber || "",
@@ -28,7 +31,6 @@ const Donation = ({ isDarkTheme }) => {
     donationType: "One-Time",
     message: "",
   });
-  
 
   const [donation, { isLoading, error }] = useDonationMutation();
   const [donationStats, setDonationStats] = useState({
@@ -49,6 +51,7 @@ const Donation = ({ isDarkTheme }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // Validation checks remain unchanged
     if (!user) {
       toast("Please Login to make a donation", {
         style: {
@@ -72,10 +75,15 @@ const Donation = ({ isDarkTheme }) => {
     }
 
     try {
-      const donate = await donation(formData).unwrap();
+      // First, create the donation order through your API
+      const donateResponse = await donation(formData).unwrap();
 
-      if (!donate.donation.id) {
-        toast("Failed to create Donation Order", {
+      if (
+        !donateResponse.success ||
+        !donateResponse.donation ||
+        !donateResponse.donation.id
+      ) {
+        toast("Failed to create donation order", {
           style: {
             background: isDarkTheme ? "#1f2937" : "#fff",
             color: isDarkTheme ? "#f87171" : "#ef4444",
@@ -85,6 +93,116 @@ const Donation = ({ isDarkTheme }) => {
         return;
       }
 
+      // Configure Razorpay with the order data
+      const options = {
+        key: donateResponse.keyId || import.meta.env.VITE_RAZOR_PAY_API_ID,
+        amount: donateResponse.donation.amount,
+        currency: donateResponse.donation.currency || "INR",
+        name: "Alumni Association",
+        description: `${formData.donationType} Donation`,
+        image: "/AA-logo.png",
+        order_id: donateResponse.donation.id,
+        prefill: {
+          name: user?.fullName || "",
+          email: user?.email || "",
+          contact: "",
+        },
+        notes: {
+          rollNumber: user?.rollNumber,
+          donationType: formData.donationType,
+        },
+        theme: {
+          color: "#4F46E5",
+        },
+        handler: async function (response) {
+          try {
+            // Show processing toast
+            const processingToast = toast.loading("Verifying your payment...", {
+              style: {
+                background: isDarkTheme ? "#1f2937" : "#fff",
+                color: isDarkTheme ? "#d1d5db" : "#4b5563",
+              },
+            });
+
+            // Verify the payment through your backend API
+            const verificationData = {
+              razorpay_payment_id: response.razorpay_payment_id,
+              razorpay_order_id: response.razorpay_order_id,
+              razorpay_signature: response.razorpay_signature,
+            };
+
+            // Make API call to verify payment
+            const verifyResponse = await fetch(
+              `${import.meta.env.VITE_BACKEND_URL}/api/donation/verify-payment`,
+              {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                  Authorization: `Bearer ${token}`,
+                },
+                body: JSON.stringify(verificationData),
+              }
+            );
+
+            const verificationResult = await verifyResponse.json();
+
+            // Update the toast based on verification result
+            if (verificationResult.verified) {
+              toast.update(processingToast, {
+                render:
+                  "Thank you! Your donation has been verified successfully.",
+                type: "success",
+                isLoading: false,
+                autoClose: 5000,
+                style: {
+                  background: isDarkTheme ? "#1f2937" : "#fff",
+                  color: isDarkTheme ? "#10b981" : "#059669",
+                  border: isDarkTheme
+                    ? "1px solid #059669"
+                    : "1px solid #10b981",
+                },
+              });
+
+              // You can add additional logic here like updating UI or redirecting
+            } else {
+              toast.update(processingToast, {
+                render: `Payment verification failed: ${
+                  verificationResult.error || "Unknown error"
+                }`,
+                type: "error",
+                isLoading: false,
+                autoClose: 5000,
+                style: {
+                  background: isDarkTheme ? "#1f2937" : "#fff",
+                  color: isDarkTheme ? "#f87171" : "#ef4444",
+                  border: isDarkTheme
+                    ? "1px solid #dc2626"
+                    : "1px solid #f87171",
+                },
+              });
+            }
+          } catch (error) {
+            // Handle any errors that occur during verification
+            toast.error(
+              `Verification error: ${
+                error.message || "Failed to verify payment"
+              }`,
+              {
+                style: {
+                  background: isDarkTheme ? "#1f2937" : "#fff",
+                  color: isDarkTheme ? "#f87171" : "#ef4444",
+                  border: isDarkTheme
+                    ? "1px solid #dc2626"
+                    : "1px solid #f87171",
+                },
+              }
+            );
+            console.error("Payment verification error:", error);
+          }
+        },
+      };
+
+      // Reset form
       setFormData({
         rollNumber: user?.rollNumber || "",
         amount: "",
@@ -92,40 +210,27 @@ const Donation = ({ isDarkTheme }) => {
         message: "",
       });
 
-      const options = {
-        key: import.meta.env.VITE_RAZOR_PAY_API_ID,
-        amount: donate.donation.amount,
-        currency: "INR",
-        name: "Alumni Association",
-        description: "Test Transaction",
-        image: "/AA-logo.png",
-        order_id: donate.donation.id,
-        callback_url: `${import.meta.env.VITE_BACKEND_URL}/api/donation/verify`,
-        // callback_url: `${import.meta.env.VITE_FRONTEND_URL}`,
-        prefill: {
-          name: user?.fullname || "",
-          email: user?.email || "",
-          contact: "",
-        },
-        notes: {
-          address: "Razorpay Corporate Office",
-        },
-        theme: {
-          color: "#4F46E5",
-        },
-      };
+      // Load Razorpay script if needed
+      if (!window.Razorpay) {
+        const script = document.createElement("script");
+        script.src = "https://checkout.razorpay.com/v1/checkout.js";
+        document.body.appendChild(script);
 
-      const rzp1 = new window.Razorpay(options);
-      rzp1.open();
+        script.onload = () => {
+          const rzp = new window.Razorpay(options);
+          rzp.open();
+        };
+
+        script.onerror = () => {
+          toast("Failed to load payment gateway");
+        };
+      } else {
+        const rzp = new window.Razorpay(options);
+        rzp.open();
+      }
     } catch (error) {
-      toast("Internal Error", {
-        style: {
-          background: isDarkTheme ? "#1f2937" : "#fff",
-          color: isDarkTheme ? "#f87171" : "#ef4444",
-          border: isDarkTheme ? "1px solid #dc2626" : "1px solid #f87171",
-        },
-      });
-      console.log(error);
+      console.error("Payment error:", error);
+      toast(`Payment Error: ${error.message || "Internal server error"}`);
     }
   };
 
@@ -415,7 +520,7 @@ const Donation = ({ isDarkTheme }) => {
                             ? "bg-indigo-600 hover:bg-indigo-700 text-white"
                             : "bg-gray-400 dark:bg-gray-600 cursor-not-allowed text-white"
                         }`}
-                        disabled={!user || !token || isLoading}
+                        disabled={!user || !token || isLoading || isProcessing}
                       >
                         {isLoading ? (
                           <>
@@ -535,6 +640,8 @@ const Donation = ({ isDarkTheme }) => {
           </div>
         </div>
       </div>
+
+      
       <ToastContainer
         position="bottom-right"
         autoClose={5000}

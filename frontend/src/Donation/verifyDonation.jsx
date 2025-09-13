@@ -6,7 +6,7 @@ import { FaHome } from "react-icons/fa";
 const VerifyDonation = () => {
   const searchQuery = useSearchParams()[0];
   const navigate = useNavigate();
-  const [countdown, setCountdown] = useState(5);
+  const [countdown, setCountdown] = useState(7);
 
   useEffect(() => {
     // Auto-redirect to home after 5 seconds with countdown
@@ -19,14 +19,19 @@ const VerifyDonation = () => {
         }
         return prev - 1;
       });
-    }, 100);
+    }, 700);
 
     return () => clearInterval(timer);
   }, [navigate]);
 
   const referenceId = searchQuery.get("reference");
-  const paymentId = searchQuery.get("razorpay_payment_id");
-  const isSuccess = !!paymentId;
+  const razorpay_payment_id = searchQuery.get("razorpay_payment_id");
+  const razorpay_order_id = searchQuery.get("razorpay_order_id");
+  const razorpay_signature = searchQuery.get("razorpay_signature");
+
+  // If this is a success response, all three should exist
+  const isSuccessResponse =
+    razorpay_payment_id && razorpay_order_id && razorpay_signature;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-indigo-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 py-12 px-4 sm:px-6 lg:px-8 flex items-center justify-center">
@@ -52,7 +57,7 @@ const VerifyDonation = () => {
 
           {/* Content */}
           <div className="relative z-10 p-8 text-center">
-            {isSuccess ? (
+            {isSuccessResponse ? (
               <>
                 <div className="w-20 h-20 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center mx-auto mb-6">
                   <CheckCircle className="text-green-500 dark:text-green-400 w-12 h-12" />
@@ -74,13 +79,13 @@ const VerifyDonation = () => {
                     </p>
                   </div>
                 )}
-                {paymentId && (
+                {razorpay_payment_id && (
                   <div className="bg-gray-50 dark:bg-gray-700/50 rounded-lg p-4 mb-6">
                     <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">
                       Payment ID
                     </p>
                     <p className="font-medium text-gray-900 dark:text-white break-all">
-                      {paymentId}
+                      {razorpay_payment_id}
                     </p>
                   </div>
                 )}
