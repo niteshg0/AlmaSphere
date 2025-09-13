@@ -1,7 +1,5 @@
 import { useState } from 'react';
-// import { toast } from 'sonner';
-
-
+// import { toast } from 'react-toastify';
 
 
 
@@ -37,6 +35,8 @@ export const useRazorpayPayment = () => {
       });
 
       const data = await response.json();
+
+      // console.log("response", response, "data", data);
 
       if (!response.ok) {
         throw new Error(data.error || 'Failed to create order');
@@ -76,7 +76,7 @@ export const useRazorpayPayment = () => {
     }
   };
 
-  const processPayment = async (options ) => {
+  const processPayment = async (options) => {
     if (isProcessing) return;
 
     try {
@@ -88,32 +88,38 @@ export const useRazorpayPayment = () => {
         throw new Error('Failed to load Razorpay script');
       }
 
+      const paymentData= {
+        rollNumber: options.rollNumber,
+        amount: options.amount,
+        donationType: options.donationType,
+        message: options.message,
+      }
+
       // Create order
-      const orderData = await createOrder(options);
+      const orderData = await createOrder(paymentData);
 
       // Razorpay options
       const razorpayOptions = {
         key: orderData.keyId,
         amount: orderData.amount,
-        currency: "INR",
-        name: "Alumni Association",
-        description: "Test Transaction",
-        image: "/AA-logo.png",
-        order_id: orderData.orderId,
+        currency: 'INR',
+        name: 'Alumni Association',
+        description: `${options.description || 'Donation'}`,
+        order_id: orderData?.orderId,
         handler: async (response) => {
           try {
             // Verify payment
             const verificationResult = await verifyPayment(response);
             
             if (verificationResult.success) {
-              toast.success('Payment successful');
+              // toast.success('Payment successful! Your subscription is now active.');
               options.onSuccess?.(verificationResult);
             } else {
               throw new Error('Payment verification failed');
             }
           } catch (error) {
             console.error('Payment verification error:', error);
-            toast.error(error.message || 'Payment verification failed');
+            // toast.error(error.message || 'Payment verification failed');
             options.onError?.(error);
           }
         },
@@ -128,7 +134,7 @@ export const useRazorpayPayment = () => {
         modal: {
           ondismiss: () => {
             setIsProcessing(false);
-            toast.info('Payment cancelled');
+            // toast.info('Payment cancelled');
           },
         },
       };
@@ -139,7 +145,7 @@ export const useRazorpayPayment = () => {
 
     } catch (error) {
       console.error('Payment processing error:', error);
-      toast.error(error.message || 'Payment processing failed');
+      // toast.error(error.message || 'Payment processing failed');
       options.onError?.(error);
     } finally {
       setIsProcessing(false);

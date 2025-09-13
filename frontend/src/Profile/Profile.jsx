@@ -577,7 +577,7 @@ const Profile = () => {
               {/* Right Side - Profile Image and Connection */}
               <div className="mt-6 md:mt-0 flex flex-col items-center md:ml-6 space-y-4">
                 <div className="w-32 h-32 rounded-full bg-indigo-100 dark:bg-indigo-900/30 border-2 border-indigo-300 dark:border-indigo-700 flex items-center justify-center overflow-hidden">
-                  <div className="text-indigo-600 dark:text-indigo-400">
+                  {/* <div className="text-indigo-600 dark:text-indigo-400">
                     <svg
                       className="w-28 h-28"
                       viewBox="0 0 100 100"
@@ -619,7 +619,7 @@ const Profile = () => {
                         strokeWidth="2"
                       />
                     </svg>
-                  </div>
+                  </div> */}
                 </div>
                 <div className="px-4 py-2 rounded-lg bg-indigo-50 dark:bg-indigo-900/30 border border-indigo-100 dark:border-indigo-800/50">
                   <Link to={"/connectedUser"}><span className="text-indigo-700 dark:text-indigo-300">

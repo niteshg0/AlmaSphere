@@ -84,12 +84,17 @@ export const create_donation = async (req, res) => {
     // Return order details
     res.status(200).json({
       success: true,
-      donation: {
-        id: donation.id,
-        amount: donation.amount,
-        currency: donation.currency,
-        receipt: donation.receipt,
-      },
+      orderId: donation.id,
+      amount: donation.amount,
+      currency: donation.currency,
+      receipt: donation.receipt,
+      notes: donation.notes,
+      // donation: {
+      //   id: donation.id,
+      //   amount: donation.amount,
+      //   currency: donation.currency,
+      //   receipt: donation.receipt,
+      // },
       keyId: process.env.RAZOR_PAY_KEY_ID || "",
     });
   } catch (error) {
@@ -227,7 +232,15 @@ export const verify_donation = async (req, res) => {
 
     return res
       .status(200)
-      .json({ success: true, message: "Payment verified successfully" });
+      .json({ 
+        success: true,
+        status: donationEntry.status,
+        orderId: donationEntry.razorpay_order_id,
+        paymentId: donationEntry.razorpay_payment_id,
+        payment: donationEntry,
+        amount: Number(donationEntry.amount),
+        message: "Payment verified successfully" 
+      });
 
     // // Determine frontend URL for redirect
     // const frontendUrl = process.env.FRONTEND_URL || "http://localhost:5500";

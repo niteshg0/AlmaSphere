@@ -30,6 +30,7 @@ import Network from "./Network/Network";
 import ConnectedUsers from "./Network/ConnectedUsers";
 import Campaign from "./Donation/campaign";
 import CampaignDetail from "./Donation/Campaign_Detail";
+import AlmaConnect from "./NetworkingPortal/AlmaConnect";
 
 function App() {
   const [isDarkTheme, setIsDarkTheme] = useState(() => {
@@ -115,8 +116,8 @@ function App() {
             element={<JobDetails isDarkTheme={isDarkTheme} />}
           />
 
-          <Route path="/network" element={<Network />}/>
-          <Route path="/connectedUser" element ={<ConnectedUsers />}/>
+          <Route path="/network" element={<Network />} />
+          <Route path="/connectedUser" element={<ConnectedUsers />} />
 
           {/* Admin Protected Routes */}
           <Route element={<AdminRoute />}>
@@ -143,7 +144,7 @@ function App() {
           <Route path="/query/askQuestion" element={<AskQuestion />} />
         </Route>
 
-        
+        <Route path="/alma_connect" element={<AlmaConnect />} />
 
         {/* Routes accessible by both Admin and Student/Alumni */}
         <Route

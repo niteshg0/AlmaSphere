@@ -15,6 +15,6 @@ donationRouter.post("/", authentication, create_donation);
 donationRouter.post("/verify", verify_donation);
 
 // API route for frontend to verify payment
-donationRouter.post("/verify-payment", verifyPayment);
+// donationRouter.post("/verify-payment", verifyPayment);
 
 export default donationRouter;

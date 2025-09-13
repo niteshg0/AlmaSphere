@@ -2,54 +2,54 @@ import { Link } from "react-router-dom";
 
 const Footer = () => {
   return (
-    <footer className="relative py-8 bg-gradient-to-br from-blue-50 via-indigo-50 to-indigo-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
+    <footer className="relative py-8 bg-gradient-to-br from-gray-50 via-gray-400 to-white dark:from-black dark:via-gray-850/95 dark:to-black">
       {/* Background decorative elements */}
       <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute -top-20 -right-20 w-60 h-60 rounded-full bg-indigo-200/30 dark:bg-indigo-500/10 blur-3xl" />
-        <div className="absolute -bottom-20 -left-20 w-60 h-60 rounded-full bg-purple-200/30 dark:bg-purple-500/10 blur-3xl" />
+        <div className="absolute top-20 right-20 w-80 h-80 rounded-full bg-gray-400/80 dark:bg-gray-400/20 blur-3xl" />
+        <div className="absolute bottom-20 left-20 w-80 h-80 rounded-full bg-gray-400/80 dark:bg-gray-600/20 blur-3xl" />
       </div>
 
       <div className="container mx-auto px-4 sm:px-6 relative">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
           {/* Quick Links Section */}
           <div className="group">
-            <h3 className="text-lg sm:text-xl font-bold font-serif mb-3 sm:mb-4 bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-purple-600 dark:from-indigo-400 dark:to-purple-400">
+            <h3 className="text-lg sm:text-xl font-bold font-serif mb-3 sm:mb-4 bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-purple-600 dark:from-gray-600 dark:to-white">
               Quick Links
             </h3>
             <ul className="space-y-2">
               <li>
                 <Link
                   to="/about"
-                  className="group/link flex items-center text-sm sm:text-base transition-all duration-300 hover:translate-x-2 text-gray-700 hover:text-indigo-600 dark:text-gray-300 dark:hover:text-indigo-400"
+                  className="group/link flex items-center text-sm sm:text-base transition-all duration-300 hover:translate-x-2 text-gray-700 hover:text-indigo-600 dark:text-gray-300 dark:hover:text-gray-100"
                 >
-                  <span className="w-1.5 h-1.5 rounded-full bg-indigo-500 mr-2 opacity-0 group-hover/link:opacity-100 transition-opacity duration-300" />
+                  <span className="w-1.5 h-1.5 rounded-full bg-indigo-500 dark:bg-gray-400 mr-2 opacity-0 group-hover/link:opacity-100 transition-opacity duration-300" />
                   About Us
                 </Link>
               </li>
               <li>
                 <Link
                   to="/contact"
-                  className="group/link flex items-center text-sm sm:text-base transition-all duration-300 hover:translate-x-2 text-gray-700 hover:text-indigo-600 dark:text-gray-300 dark:hover:text-indigo-400"
+                  className="group/link flex items-center text-sm sm:text-base transition-all duration-300 hover:translate-x-2 text-gray-700 hover:text-indigo-600 dark:text-gray-300 dark:hover:text-gray-100"
                 >
-                  <span className="w-1.5 h-1.5 rounded-full bg-indigo-500 mr-2 opacity-0 group-hover/link:opacity-100 transition-opacity duration-300" />
+                  <span className="w-1.5 h-1.5 rounded-full bg-indigo-500 dark:bg-gray-400 mr-2 opacity-0 group-hover/link:opacity-100 transition-opacity duration-300" />
                   Contact Us
                 </Link>
               </li>
               <li>
                 <Link
                   to="/query"
-                  className="group/link flex items-center text-sm sm:text-base transition-all duration-300 hover:translate-x-2 text-gray-700 hover:text-indigo-600 dark:text-gray-300 dark:hover:text-indigo-400"
+                  className="group/link flex items-center text-sm sm:text-base transition-all duration-300 hover:translate-x-2 text-gray-700 hover:text-indigo-600 dark:text-gray-300 dark:hover:text-gray-100"
                 >
-                  <span className="w-1.5 h-1.5 rounded-full bg-indigo-500 mr-2 opacity-0 group-hover/link:opacity-100 transition-opacity duration-300" />
+                  <span className="w-1.5 h-1.5 rounded-full bg-indigo-500 dark:bg-gray-400 mr-2 opacity-0 group-hover/link:opacity-100 transition-opacity duration-300" />
                   Queries
                 </Link>
               </li>
               <li>
                 <Link
                   to="/jobs"
-                  className="group/link flex items-center text-sm sm:text-base transition-all duration-300 hover:translate-x-2 text-gray-700 hover:text-indigo-600 dark:text-gray-300 dark:hover:text-indigo-400"
+                  className="group/link flex items-center text-sm sm:text-base transition-all duration-300 hover:translate-x-2 text-gray-700 hover:text-indigo-600 dark:text-gray-300 dark:hover:text-gray-100"
                 >
-                  <span className="w-1.5 h-1.5 rounded-full bg-indigo-500 mr-2 opacity-0 group-hover/link:opacity-100 transition-opacity duration-300" />
+                  <span className="w-1.5 h-1.5 rounded-full bg-indigo-500 dark:bg-gray-400 mr-2 opacity-0 group-hover/link:opacity-100 transition-opacity duration-300" />
                   Job Portal
                 </Link>
               </li>
@@ -58,31 +58,31 @@ const Footer = () => {
 
           {/* Contact Information Section */}
           <div className="group">
-            <h3 className="text-lg sm:text-xl font-bold font-serif mb-3 sm:mb-4 bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-purple-600 dark:from-indigo-400 dark:to-purple-400">
+            <h3 className="text-lg sm:text-xl font-bold font-serif mb-3 sm:mb-4 bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-purple-600 dark:from-gray-600 dark:to-white">
               Contact Us
             </h3>
             <ul className="space-y-2">
               <li>
                 <a
                   href="mailto:support@alumnihub.com"
-                  className="group/link flex items-center text-sm sm:text-base transition-all duration-300 hover:translate-x-2 text-gray-700 hover:text-indigo-600 dark:text-gray-300 dark:hover:text-indigo-400"
+                  className="group/link flex items-center text-sm sm:text-base transition-all duration-300 hover:translate-x-2 text-gray-700 hover:text-indigo-600 dark:text-gray-300 dark:hover:text-gray-100"
                 >
-                  <span className="w-1.5 h-1.5 rounded-full bg-indigo-500 mr-2 opacity-0 group-hover/link:opacity-100 transition-opacity duration-300" />
+                  <span className="w-1.5 h-1.5 rounded-full bg-indigo-500 dark:bg-gray-400 mr-2 opacity-0 group-hover/link:opacity-100 transition-opacity duration-300" />
                   support@alumnihub.com
                 </a>
               </li>
               <li>
                 <a
                   href="tel:+1234567890"
-                  className="group/link flex items-center text-sm sm:text-base transition-all duration-300 hover:translate-x-2 text-gray-700 hover:text-indigo-600 dark:text-gray-300 dark:hover:text-indigo-400"
+                  className="group/link flex items-center text-sm sm:text-base transition-all duration-300 hover:translate-x-2 text-gray-700 hover:text-indigo-600 dark:text-gray-300 dark:hover:text-gray-100"
                 >
-                  <span className="w-1.5 h-1.5 rounded-full bg-indigo-500 mr-2 opacity-0 group-hover/link:opacity-100 transition-opacity duration-300" />
+                  <span className="w-1.5 h-1.5 rounded-full bg-indigo-500 dark:bg-gray-400 mr-2 opacity-0 group-hover/link:opacity-100 transition-opacity duration-300" />
                   +1 (234) 567-890
                 </a>
               </li>
               <li>
                 <p className="group/link flex items-center text-sm sm:text-base text-gray-700 dark:text-gray-300">
-                  <span className="w-1.5 h-1.5 rounded-full bg-indigo-500 mr-2 opacity-0 group-hover/link:opacity-100 transition-opacity duration-300" />
+                  <span className="w-1.5 h-1.5 rounded-full bg-indigo-500 dark:bg-gray-400 mr-2 opacity-0 group-hover/link:opacity-100 transition-opacity duration-300" />
                   123 Alumni Street, College Town, USA
                 </p>
               </li>
@@ -91,7 +91,7 @@ const Footer = () => {
 
           {/* Social Media Section */}
           <div className="group sm:col-span-2 md:col-span-1">
-            <h3 className="text-lg sm:text-xl font-bold font-serif mb-3 sm:mb-4 bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-purple-600 dark:from-indigo-400 dark:to-purple-400">
+            <h3 className="text-lg sm:text-xl font-bold font-serif mb-3 sm:mb-4 bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-purple-600 dark:from-gray-600 dark:to-white">
               Follow Us
             </h3>
             <div className="flex space-x-4 sm:space-x-6">
@@ -99,7 +99,7 @@ const Footer = () => {
                 href="https://facebook.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group/social p-2 rounded-full transition-all duration-300 hover:scale-110 bg-white/80 text-gray-700 hover:text-indigo-600 dark:bg-gray-800/50 dark:text-gray-300 dark:hover:text-indigo-400"
+                className="group/social p-2 rounded-full transition-all duration-300 hover:scale-110 bg-white/80 text-gray-700 hover:text-indigo-600 dark:bg-gray-800/50 dark:text-gray-300 dark:hover:text-gray-100"
                 aria-label="Facebook"
               >
                 <svg
@@ -115,7 +115,7 @@ const Footer = () => {
                 href="https://twitter.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group/social p-2 rounded-full transition-all duration-300 hover:scale-110 bg-white/80 text-gray-700 hover:text-indigo-600 dark:bg-gray-800/50 dark:text-gray-300 dark:hover:text-indigo-400"
+                className="group/social p-2 rounded-full transition-all duration-300 hover:scale-110 bg-white/80 text-gray-700 hover:text-indigo-600 dark:bg-gray-800/50 dark:text-gray-300 dark:hover:text-gray-100"
                 aria-label="Twitter"
               >
                 <svg
@@ -131,7 +131,7 @@ const Footer = () => {
                 href="https://linkedin.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group/social p-2 rounded-full transition-all duration-300 hover:scale-110 bg-white/80 text-gray-700 hover:text-indigo-600 dark:bg-gray-800/50 dark:text-gray-300 dark:hover:text-indigo-400"
+                className="group/social p-2 rounded-full transition-all duration-300 hover:scale-110 bg-white/80 text-gray-700 hover:text-indigo-600 dark:bg-gray-800/50 dark:text-gray-300 dark:hover:text-gray-100"
                 aria-label="LinkedIn"
               >
                 <svg
@@ -147,7 +147,7 @@ const Footer = () => {
                 href="https://instagram.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group/social p-2 rounded-full transition-all duration-300 hover:scale-110 bg-white/80 text-gray-700 hover:text-indigo-600 dark:bg-gray-800/50 dark:text-gray-300 dark:hover:text-indigo-400"
+                className="group/social p-2 rounded-full transition-all duration-300 hover:scale-110 bg-white/80 text-gray-700 hover:text-indigo-600 dark:bg-gray-800/50 dark:text-gray-300 dark:hover:text-gray-100"
                 aria-label="Instagram"
               >
                 <svg
