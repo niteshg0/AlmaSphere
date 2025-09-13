@@ -21,21 +21,21 @@ export default defineConfig(({ mode }) => {
   },
     server: {
       proxy: {
-        "/api/":`http://localhost:${env.VITE_BACKEND_PORT}`,
+        // "/api/":`http://localhost:${env.VITE_BACKEND_PORT}`,
         // "/api/":`http://localhost:8000`,
 
-        // "/api/": {
-        //   target: env.VITE_BACKEND_URL,
-        //   changeOrigin: true,
-        //   secure: true,
-        //   cookieDomainRewrite: {
-        //     "*": "", // This allows cookies to be sent to the current domain
-        //   },
-        //   headers: {
-        //     "Access-Control-Allow-Origin": "*",
-        //     "Access-Control-Allow-Credentials": "true",
-        //   },
-        // },
+        "/api/": {
+          target: env.VITE_BACKEND_URL,
+          changeOrigin: true,
+          secure: true,
+          cookieDomainRewrite: {
+            "*": "", // This allows cookies to be sent to the current domain
+          },
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Credentials": "true",
+          },
+        },
 
         
       },
