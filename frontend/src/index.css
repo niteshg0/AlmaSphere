@@ -110,3 +110,20 @@
 .sheet-exit {
   animation: sheet-out 0.2s ease-in;
 }
+/* Iteration effect */
+@keyframes gradient-iteration {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.animated-gradient {
+  background-size: 200% 200%;
+  animation: gradient-iteration 6s ease-in-out infinite;
+}

@@ -28,6 +28,8 @@ import AddStudent from "./admin/AddStudent";
 import Student from "./admin/Student";
 import Network from "./Network/Network";
 import ConnectedUsers from "./Network/ConnectedUsers";
+import AlumniEventsSection from "./Events/Events";
+import EventDetailsPage from "./Events/EventsDesc";
 
 function App() {
   const [isDarkTheme, setIsDarkTheme] = useState(() => {
@@ -82,7 +84,8 @@ function App() {
           <Route path="/signup" element={<SignUp />} />
 
           <Route path="/query" element={<Query />} />
-
+          <Route path="/events" element={<AlumniEventsSection />} />
+          <Route path="/events/:eventId" element={<EventDetailsPage />} />
           <Route path="/query/askQuestion" element={<AskQuestion />} />
           <Route path="/query/:questionId" element={<Question />} />
 

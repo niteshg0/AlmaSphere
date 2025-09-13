@@ -12,20 +12,20 @@ import { useSelector } from "react-redux";
 
 const Home = () => {
 
-   const {user} = useSelector((state) => state.auth);
-   const navigate= useNavigate()
+  const { user } = useSelector((state) => state.auth);
+  const navigate = useNavigate()
 
-   if(user?.role==="Admin"){
+  if (user?.role === "Admin") {
     navigate("/admin/add-edit-Student")
-    return 
-   }
+    return
+  }
 
   const scrollToCards = () => {
     const cardSection = document.getElementById("card-section");
     cardSection?.scrollIntoView({ behavior: "smooth" });
   };
 
-  
+
 
   return (
     <main className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-indigo-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 text-gray-900 dark:text-gray-200">
@@ -39,9 +39,15 @@ const Home = () => {
 
         {/* Content */}
         <div className="relative z-10 max-w-4xl mx-auto">
-          <h1 className="pb-2 text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold font-serif mb-6 sm:mb-8 bg-clip-text text-transparent leading-tight bg-gradient-to-r from-indigo-900 to-purple-900 dark:from-indigo-400 dark:to-purple-400">
+          <h1 className="pb-2 text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl 
+               font-bold font-serif mb-6 sm:mb-8 
+               bg-clip-text text-transparent leading-tight 
+               bg-gradient-to-r from-indigo-900 via-purple-700 to-purple-900 
+               dark:from-indigo-400 dark:via-purple-500 dark:to-purple-400 
+               animated-gradient">
             Your Alumni Journey Begins Here
           </h1>
+
           <p className="text-base sm:text-lg md:text-xl lg:text-2xl font-serif mb-8 sm:mb-12 text-gray-700 dark:text-gray-300 font-light leading-relaxed">
             Join a vibrant community of graduates who are shaping the future.
             Together, we create lasting connections and meaningful impact.
@@ -62,7 +68,7 @@ const Home = () => {
           </div>
         </div>
       </section>
-      
+
       {/* Features Section */}
       <section
         id="card-section"
@@ -77,29 +83,33 @@ const Home = () => {
             network can enrich your professional and personal life.
           </p>
         </div>
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
           {/* Event Card */}
-          <div className="group relative p-4 sm:p-6 md:p-8 rounded-3xl overflow-hidden transition-all duration-500 h-auto sm:h-[280px] flex flex-col bg-gradient-to-br from-white/95 via-blue-50/95 to-indigo-50/95 dark:from-gray-800/90 dark:via-gray-800/90 dark:to-gray-900/90 shadow-lg dark:shadow-gray-900/20">
-            <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/5 to-purple-500/5 dark:from-indigo-500/20 dark:to-purple-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-            <div className="relative z-10 flex flex-col h-full">
-              <div className="flex flex-col sm:flex-row sm:items-center mb-4 sm:mb-6">
-                <div className="p-3 rounded-xl bg-indigo-100 dark:bg-indigo-500/20 transform transition-all duration-300 group-hover:scale-110 mb-3 sm:mb-0 inline-flex">
-                  <img src={EventIcon} alt="Events" className="w-8 h-8" />
+          <Link to="/events" className="block h-auto sm:h-[280px]">
+            <div className="group relative p-4 sm:p-6 md:p-8 rounded-3xl overflow-hidden transition-all duration-500 h-auto sm:h-[280px] flex flex-col bg-gradient-to-br from-white/95 via-blue-50/95 to-indigo-50/95 dark:from-gray-800/90 dark:via-gray-800/90 dark:to-gray-900/90 shadow-lg dark:shadow-gray-900/20">
+              <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/5 to-purple-500/5 dark:from-indigo-500/20 dark:to-purple-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+              <div className="relative z-10 flex flex-col h-full">
+                <div className="flex flex-col sm:flex-row sm:items-center mb-4 sm:mb-6">
+                  <div className="p-3 rounded-xl bg-indigo-100 dark:bg-indigo-500/20 transform transition-all duration-300 group-hover:scale-110 mb-3 sm:mb-0 inline-flex">
+                    <img src={EventIcon} alt="Events" className="w-8 h-8" />
+                  </div>
+                  <h3 className="sm:ml-4 text-xl sm:text-2xl font-bold text-indigo-900 dark:text-indigo-400">
+                    Alumni Events & Meetups
+                  </h3>
                 </div>
-                <h3 className="sm:ml-4 text-xl sm:text-2xl font-bold text-indigo-900 dark:text-indigo-400">
-                  Alumni Events & Meetups
-                </h3>
+                <p className="text-sm sm:text-base leading-relaxed flex-grow text-gray-600 dark:text-gray-300">
+                  Experience unforgettable moments at our exclusive events. From
+                  intimate networking dinners to grand reunions, create memories
+                  that last a lifetime while expanding your professional circle.
+                </p>
               </div>
-              <p className="text-sm sm:text-base leading-relaxed flex-grow text-gray-600 dark:text-gray-300">
-                Experience unforgettable moments at our exclusive events. From
-                intimate networking dinners to grand reunions, create memories
-                that last a lifetime while expanding your professional circle.
-              </p>
+              <div className="absolute bottom-0 left-0 w-full h-1 bg-indigo-600 dark:bg-indigo-500 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left" />
             </div>
-            <div className="absolute bottom-0 left-0 w-full h-1 bg-indigo-600 dark:bg-indigo-500 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left" />
-          </div>
+          </Link>
 
           {/* Jobs Card */}
+
           <Link to="/jobs" className="block h-auto sm:h-[280px]">
             <div className="group relative p-4 sm:p-6 md:p-8 rounded-3xl overflow-hidden transition-all duration-500 h-full flex flex-col bg-gradient-to-br from-white/95 via-blue-50/95 to-indigo-50/95 dark:from-gray-800/90 dark:via-gray-800/90 dark:to-gray-900/90 shadow-lg dark:shadow-gray-900/20">
               <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/5 to-purple-500/5 dark:from-indigo-500/20 dark:to-purple-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
