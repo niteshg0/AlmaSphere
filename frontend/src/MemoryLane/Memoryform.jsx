@@ -2,7 +2,7 @@ import React, { useState, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { FiUpload, FiX } from "react-icons/fi";
 import { useParams } from "react-router-dom";
-// const token = localStorage.getItem("token");
+
 
 export default function MemoryForm({ onUpload }) {
   const { register, handleSubmit, reset, watch, setValue } = useForm();
@@ -13,7 +13,7 @@ export default function MemoryForm({ onUpload }) {
   const [uploadProgress, setUploadProgress] = useState(0);
   const fileInputRef = useRef(null);
 
-  const images = watch("images");
+  // const images = watch("images");
 
   const handleFileChange = (event) => {
     const newFiles = Array.from(event.target.files);

@@ -24,7 +24,9 @@ const authentication = async (req, res, next) => {
 
   try {
     const decodeToken = jwt.verify(token, process.env.SECRET_KEY);
-    console.log("Token verified successfully for user:", decodeToken.userId);
+  if (process.env.NODE_ENV === "development") {
+  console.log("Token verified successfully for user:", decodeToken.userId);
+}
 
     const user = await User.findById(decodeToken.userId).select("-password");
 

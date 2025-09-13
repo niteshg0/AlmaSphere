@@ -38,7 +38,7 @@ const showAllPhotoes = async (req, res) => {
     try {
         
     const { id } = req.params;
-    console.log(id);
+    
 
     const memories = await MemoryForm.find({ tags: Number(id) }).populate("PostedBy", "fullName email"); // filter by tag and populate
 
@@ -71,7 +71,7 @@ const showAllPhotoes = async (req, res) => {
 const upvoteImage = async (req, res) => {
     try {
         const { photoid } = req.params;
-        const userId = req.user?._id || "demoUser";
+        const userId = req.user?._id;
 
         const image = await MemoryForm.findById(photoid);
         if (!image) {
@@ -108,7 +108,7 @@ const upvoteImage = async (req, res) => {
 const downvoteImage = async (req, res) => {
     try {
         const { photoid } = req.params;
-        const userId = req.user?._id || "demoUser";
+        const userId = req.user?._id ;
 
         const image = await MemoryForm.findById(photoid);
         if (!image) {

@@ -1,6 +1,12 @@
 import { useState, useEffect } from "react";
 import { MdNotificationAdd } from "react-icons/md";
 import { IoIosNotifications } from "react-icons/io";
+import axios from "axios";
+import Modal from "./Model";
+import ProfileAvatar from "../Profile/ProfileAvatar.jsx"
+import UploadProfileImage from "../Profile/Photo.jsx"
+import { AnimatePresence, motion } from "framer-motion";
+
 import {
   FaUserCircle,
   FaFileAlt,
@@ -46,9 +52,11 @@ import { useGetConnectionRequestsQuery } from "../redux/Api/connectUserApiSlice.
 
 const Profile = () => {
   const { user, token } = useSelector((state) => state.auth);
-  const { data, isLoading, error , refetch} = useUserProfileQuery();
+  const { data, isLoading, error, refetch } = useUserProfileQuery();
   const [userData, setUserData] = useState(null);
   const [formData, setFormData] = useState({});
+    const [userp, setUserp] = useState(null);
+  const [photoloading, setphotoLoading] = useState(true);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -59,7 +67,8 @@ const Profile = () => {
   const [loading, setLoading] = useState(true);
   const [activeModal, setActiveModal] = useState(null);
 
-   const { data: connectionData, refetch: refetchStatus } = useGetConnectionRequestsQuery()
+  const { data: connectionData, refetch: refetchStatus } =
+    useGetConnectionRequestsQuery();
 
   // Modal types
   const MODAL_TYPES = {
@@ -77,8 +86,35 @@ const Profile = () => {
       console.log(data);
     }
     setLoading(false);
-    refetchStatus()
-  }, [data,connectionData]);
+    refetchStatus();
+  }, [data, connectionData]);
+
+useEffect(() => {
+  const fetchUser = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const res = await axios.get("http://localhost:8000/api/users/getPhoto", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      console.log("🔍 Full backend response:", res.data);
+
+      setUserp(res.data); // this should contain profile_image
+    } catch (error) {
+      console.error("❌ Error fetching user:", error);
+    } finally {
+      setphotoLoading(false);
+    }
+  };
+
+  fetchUser();
+}, []);
+
+const [openUpload, setOpenUpload] = useState(false);
+
+const editHandler = () => {
+  setOpenUpload(true);
+};
 
   const logoutHandler = async () => {
     try {
@@ -192,7 +228,7 @@ const Profile = () => {
           "dark:!bg-gradient-to-r dark:!from-green-950/90 dark:!to-green-900/90 dark:!text-green-100",
       });
 
-      const { data: freshData } = await refetch()
+      const { data: freshData } = await refetch();
       setUserData(freshData);
 
       handleCloseModal();
@@ -489,8 +525,6 @@ const Profile = () => {
     );
   }
 
-  
-
   // Process skills into arrays for better display
   const technicalSkills = userData.skillId?.technicalSkill || [];
   const nonTechnicalSkills = userData.skillId?.nonTechnicalSkill || [];
@@ -522,12 +556,19 @@ const Profile = () => {
                 <div className="flex flex-col md:flex-row md:justify-between md:space-x-4">
                   <div className="flex align-middle">
                     <div className="px-4 py-2 rounded-lg bg-indigo-50 dark:bg-indigo-900/30 border border-indigo-100 dark:border-indigo-800/50">
-                    <span className="text-indigo-700 dark:text-indigo-300 font-medium">
-                      {userData.fullName}
-                    </span>
-                  </div>
-                  {connectionData>0 ? <Link to={"/network"}><MdNotificationAdd className="scale-150 mt-3 ml-4 text-indigo-700 dark:text-indigo-300"/></Link> : 
-                  <Link to={"/network"}><IoIosNotifications className="scale-150 mt-3 ml-4 text-indigo-700 dark:text-indigo-300"/></Link>}
+                      <span className="text-indigo-700 dark:text-indigo-300 font-medium">
+                        {userData.fullName}
+                      </span>
+                    </div>
+                    {connectionData > 0 ? (
+                      <Link to={"/network"}>
+                        <MdNotificationAdd className="scale-150 mt-3 ml-4 text-indigo-700 dark:text-indigo-300" />
+                      </Link>
+                    ) : (
+                      <Link to={"/network"}>
+                        <IoIosNotifications className="scale-150 mt-3 ml-4 text-indigo-700 dark:text-indigo-300" />
+                      </Link>
+                    )}
                   </div>
                   <div className="px-4 py-2 rounded-lg bg-blue-50 dark:bg-blue-900/30 border border-blue-100 dark:border-blue-800/50">
                     <span className="text-blue-700 dark:text-blue-300">
@@ -571,60 +612,59 @@ const Profile = () => {
                   >
                     Logout
                   </button>
+                  <button
+        onClick={() => setOpenUpload(true)}
+        className="px-4 py-2 rounded-lg bg-gradient-to-r from-green-500 to-teal-500 
+                   hover:from-green-600 hover:to-teal-600 text-white shadow-md 
+                   transition-colors flex items-center justify-center"
+      >
+        Edit Photo
+      </button>
+
+      {/* Modal */}
+      <AnimatePresence>
+        {openUpload && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm"
+          >
+            {/* Modal content */}
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              transition={{ duration: 0.25 }}
+              className="bg-white dark:bg-gray-900 rounded-2xl p-6 shadow-2xl max-w-md w-full relative"
+            >
+              {/* Close button */}
+              <button
+                onClick={() => setOpenUpload(false)}
+                className="absolute top-3 right-3 text-gray-600 hover:text-red-500 text-xl"
+              >
+                ✕
+              </button>
+
+              {/* Upload form */}
+              <UploadProfileImage onSuccess={() => setOpenUpload(false)} />
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
                 </div>
               </div>
 
               {/* Right Side - Profile Image and Connection */}
               <div className="mt-6 md:mt-0 flex flex-col items-center md:ml-6 space-y-4">
-                <div className="w-32 h-32 rounded-full bg-indigo-100 dark:bg-indigo-900/30 border-2 border-indigo-300 dark:border-indigo-700 flex items-center justify-center overflow-hidden">
-                  <div className="text-indigo-600 dark:text-indigo-400">
-                    <svg
-                      className="w-28 h-28"
-                      viewBox="0 0 100 100"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <circle
-                        cx="50"
-                        cy="50"
-                        r="48"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        fill="none"
-                      />
-                      <path
-                        d="M50 30 C60 30, 65 40, 65 45 C65 55, 55 60, 50 60"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        fill="none"
-                      />
-                      <path
-                        d="M30 45 L40 50"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                      />
-                      <path
-                        d="M60 50 L70 45"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                      />
-                      <path
-                        d="M50 60 L50 75"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                      />
-                      <path
-                        d="M40 75 L60 75"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                      />
-                    </svg>
-                  </div>
-                </div>
+                        <ProfileAvatar userp={userp} />
                 <div className="px-4 py-2 rounded-lg bg-indigo-50 dark:bg-indigo-900/30 border border-indigo-100 dark:border-indigo-800/50">
-                  <Link to={"/connectedUser"}><span className="text-indigo-700 dark:text-indigo-300">
-                    Connections : {userData.connections.length}
-                  </span></Link>
+                  <Link to={"/connectedUser"}>
+                    <span className="text-indigo-700 dark:text-indigo-300">
+                      Connections : {userData.connections.length}
+                    </span>
+                  </Link>
                 </div>
               </div>
             </div>

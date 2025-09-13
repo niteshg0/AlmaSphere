@@ -31,6 +31,7 @@ import ConnectedUsers from "./Network/ConnectedUsers";
 import MemoryLane from "./MemoryLane/Memorylane";
 import MemoryForm from "./MemoryLane/Memoryform";
 import MemoryGallery from "./MemoryLane/MemoryGallary";
+import UploadProfileImage from "./Profile/Photo";
 
 function App() {
   const [isDarkTheme, setIsDarkTheme] = useState(() => {
@@ -68,6 +69,8 @@ function App() {
         
            <Route path="/add-memory" element = {<MemoryForm/>} />
           <Route path="/memory/:id" element={<MemoryGallery />} />
+          <Route path="/photo" element={<UploadProfileImage/>} />
+
 
 
 
