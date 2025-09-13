@@ -27,6 +27,7 @@
     "nodemon": "^3.1.9",
     "razorpay": "^2.9.5",
     "react-hook-form": "^7.56.3",
+    "react-router": "^7.9.1",
     "react-toastify": "^11.0.3",
     "xlsx": "^0.18.5",
     "zod": "^3.24.4"
