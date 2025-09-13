@@ -30,6 +30,7 @@ import Network from "./Network/Network";
 import ConnectedUsers from "./Network/ConnectedUsers";
 import Campaign from "./Donation/campaign";
 import CampaignDetail from "./Donation/Campaign_Detail";
+import AlmaSearch from "./NetworkingPortal/AlmaSearch";
 import AlmaConnect from "./NetworkingPortal/AlmaConnect";
 
 function App() {
