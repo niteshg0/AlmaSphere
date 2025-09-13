@@ -185,7 +185,7 @@ const Campaign = () => {
             </div>
 
             <div className="relative z-10 p-6  md:p-5 text-white pb- md:pb-24">
-              <div className="max-w-3xl pl-5">
+              <div className="max-w-3xl pl-5 pt-3">
                 <h1 className="text-3xl md:text-3xl lg:text-4xl font-bold mb-2">
                   College Campaign Initiatives
                 </h1>

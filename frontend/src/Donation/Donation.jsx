@@ -15,8 +15,7 @@ import {
   FaLock,
   FaInfo,
 } from "react-icons/fa";
-import { useRazorpayPayment } from "@/hooks/useRazorpay";
-import Campaign from "./campaign";
+
 
 const Donation = ({ isDarkTheme }) => {
   const { user, token } = useSelector((state) => state.auth);
@@ -642,9 +641,7 @@ const Donation = ({ isDarkTheme }) => {
         </div>
       </div>
 
-      <div>
-        <Campaign />
-      </div>
+      
       <ToastContainer
         position="bottom-right"
         autoClose={5000}
