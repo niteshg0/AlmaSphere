@@ -1,57 +1,93 @@
-import React from 'react';
-import { useAcceptConnectionMutation, useRejectConnectionMutation } from '../../redux/Api/connectUserApiSlice';
+import React from "react";
+import {
+  useAcceptConnectionMutation,
+  useRejectConnectionMutation,
+} from "../../redux/Api/connectUserApiSlice";
+import { Button } from "../ui/button";
+import { Card, CardContent } from "../ui/card";
+import { Avatar, AvatarImage, AvatarFallback } from "../ui/avatar";
+import { Badge } from "../ui/badge";
+import { Check, X, User } from "lucide-react";
+import { Link } from "react-router-dom";
 
-const ConnectionProfile = ({user,connectionId}) => {
+const ConnectionProfile = ({ user, connectionId, setOpen }) => {
+  const [acceptConnection] = useAcceptConnectionMutation();
+  const [rejectConnection] = useRejectConnectionMutation();
 
-    const [acceptConnection] = useAcceptConnectionMutation()
-    const [rejectConnection] = useRejectConnectionMutation()
-
-    const handleAccept = async() => {
-        const res =  await acceptConnection(connectionId)
+  const handleAccept = async () => {
+    try {
+      await acceptConnection(connectionId).unwrap();
+    } catch (error) {
+      console.error("Failed to accept connection:", error);
     }
+  };
 
-    const handleReject =async () => {
-        const res = await rejectConnection(connectionId)
+  const handleReject = async () => {
+    try {
+      await rejectConnection(connectionId).unwrap();
+    } catch (error) {
+      console.error("Failed to reject connection:", error);
     }
+  };
 
   return (
-    <div className="bg-white p-4 border border-gray-200 rounded-lg shadow-sm flex items-center justify-between mb-4">
-      <div className="flex items-center space-x-4">
-        {/* Placeholder for Avatar */}
-        <div className="flex-shrink-0 w-16 h-16 rounded-full overflow-hidden bg-gray-100 flex items-center justify-center">
-          {user?.profile ? (
-            <img
-              src={user?.profile}
-              alt={user?.fullName || 'User Avatar'}
-              className="w-full h-full object-cover"
-            />
-          ) : (
-            <div className="w-full h-full flex items-center justify-center text-gray-400">
-              <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-              </svg>
-            </div>
-          )}
+    <Card className="w-full mb-3 border-border bg-background/50 backdrop-blur-sm">
+      <CardContent className="p-3">
+        {/* User Info Section */}
+        <Link to={`/profiles/${user.rollNumber}`}
+          onClick={() => {
+            if (setOpen) setOpen(false);
+          }
+        }
+        >
+        <div className="flex items-center gap-3 mb-3">
+          <Avatar className="h-10 w-10 border-2 border-primary/20">
+            {user?.profile ? (
+              <AvatarImage src={user?.profile} alt={user?.fullName} />
+            ) : (
+              <AvatarFallback className="bg-primary/10">
+                <User className="h-5 w-5 text-primary/60" />
+              </AvatarFallback>
+            )}
+          </Avatar>
+          <div className="flex flex-col min-w-0">
+            <span className="font-medium text-foreground truncate">
+              {user?.fullName}
+            </span>
+            <span className="text-xs text-muted-foreground">
+              {user?.rollNumber}
+            </span>
+            <Badge variant="secondary" className="mt-1 w-fit text-xs px-2 py-0">
+              {user?.role}
+            </Badge>
+          </div>
         </div>
-        <div>
-          {/* Placeholder for Full Name */}
-          <div className="font-semibold text-lg text-gray-800">{user?.fullName}</div>
-          {/* Placeholder for Roll Number */}
-          <div className="text-sm text-gray-500">{user?.rollNumber}</div>
+        </Link>
+
+        {/* Action Buttons */}
+        <div className="flex gap-2 w-full">
+          <Button
+            size="sm"
+            variant="success"
+            className="flex-1 bg-green-600 hover:bg-green-700 text-white h-8"
+            onClick={handleAccept}
+          >
+            <Check className="h-4 w-4 mr-1" />
+            Accept
+          </Button>
+          <Button
+            size="sm"
+            variant="destructive"
+            onClick={handleReject}
+            className="flex-1 h-8"
+          >
+            <X className="h-4 w-4 mr-1" />
+            Reject
+          </Button>
         </div>
-      </div>
-      {/* Placeholder for Role */}
-      <div className="flex-grow text-center">
-        <span className="px-3 py-1 text-sm bg-blue-100 text-blue-700 rounded-full">{user?.role}</span>
-      </div>
-      <div className="flex space-x-2">
-        {/* Placeholder for Accept Button */}
-        <button className="px-4 py-2 text-sm font-medium text-white bg-green-600 rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50" onClick={handleAccept}>Accept</button>
-        {/* Placeholder for Reject Button */}
-        <button className="px-4 py-2 text-sm font-medium text-red-700 bg-red-100 rounded-md hover:bg-red-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50" onClick={handleReject}>Reject</button>
-      </div>
-    </div>
+      </CardContent>
+    </Card>
   );
 };
 
-export default ConnectionProfile; 
+export default ConnectionProfile;

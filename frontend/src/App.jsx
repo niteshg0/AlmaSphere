@@ -28,6 +28,8 @@ import AddStudent from "./admin/AddStudent";
 import Student from "./admin/Student";
 import Network from "./Network/Network";
 import ConnectedUsers from "./Network/ConnectedUsers";
+import Campaign from "./Donation/campaign";
+import CampaignDetail from "./Donation/Campaign_Detail";
 import AlmaConnect from "./NetworkingPortal/AlmaConnect";
 
 function App() {
@@ -71,10 +73,10 @@ function App() {
 
           <Route path="/profiles/:rollNumber" element={<Profiles />} />
 
-          <Route
+          {/* <Route
             path="/donation/verify"
             element={<VerifyDonation isDarkTheme={isDarkTheme} />}
-          />
+          /> */}
 
           <Route path="/login" element={<Login />} />
 
@@ -89,9 +91,17 @@ function App() {
 
           {/* Moved from protected routes to public routes */}
           <Route path="/profile" element={<Profile />} />
-          <Route
+          {/* <Route
             path="/donation"
             element={<Donation isDarkTheme={isDarkTheme} />}
+          /> */}
+          <Route
+            path="/donation"
+            element={<Campaign isDarkTheme={isDarkTheme} />}
+          />
+          <Route
+            path="/donation/details"
+            element={<CampaignDetail isDarkTheme={isDarkTheme} />}
           />
           <Route
             path="/jobs"
@@ -119,9 +129,13 @@ function App() {
         {/* Student/Alumni Protected Routes */}
         <Route element={<PrivateRoute allowedRoles={["Student / Alumni"]} />}>
           <Route path="/profile" element={<Profile />} />
-          <Route
+          {/* <Route
             path="/donation"
             element={<Donation isDarkTheme={isDarkTheme} />}
+          /> */}
+          <Route
+            path="/donation"
+            element={<Campaign isDarkTheme={isDarkTheme} />}
           />
           <Route
             path="/createJob"

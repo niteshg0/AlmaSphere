@@ -5,7 +5,7 @@ import { Link } from 'react-router'
 
 const Network = () => {
   const [connections , setConnections] = useState([])
-  const { data: connectionData, refetch: refetchStatus } = useGetConnectionRequestsQuery()
+  const { data: connectionData, refetch } = useGetConnectionRequestsQuery()
 
   const handleGetRequest = async () => {
     setConnections(connectionData)
@@ -13,8 +13,15 @@ const Network = () => {
   }
   
   useEffect (() => {
-    handleGetRequest()
+    if(connectionData) handleGetRequest()
+    refetch()
   },[connectionData])
+
+  if(!connectionData){
+    return (
+      <div>Loading ...</div>
+    )
+  }
 
   return (
     <div>

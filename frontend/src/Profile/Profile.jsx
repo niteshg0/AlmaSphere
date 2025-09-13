@@ -481,7 +481,7 @@ const Profile = () => {
     );
   };
 
-  if (loading || isLoading) {
+  if (loading || isLoading || !userData) {
     return (
       <div className="flex justify-center items-center min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-indigo-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
         <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-600 dark:border-indigo-400"></div>
@@ -489,15 +489,7 @@ const Profile = () => {
     );
   }
 
-  if (!userData) {
-    return (
-      <div className="flex justify-center items-center min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-indigo-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
-        <div className="text-red-500 font-medium">
-          Error loading profile data
-        </div>
-      </div>
-    );
-  }
+  
 
   // Process skills into arrays for better display
   const technicalSkills = userData.skillId?.technicalSkill || [];
@@ -522,12 +514,6 @@ const Profile = () => {
                 <FaUserCircle className="mr-2" />
                 Profile
               </h2>
-              {/* <button
-                onClick={() => handleOpenModal(MODAL_TYPES.PROFILE, userData)}
-                className="p-2 rounded-lg bg-white dark:bg-gray-700 text-indigo-600 dark:text-indigo-400 shadow-sm border border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors"
-              >
-                <FaEdit className="h-5 w-5" />
-              </button> */}
             </div>
             <div className="flex flex-col md:flex-row">
               {/* Left Side - Basic Info */}

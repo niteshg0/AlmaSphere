@@ -1,3 +1,112 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 240 10% 3.9%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 240 10% 3.9%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 10% 3.9%;
+
+    /* Changed to match your indigo theme */
+    --primary: 226 70% 55.1%;
+    --primary-foreground: 210 40% 98%;
+
+    --secondary: 220 14.3% 95.9%;
+    --secondary-foreground: 220.9 39.3% 11%;
+
+    --muted: 220 14.3% 95.9%;
+    --muted-foreground: 220 8.9% 46.1%;
+
+    --accent: 220 14.3% 95.9%;
+    --accent-foreground: 220.9 39.3% 11%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 220 13% 91%;
+    --input: 220 13% 91%;
+    --ring: 226 70% 55.1%;
+
+    --radius: 1rem;
+  }
+
+  .dark {
+    --background: 222 47% 11%; /* Changed to be less black, more indigo-influenced */
+    --foreground: 213 31% 91%;
+
+    --card: 222 47% 11%;
+    --card-foreground: 213 31% 91%;
+
+    --popover: 222 47% 11%;
+    --popover-foreground: 213 31% 91%;
+
+    /* Adjusted primary to be more visible in dark mode */
+    --primary: 226 70% 65%; /* Increased lightness for better visibility */
+    --primary-foreground: 210 40% 98%;
+
+    /* Made secondary more indigo-tinted */
+    --secondary: 223 27.9% 26.9%;
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 223 27.9% 26.9%;
+    --muted-foreground: 215 20.2% 65.1%;
+
+    /* Accent colors with indigo influence */
+    --accent: 223 27.9% 26.9%;
+    --accent-foreground: 210 40% 98%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+
+    /* Border and input colors lightened */
+    --border: 223 27.9% 26.9%;
+    --input: 223 27.9% 26.9%;
+    --ring: 226 70% 65%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+/* Add custom animations for sheet component */
+@keyframes sheet-in {
+  from {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes sheet-out {
+  from {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+}
+
+.sheet-enter {
+  animation: sheet-in 0.3s ease-out;
+}
+
+.sheet-exit {
+  animation: sheet-out 0.2s ease-in;
+}

@@ -3,12 +3,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { useLogoutMutation } from "../redux/Api/userApiSlice";
 import { useSearchMutation } from "../redux/Api/searchApiSlice.js";
-
+import Notification from "./Notification.jsx";
 import { logout } from "../redux/features/authSlice.js";
-
-import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import ShowProfileCard from "./Card/ShowProfileCard.jsx";
 import SearchResultsDropdown from "./Card/SearchResultsDropdown.jsx";
 
 const Header = ({ isDarkTheme, toggleTheme, NavBar }) => {
@@ -218,7 +215,7 @@ const Header = ({ isDarkTheme, toggleTheme, NavBar }) => {
               </button>
             </div>
 
-            {/* Search Bar */}
+            {user?.role!= "Admin" && (
             <div className="relative w-full md:w-auto md:max-w-md">
               <form
                 onSubmit={handleSearch}
@@ -240,8 +237,8 @@ const Header = ({ isDarkTheme, toggleTheme, NavBar }) => {
                     setIsSearchFocused(false);
                     setTimeout(() => setShowResults(false), 200);
                   }}
-                  placeholder="Search alumni..."
-                  className="w-full px-4 py-2.5 bg-transparent text-gray-800 dark:text-gray-200 placeholder-gray-600 dark:placeholder-gray-400 focus:outline-none rounded-full font-medium"
+                  placeholder="search alumni/student"
+                  className="w-full px-4 py-2 bg-transparent text-gray-700 dark:text-gray-300 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none rounded-full"
                 />
                 <button
                   type="submit"
@@ -269,6 +266,9 @@ const Header = ({ isDarkTheme, toggleTheme, NavBar }) => {
                 />
               )}
             </div>
+            )}
+
+            
 
             {/* Navigation Links - Desktop */}
             <ul className="hidden md:flex gap-8 items-center">
@@ -381,6 +381,12 @@ const Header = ({ isDarkTheme, toggleTheme, NavBar }) => {
                   </div>
                 )}
               </div>
+
+              <div>
+                {user && (<Notification />)}
+              </div>
+
+              
             </div>
           </div>
 
@@ -423,6 +429,13 @@ const Header = ({ isDarkTheme, toggleTheme, NavBar }) => {
               </form>
 
               <ul className="space-y-4">
+                <li>
+                  <div
+                    className="block btn-link py-2 text-gray-700 hover:text-indigo-600 dark:text-gray-300 dark:hover:text-indigo-400"
+                  >
+                    {user && (<Notification />)}
+                  </div>
+                </li>
                 <li>
                   <Link
                     to="/about"
@@ -483,6 +496,8 @@ const Header = ({ isDarkTheme, toggleTheme, NavBar }) => {
           </div>
         </nav>
       </div>
+
+      
     </div>
   );
 };
