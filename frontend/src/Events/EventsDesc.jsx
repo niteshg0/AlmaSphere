@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
     Calendar,
     MapPin,
@@ -14,46 +15,18 @@ import {
     Heart,
     Download
 } from 'lucide-react';
-import { Link } from 'react-router';
+import { Link } from 'react-router-dom';
+import { events }  from './eventsData';
+import { useParams } from 'react-router-dom';
 
 const EventDetailsPage = () => {
     const [lightboxOpen, setLightboxOpen] = useState(false);
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
     const [isLiked, setIsLiked] = useState(false);
+    const navigate = useNavigate(); 
+    const { eventId } = useParams();
 
-    // Sample event data
-    // In a real application, this data would be fetched from an API
-    const event = {
-        id: 1,
-        title: "Annual Alumni Gala",
-        date: "December 15, 2025",
-        time: "7:00 PM",
-        location: "Grand Ballroom, Hyatt Hotel",
-        venue: "Hyatt Regency Downtown",
-        address: "123 Main Street, Downtown City, CA 90210",
-        status: "upcoming",
-        type: "social",
-        coverImage: "https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=1200&h=600&fit=crop&crop=center",
-        description: `Join us for an elegant evening celebrating our alumni achievements with dinner, awards, and networking opportunities. This year's Annual Alumni Gala promises to be our most spectacular event yet, bringing together graduates from across the decades to celebrate our shared legacy and continued success.
-
-    The evening will begin with a cocktail reception at 7:00 PM, followed by a three-course dinner prepared by award-winning chefs. We'll be honoring distinguished alumni who have made significant contributions to their fields and communities, with special recognition for this year's Alumni Achievement Award recipients.
-
-    Don't miss this opportunity to reconnect with old friends, make new professional connections, and celebrate the continued excellence of our alumni community. Formal attire is requested for this black-tie event.
-
-    The event will conclude with dancing and entertainment, featuring live music from the acclaimed City Symphony Orchestra. We encourage all attendees to share their memories and photos using our event hashtag #AlumniGala2025.`,
-        tags: ["Alumni Meetup", "Networking", "Formal", "Awards", "Dinner"],
-        attendees: 250,
-        duration: "5 hours",
-        highlights: ["3-Course Dinner", "Awards Ceremony", "Live Music", "Networking"],
-        gallery: [
-            "https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=600&h=400&fit=crop",
-            "https://images.unsplash.com/photo-1519671482749-fd09be7ccebf?w=600&h=400&fit=crop",
-            "https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?w=600&h=400&fit=crop",
-            "https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=600&h=400&fit=crop",
-            "https://images.unsplash.com/photo-1515187029135-18ee286d815b?w=600&h=400&fit=crop",
-            "https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=600&h=400&fit=crop"
-        ]
-    };
+    const event = events.find((e) => e.id === parseInt(eventId));
 
     const openLightbox = (index) => {
         setCurrentImageIndex(index);
@@ -95,7 +68,16 @@ const EventDetailsPage = () => {
         };
         return colors[type] || 'bg-gradient-to-r from-gray-500 to-slate-500';
     };
-
+      if (!event) {
+        return (
+            <div className="min-h-screen flex items-center justify-center">
+                <div className="bg-white shadow-lg rounded-xl p-8 text-center">
+                    <h2 className="text-xl font-bold text-red-600 mb-4">Event not found</h2>
+                    <Link to="/events" className="text-indigo-600 underline">Back to Events</Link>
+                </div>
+            </div>
+        );
+    }
     return (
         <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
             {/* Navigation Bar */}
@@ -125,8 +107,9 @@ const EventDetailsPage = () => {
 
             {/* Hero Section */}
             <div className="relative h-96 md:h-[500px] overflow-hidden">
+                
                 <img
-                    src={event.coverImage}
+                    src={event.image}
                     alt={event.title}
                     className="w-full h-full object-cover"
                 />
@@ -187,10 +170,10 @@ const EventDetailsPage = () => {
 
                                 <div className="flex flex-col items-start sm:items-end gap-3">
                                     <span className={`inline-flex items-center px-4 py-2 rounded-full text-sm font-bold ${getStatusColor(event.status)}`}>
-                                        {event.status === 'upcoming' ? '🚀 Upcoming Event' : '📚 Past Event'}
+                                        {event.status === 'upcoming' ? '🚀 Upcoming Event' : '📚 Ongoing Event'}
                                     </span>
                                     <div className="flex flex-wrap gap-2">
-                                        {event.tags.map((tag, index) => (
+                                        {(event.tags ?? []).map((tag, index) => (
                                             <span
                                                 key={index}
                                                 className="px-3 py-1 bg-blue-100 dark:bg-blue-800/30 text-blue-800 dark:text-blue-300 text-sm font-medium rounded-lg"
@@ -209,7 +192,7 @@ const EventDetailsPage = () => {
                                 About This Event
                             </h2>
                             <div className="prose prose-lg dark:prose-invert max-w-none">
-                                {event.description.split('\n\n').map((paragraph, index) => (
+                                {(event.description.split('\n\n') ?? []).map((paragraph, index) => (
                                     <p key={index} className="text-gray-700 dark:text-gray-300 leading-relaxed mb-6 last:mb-0">
                                         {paragraph.trim()}
                                     </p>
@@ -218,7 +201,7 @@ const EventDetailsPage = () => {
                         </div>
 
                         {/* Image Gallery Section */}
-                        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700 p-8">
+                        {/* <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700 p-8">
                             <h2 className="text-3xl font-bold text-gray-900 dark:text-white font-serif mb-8">
                                 Event Gallery
                             </h2>
@@ -245,7 +228,7 @@ const EventDetailsPage = () => {
                                     </div>
                                 ))}
                             </div>
-                        </div>
+                        </div> */}
                     </div>
 
                     {/* Sidebar */}
@@ -294,7 +277,7 @@ const EventDetailsPage = () => {
                                 Event Highlights
                             </h3>
                             <div className="space-y-3">
-                                {event.highlights.map((highlight, index) => (
+                                {(event.highlights ?? []).map((highlight, index) => (
                                     <div key={index} className="flex items-center text-gray-700 dark:text-gray-300">
                                         <Star className="h-4 w-4 text-amber-500 mr-3 flex-shrink-0" />
                                         <span>{highlight}</span>
@@ -308,23 +291,20 @@ const EventDetailsPage = () => {
                             <div className="text-center">
                                 {event.status === 'upcoming' ? (
                                     <>
-                                        <button className="w-full py-4 px-6 bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 hover:from-blue-700 hover:via-purple-700 hover:to-indigo-700 text-white font-bold text-lg rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl mb-4">
-                                            Register Now
-                                        </button>
+                                        <button className="w-full py-4 px-6 bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 hover:from-blue-700 hover:via-purple-700 hover:to-indigo-700 text-white font-bold text-lg rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl mb-4"
+                                            onClick={() => { navigate('/register', { state: { event } }) }}
+                                        >
+                                                Register Now
+                                            </button>
+                                        
                                         <p className="text-sm text-gray-600 dark:text-gray-400">
                                             Secure your spot for this exclusive event
                                         </p>
                                     </>
                                 ) : (
-                                    <>
-                                        <button className="w-full py-4 px-6 bg-gradient-to-r from-gray-600 to-slate-700 hover:from-gray-700 hover:to-slate-800 text-white font-bold text-lg rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl mb-4">
-                                            View Event Photos
-                                        </button>
-                                        <button className="w-full py-3 px-6 border-2 border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 font-semibold rounded-xl transition-all duration-300">
-                                            <Download className="h-4 w-4 mr-2 inline-block" />
-                                            Download Highlights
-                                        </button>
-                                    </>
+                                    <p className="text-lg text-gray-600 dark:text-gray-400">
+                                        Registrations are closed for this event.
+                                    </p>
                                 )}
                             </div>
                         </div>
@@ -332,7 +312,7 @@ const EventDetailsPage = () => {
                 </div>
             </div>
 
-            {/* Lightbox Modal */}
+            {/* Lightbox Modal
             {lightboxOpen && (
                 <div className="fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-4">
                     <div className="relative max-w-4xl max-h-full">
@@ -371,7 +351,7 @@ const EventDetailsPage = () => {
                         </div>
                     </div>
                 </div>
-            )}
+            )} */}
         </div>
     );
 };

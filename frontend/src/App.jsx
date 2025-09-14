@@ -32,7 +32,8 @@ import AlumniEventsSection from "./Events/Events";
 import EventDetailsPage from "./Events/EventsDesc";
 import Campaign from "./Donation/campaign";
 import CampaignDetail from "./Donation/Campaign_Detail";
-
+import Register from "./Registration/Register"  
+import CreateEvent from "./CreateEvent/CreateEvent";
 function App() {
   const [isDarkTheme, setIsDarkTheme] = useState(() => {
     const savedTheme = localStorage.getItem("theme");
@@ -80,14 +81,16 @@ function App() {
           /> */}
 
           <Route path="/login" element={<Login />} />
-
           <Route path="/verify/:email" element={<Verify />} />
 
-          <Route path="/signup" element={<SignUp />} />
 
-          <Route path="/query" element={<Query />} />
+          <Route path="/create-event" element={<CreateEvent />} />
+          <Route path="/register" element={<Register />} />
           <Route path="/events" element={<AlumniEventsSection />} />
           <Route path="/events/:eventId" element={<EventDetailsPage />} />
+
+          <Route path="/signup" element={<SignUp />} />
+          <Route path="/query" element={<Query />} />
           <Route path="/query/askQuestion" element={<AskQuestion />} />
           <Route path="/query/:questionId" element={<Question />} />
 
