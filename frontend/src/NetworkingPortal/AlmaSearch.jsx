@@ -4,7 +4,7 @@ import FilterSidebar from "../components/AlmaConnectCards/FilterSideBar";
 import UserShownCard from "../components/AlmaConnectCards/UserShownCard";
 import SearchCard from "../components/AlmaConnectCards/SearchCard";
 
-// Sample alumni data (move to a separate data file or API if needed)
+// Sample alumni data
 const alumniData = [
   {
     id: 1,
@@ -21,7 +21,6 @@ const alumniData = [
     course: "Electronics Engineering",
     connections: 32,
     avatar: null,
-  
   },
   {
     id: 3,
@@ -38,7 +37,6 @@ const alumniData = [
     course: "Information Technology",
     connections: 32,
     avatar: null,
-  
   },
   {
     id: 5,
@@ -116,7 +114,7 @@ const AlmaSearch = () => {
   const y1 = useTransform(scrollY, [0, 300], [0, -50]);
   const y2 = useTransform(scrollY, [0, 300], [0, -100]);
 
-  // Track mouse position for interactive glow effects
+  // Single mouse position tracker for the entire page
   useEffect(() => {
     const handleMouseMove = (e) => {
       setMousePosition({ x: e.clientX, y: e.clientY });
@@ -132,10 +130,8 @@ const AlmaSearch = () => {
     const starsPerLine = 8;
 
     // Check if window is available (for SSR compatibility)
-    const windowWidth =
-      typeof window !== "undefined" ? window.innerWidth : 1920;
-    const windowHeight =
-      typeof window !== "undefined" ? window.innerHeight : 1080;
+    const windowWidth = typeof window !== "undefined" ? window.innerWidth : 1920;
+    const windowHeight = typeof window !== "undefined" ? window.innerHeight : 1080;
 
     for (let line = 0; line < numberOfLines; line++) {
       for (let star = 0; star < starsPerLine; star++) {
@@ -146,7 +142,7 @@ const AlmaSearch = () => {
         lines.push(
           <motion.div
             key={`star-${line}-${star}`}
-            className="absolute w-1 h-1 rounded-full bg-gradient-to-r from-gray-200 to-white"
+            className="absolute w-1 h-1 rounded-full bg-gradient-to-r from-indigo-300 via-purple-200 to-pink-300 dark:from-gray-300 dark:via-white dark:to-gray-200"
             initial={{
               x: xStart,
               y: yStart,
@@ -177,7 +173,23 @@ const AlmaSearch = () => {
   };
 
   return (
-    <main className="min-h-screen relative overflow-hidden bg-gradient-to-br from-black via-gray-850/95 to-black">
+    <main className="min-h-screen relative overflow-hidden bg-gradient-to-br from-white via-gray-100/80 to-gray-200/90 dark:from-black dark:via-gray-850/95 dark:to-black">
+      {/* Single cursor glow effect for entire page */}
+      <motion.div
+        className="fixed pointer-events-none z-50"
+        animate={{
+          x: mousePosition.x - 100,
+          y: mousePosition.y - 100,
+        }}
+        transition={{
+          type: "spring",
+          damping: 30,
+          stiffness: 200,
+        }}
+      >
+        <div className="w-48 h-48 bg-gradient-to-r from-indigo-200/10 via-purple-100/15 to-pink-200/10 dark:from-gray-400/10 dark:via-gray-300/15 dark:to-gray-200/10 rounded-full blur-2xl opacity-60" />
+      </motion.div>
+
       {/* Falling stars animation */}
       <div className="fixed inset-0 pointer-events-none z-5">
         {generateStarLines()}
@@ -188,20 +200,17 @@ const AlmaSearch = () => {
         className="fixed inset-0 pointer-events-none"
         style={{ y: y1 }}
       >
-        <div className="absolute top-60 left-40 w-72 h-72 bg-gradient-to-r from-gray-400/50 to-gray-200/10 rounded-full blur-3xl" />
-        <div className="absolute top-80 right-60 w-96 h-96 bg-gradient-to-r from-gray-600/50 to-gray-200/20  rounded-full blur-3xl" />
+        <div className="absolute top-60 left-40 w-72 h-72 bg-gradient-to-r from-gray-600/50 to-gray-800/10 dark:from-gray-400/50 dark:to-gray-200/10 rounded-full blur-3xl" />
+        <div className="absolute top-80 right-60 w-96 h-96 bg-gradient-to-r from-gray-400/50 to-gray-800/20 dark:from-gray-600/50 dark:to-gray-200/20 rounded-full blur-3xl" />
       </motion.div>
-      {/* from-blue-600/15 to-violet-600/20 */}
 
       <motion.div
         className="fixed inset-0 pointer-events-none"
         style={{ y: y2 }}
       >
-        {/* from-cyan-600/20 to-blue-600/15  */}
-        <div className="absolute bottom-20 left-20 w-80 h-80 bg-gradient-to-r from-gray-600/20 to-gray-300/10  rounded-full blur-3xl" />
-        <div className="absolute bottom-40 right-10 w-64 h-64 bg-gradient-to-r from-gray-600/10 to-gray-200/10 rounded-full blur-3xl" />
+        <div className="absolute bottom-20 left-20 w-80 h-80 bg-gradient-to-r from-gray-400/20 to-gray-700/10 dark:from-gray-600/20 dark:to-gray-300/10 rounded-full blur-3xl" />
+        <div className="absolute bottom-40 right-10 w-64 h-64 bg-gradient-to-r from-gray-400/10 to-gray-700/10 dark:from-gray-600/10 dark:to-gray-200/10 rounded-full blur-3xl" />
       </motion.div>
-      {/* from-purple-600/25 to-pink-600/20  */}
 
       {/* Header */}
       <section className="relative z-10 pt-8 pb-6 px-4 sm:px-6">
@@ -212,7 +221,7 @@ const AlmaSearch = () => {
             transition={{ duration: 0.6 }}
             className="flex items-center justify-between mb-8"
           >
-            <h1 className="text-3xl sm:text-5xl font-bold bg-gradient-to-r from-gray-600 to-white bg-clip-text text-transparent">
+            <h1 className="text-3xl sm:text-5xl font-bold bg-gradient-to-r from-indigo-700 via-purple-600 to-indigo-700 dark:from-gray-600 dark:via-white dark:to-gray-600 bg-clip-text text-transparent">
               AlmaSearch
             </h1>
             <SearchCard searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
@@ -258,21 +267,8 @@ const AlmaSearch = () => {
       </section>
 
       {/* Floating accent elements */}
-      {/* <motion.div
-        className="fixed top-1/4 right-10 w-2 h-2 bg-gray-400 rounded-full opacity-60"
-        animate={{
-          y: [0, -20, 0],
-          opacity: [0.6, 0.9, 0.6],
-        }}
-        transition={{
-          duration: 3,
-          repeat: Infinity,
-          ease: "easeInOut",
-        }}
-      /> */}
-
       <motion.div
-        className="fixed bottom-1/3 left-10 w-3 h-3 bg-gray-900 rounded-full opacity-50"
+        className="fixed bottom-1/3 left-10 w-3 h-3 bg-gray-600 dark:bg-gray-400 rounded-full opacity-50"
         animate={{
           x: [0, 15, 0],
           opacity: [0.5, 0.8, 0.5],
