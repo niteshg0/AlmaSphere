@@ -10,7 +10,7 @@ import DonationIcon from "../icons/donation-animated.svg";
 import GalleryIcon from "../icons/gallery-animated.svg";
 import CollegeIcon from "../icons/college-animated.svg";
 import QueryIcon from "../icons/query-animated.svg";
-import { SparklesCore } from "../components/ui/Sparkles";
+// import { SparklesCore } from "../components/ui/Sparkles";
 
 const Home = () => {
   const { user } = useSelector((state) => state.auth);
