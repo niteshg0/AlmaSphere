@@ -29,7 +29,7 @@ app.use(
   cors({
     origin: [
       // process.env.VITE_FRONTEND_URL,       // deployed frontend
-      https://alma-sphere-drab.vercel.app
+      "https://alma-sphere-drab.vercel.app",
       "http://localhost:5500",             // local dev
     ],
     credentials: true,
