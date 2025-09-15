@@ -28,6 +28,8 @@ import AddStudent from "./admin/AddStudent";
 import Student from "./admin/Student";
 import Network from "./Network/Network";
 import ConnectedUsers from "./Network/ConnectedUsers";
+import AlumniEventsSection from "./Events/Events";
+import EventDetailsPage from "./Events/EventsDesc";
 import Campaign from "./Donation/campaign";
 import CampaignDetail from "./Donation/Campaign_Detail";
 import AlmaSearch from "./NetworkingPortal/AlmaSearch";
@@ -41,6 +43,8 @@ import CollegeLegacy from "./CollegeLegacy/Legacy";
 import PlacementStats from "./CollegeLegacy/PlacementStats";
 import ResearchInnovation from "./CollegeLegacy/Research";
 
+import Register from "./Registration/Register"  
+import CreateEvent from "./CreateEvent/CreateEvent";
 function App() {
   const [isDarkTheme, setIsDarkTheme] = useState(() => {
     const savedTheme = localStorage.getItem("theme");
@@ -102,13 +106,16 @@ function App() {
           /> */}
 
           <Route path="/login" element={<Login />} />
-
           <Route path="/verify/:email" element={<Verify />} />
 
+
+          <Route path="/create-event" element={<CreateEvent />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/events" element={<AlumniEventsSection />} />
+          <Route path="/events/:eventId" element={<EventDetailsPage />} />
+
           <Route path="/signup" element={<SignUp />} />
-
           <Route path="/query" element={<Query />} />
-
           <Route path="/query/askQuestion" element={<AskQuestion />} />
           <Route path="/query/:questionId" element={<Question />} />
 
