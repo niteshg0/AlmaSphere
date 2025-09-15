@@ -6,11 +6,11 @@ import multer from "multer";
 
 const router = Router();
 
-// const upload= multer({dest: "uploads/"});
+const upload= multer({dest: "uploads/"});
 
 
 router.get("/all-Data",  getCollege_data);
 router.post("/add-edit-Data",  postCollege_data);
-// router.post("/upload-excel", upload.single("file"), upload_Excel)
+router.post("/upload-excel", upload.single("file"), upload_Excel)
 
 export default router;
