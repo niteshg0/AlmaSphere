@@ -1,0 +1,11 @@
+{
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "frontend/index.html"
+    }
+  ],
+  "env": {
+    "VITE_BACKEND_URL": "https://almasphere.onrender.com"
+  }
+}
