@@ -342,6 +342,7 @@ const Home = () => {
             title="Alumni Events & Meetups"
             description="Experience unforgettable moments at our exclusive events. From intimate networking dinners to grand reunions, create memories that last a lifetime while expanding your professional circle."
             index={0}
+            link="/events"
           />
 
           <FeatureCard
