@@ -32,6 +32,8 @@ import AlumniEventsSection from "./Events/Events";
 import EventDetailsPage from "./Events/EventsDesc";
 import Campaign from "./Donation/campaign";
 import CampaignDetail from "./Donation/Campaign_Detail";
+import AlmaConnect from "./NetworkingPortal/AlmaConnect";
+
 import Register from "./Registration/Register"  
 import CreateEvent from "./CreateEvent/CreateEvent";
 function App() {
@@ -121,8 +123,8 @@ function App() {
             element={<JobDetails isDarkTheme={isDarkTheme} />}
           />
 
-          <Route path="/network" element={<Network />}/>
-          <Route path="/connectedUser" element ={<ConnectedUsers />}/>
+          <Route path="/network" element={<Network />} />
+          <Route path="/connectedUser" element={<ConnectedUsers />} />
 
           {/* Admin Protected Routes */}
           <Route element={<AdminRoute />}>
@@ -149,7 +151,7 @@ function App() {
           <Route path="/query/askQuestion" element={<AskQuestion />} />
         </Route>
 
-        
+        <Route path="/alma_connect" element={<AlmaConnect />} />
 
         {/* Routes accessible by both Admin and Student/Alumni */}
         <Route
