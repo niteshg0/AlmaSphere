@@ -35,9 +35,9 @@ import MemoryLane from "./MemoryLane/Memorylane";
 import MemoryForm from "./MemoryLane/Memoryform";
 import MemoryGallery from "./MemoryLane/MemoryGallary";
 import UploadProfileImage from "./Profile/Photo";
-import CollegeLegacy from "./CollegeLegacy/Test"; 
-import PlacementStats from "./CollegeLegacy/Test1";
-import ResearchInnovation from "./CollegeLegacy/Test3";
+import CollegeLegacy from "./CollegeLegacy/Legacy"; 
+import PlacementStats from "./CollegeLegacy/PlacementStats";
+import ResearchInnovation from "./CollegeLegacy/Research";
 
 function App() {
   const [isDarkTheme, setIsDarkTheme] = useState(() => {
