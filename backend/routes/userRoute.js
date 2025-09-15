@@ -29,7 +29,7 @@ import { authrizeAlumni, authrizeAdmin } from "../middleware/authrizeRole.js";
 // edit
 import { editJobInfo } from "../controller/EditSection/editJobs.js";
 import { editUserSkills } from "../controller/EditSection/editSkills.js";
-import { editUserInfo } from "../controller/EditSection/editProfile.js";
+import { editUserInfo , editProfile , getPhoto } from "../controller/EditSection/editProfile.js";
 import { editAchievements, editExtraCurricular } from "../controller/EditSection/editExtra.js";
 
 const router = Router();
@@ -41,6 +41,9 @@ router.post("/verify/:rollNumber/code", verify_Roll_Code)
 router.route("/profile").get(authentication, getUserProfile);
 router.route("/profile").post(createUser).get(authentication, getUserProfile);
 router.put("/updateUserProfile",authentication,editUserInfo)
+router.post("/updateimage",authentication,editProfile)
+router.get("/getphoto",authentication, getPhoto)
+
 
 // login and logout
 router.route("/auth").post(loginUser);
@@ -63,7 +66,7 @@ router.put("/updateSkills",authentication,editUserSkills)
 // router.route("/verify/:email")
 router.post("/verify/:email", verifyCode);
 
-router.get("/:rollNumber", authentication, getProfile);
+router.get("/:rollNumber", getProfile);
 
 
 

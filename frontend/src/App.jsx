@@ -31,6 +31,10 @@ import ConnectedUsers from "./Network/ConnectedUsers";
 import Campaign from "./Donation/campaign";
 import CampaignDetail from "./Donation/Campaign_Detail";
 import AlmaConnect from "./NetworkingPortal/AlmaConnect";
+import MemoryLane from "./MemoryLane/Memorylane";
+import MemoryForm from "./MemoryLane/Memoryform";
+import MemoryGallery from "./MemoryLane/MemoryGallary";
+import UploadProfileImage from "./Profile/Photo";
 
 function App() {
   const [isDarkTheme, setIsDarkTheme] = useState(() => {
@@ -64,7 +68,16 @@ function App() {
               // NavBar={""}
             />
           }
-        >
+        >           <Route path="/Memorylane" element = {<MemoryLane/>} />
+        
+           <Route path="/add-memory" element = {<MemoryForm/>} />
+          <Route path="/memory/:id" element={<MemoryGallery />} />
+          <Route path="/photo" element={<UploadProfileImage/>} />
+
+
+
+
+
           <Route index element={<Home />} />
 
           <Route path="/about" element={<AboutUs />} />
