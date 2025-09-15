@@ -37,6 +37,9 @@ import MemoryLane from "./MemoryLane/Memorylane";
 import MemoryForm from "./MemoryLane/Memoryform";
 import MemoryGallery from "./MemoryLane/MemoryGallary";
 import UploadProfileImage from "./Profile/Photo";
+import CollegeLegacy from "./CollegeLegacy/Legacy"; 
+import PlacementStats from "./CollegeLegacy/PlacementStats";
+import ResearchInnovation from "./CollegeLegacy/Research";
 
 function App() {
   const [isDarkTheme, setIsDarkTheme] = useState(() => {
@@ -70,11 +73,16 @@ function App() {
               // NavBar={""}
             />
           }
-        >           <Route path="/Memorylane" element = {<MemoryLane/>} />
+        >           <Route path="/memorylane" element = {<MemoryLane/>} />
         
            <Route path="/add-memory" element = {<MemoryForm/>} />
           <Route path="/memory/:id" element={<MemoryGallery />} />
           <Route path="/photo" element={<UploadProfileImage/>} />
+          <Route path="/Legacy" element={<CollegeLegacy/>} />
+          <Route path="/Stats" element={<PlacementStats/>} />
+          <Route path="/Research" element={<ResearchInnovation/>} />
+
+
 
 
 

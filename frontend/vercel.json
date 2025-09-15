@@ -2,10 +2,10 @@
   "rewrites": [
     {
       "source": "/(.*)",
-      "destination": "/index.html"
+      "destination": "frontend/index.html"
     }
   ],
   "env": {
-    "VITE_BACKEND_UR": "https://alma-sphere-drab.vercel.app"
+    "VITE_BACKEND_URL": "https://almasphere.onrender.com"
   }
 }
