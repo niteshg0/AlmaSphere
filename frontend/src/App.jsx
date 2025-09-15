@@ -32,7 +32,16 @@ import AlumniEventsSection from "./Events/Events";
 import EventDetailsPage from "./Events/EventsDesc";
 import Campaign from "./Donation/campaign";
 import CampaignDetail from "./Donation/Campaign_Detail";
+import AlmaSearch from "./NetworkingPortal/AlmaSearch";
 import AlmaConnect from "./NetworkingPortal/AlmaConnect";
+import ConnectionsPage from "./NetworkingPortal/ConnectionsPage";
+import MemoryLane from "./MemoryLane/Memorylane";
+import MemoryForm from "./MemoryLane/Memoryform";
+import MemoryGallery from "./MemoryLane/MemoryGallary";
+import UploadProfileImage from "./Profile/Photo";
+import CollegeLegacy from "./CollegeLegacy/Legacy"; 
+import PlacementStats from "./CollegeLegacy/PlacementStats";
+import ResearchInnovation from "./CollegeLegacy/Research";
 
 import Register from "./Registration/Register"  
 import CreateEvent from "./CreateEvent/CreateEvent";
@@ -68,7 +77,21 @@ function App() {
               // NavBar={""}
             />
           }
-        >
+        >           <Route path="/memorylane" element = {<MemoryLane/>} />
+        
+           <Route path="/add-memory" element = {<MemoryForm/>} />
+          <Route path="/memory/:id" element={<MemoryGallery />} />
+          <Route path="/photo" element={<UploadProfileImage/>} />
+          <Route path="/Legacy" element={<CollegeLegacy/>} />
+          <Route path="/Stats" element={<PlacementStats/>} />
+          <Route path="/Research" element={<ResearchInnovation/>} />
+
+
+
+
+
+
+
           <Route index element={<Home />} />
 
           <Route path="/about" element={<AboutUs />} />
@@ -152,6 +175,8 @@ function App() {
         </Route>
 
         <Route path="/alma_connect" element={<AlmaConnect />} />
+        <Route path="/alma_search" element={<AlmaSearch />}/>
+        <Route path="/connect_info" element={<ConnectionsPage />}/>
 
         {/* Routes accessible by both Admin and Student/Alumni */}
         <Route
