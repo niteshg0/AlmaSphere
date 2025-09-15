@@ -364,6 +364,7 @@ const Home = () => {
             icon={GalleryIcon}
             title="Memory Lane"
             description="Take a stroll down memory lane with our extensive collection of photos and videos. Relive your college days, celebrate achievements, and stay connected with classmates through our digital galleries."
+            link="/memorylane"
             index={3}
           />
 
@@ -371,6 +372,7 @@ const Home = () => {
             icon={CollegeIcon}
             title="College Legacy"
             description="Stay connected with your alma mater's journey. Learn about groundbreaking research, student achievements, and how your college continues to innovate and shape the future of education."
+           link="/Legacy"
             index={4}
           />
 

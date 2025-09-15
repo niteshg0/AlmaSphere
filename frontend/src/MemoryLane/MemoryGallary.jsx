@@ -1,6 +1,8 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { useParams } from "react-router-dom";
 import AddMemoryForm from "./Memoryform";
+import { Link } from "react-router-dom";
+import { FaHome } from "react-icons/fa";
 import {
   FaHeart,
   FaRegHeart,
@@ -154,26 +156,42 @@ export default function MemoryGallery() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-indigo-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 transition-colors duration-500">
       
-      <div className="w-full  dark:bg-gray-900/80 backdrop-blur-lg py-6 px-4 sm:px-6  ">
-        <div className="max-w-7xl mx-auto flex justify-between items-center">
-          <div className="flex items-center gap-5">
-            <div className="relative">
-              <span className="absolute -inset-2 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full opacity-20" />
-              <h1 className="text-3xl font-extrabold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent relative">
-                Memory Lane
-              </h1>
-            </div>
-          </div>
-
-          <button
-            onClick={() => setShowForm(!showForm)}
-            className="px-6 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-medium rounded-full shadow-lg hover:shadow-xl transition-all duration-300 flex items-center gap-2"
-          >
-            <FaCamera className="text-lg" />
-            {showForm ? "Back to Gallery" : "Add Memory"}
-          </button>
-        </div>
+<div className="w-full bg-transparent py-6 px-4 sm:px-6 transition-colors duration-500">
+  <div className="max-w-7xl mx-auto flex justify-between items-center">
+    {/* <div className="flex items-center gap-5">
+      <div className="relative">
+        <span className="absolute -inset-2 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full" />
+        <h1 className="text-3xl font-extrabold text-white relative z-10">
+          Memory Lane
+        </h1>
       </div>
+    </div> */}
+     <div className="flex items-center gap-4">
+                <Link
+                  to="/memorylane"
+                  className="flex items-center gap-2 bg-white dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 text-indigo-600 dark:text-indigo-400 px-4 py-2 rounded-lg transition-colors duration-300 shadow-sm"
+                >
+                  <FaHome size={16} />
+                  <span>Back</span>
+                </Link>
+                <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+                  MemoryLane
+                </h1>
+              </div>
+
+    <button
+      onClick={() => setShowForm(!showForm)}
+      className="px-6 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 
+                 hover:from-blue-700 hover:to-indigo-700 text-white font-medium 
+                 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 flex items-center gap-2"
+    >
+      <FaCamera className="text-lg" />
+      {showForm ? "Back to Gallery" : "Add Memory"}
+    </button>
+  </div>
+</div>
+
+
 
       {/* Main Content */}
       <div className="py-8 px-4 sm:px-6">
@@ -236,7 +254,7 @@ export default function MemoryGallery() {
                         >
                           {/* Image Section */}
                         {/* Image Section */}
-<div className="relative aspect-[9/9] overflow-hidden">
+<div className="relative aspect-[13/9] overflow-hidden">
   {post.totalImages > 1 ? (
     <motion.div
       key={post._id}
