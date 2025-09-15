@@ -25,19 +25,21 @@ const PORT = process.env.VITE_BACKEND_PORT || 8001;
 
 const app = express();
 
-// Configure CORS with specific options
 app.use(
   cors({
     origin: [
-      // process.env.VITE_FRONTEND_URL,
-      "https://alma-sphere-drab.vercel.app",
-      `http://localhost:${process.env.VITE_PORT}`,
-    ], // Allow your frontend domain
-    credentials: true, // Allow cookies to be sent with requests
+      // process.env.VITE_FRONTEND_URL,       // deployed frontend
+      https://alma-sphere-drab.vercel.app
+      "http://localhost:5500",             // local dev
+    ],
+    credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
+
+// Allow preflight across routes
+app.options("*", cors());
 
 export const instance = new Razorpay({
   key_id: process.env.VITE_RAZOR_PAY_API_ID,
