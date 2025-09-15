@@ -63,4 +63,6 @@ app.use("/", (req, res) => {
   return res.status(200).json("Welcome to Backend");
 });
 
-app.listen(PORT, () => console.log(`server started at PORT : ${PORT}...`));
+// app.listen(PORT, () => console.log(`server started at PORT : ${PORT}...`));
+
+export default app;
