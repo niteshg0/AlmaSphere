@@ -24,14 +24,35 @@ import ConnectionButton from "./components/ConnectionComponents/ConnectionButton
 
 const Profiles = () => {
   const { user } = useSelector((state) => state.auth);
-  const navigate= useNavigate();
+  const navigate = useNavigate();
   const { rollNumber } = useParams();
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
 
   const { data, isLoading } = useGetProfileQuery(rollNumber);
 
+  const [userp, setUserp] = useState(null);
+  const [photoloading, setphotoLoading] = useState(true);
 
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        const res = await axios.get("http://localhost:8000/api/user/getPhoto", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
+        console.log("Fetched user:", res.data); // check exact structure
+        setUserp(res.data); // or res.data.user depending on backend
+      } catch (error) {
+        console.error("Error fetching user:", error.response || error.message);
+      } finally {
+        setphotoLoading(false);
+      }
+    };
+
+    fetchUser();
+  }, []);
 
   useEffect(() => {
     if (data) {
@@ -41,11 +62,9 @@ const Profiles = () => {
     setLoading(false);
   }, [data]);
 
-  if(!user){
-    navigate("/login")
+  if (!user) {
+    navigate("/login");
   }
-
- 
 
   if (isLoading || loading || !userData) {
     return (
@@ -55,12 +74,7 @@ const Profiles = () => {
     );
   }
 
-  
-
-
-  
-
-  // Process skills into arrays for better display 
+  // Process skills into arrays for better display
   const technicalSkills = userData.skillId?.technicalSkill || [];
   const nonTechnicalSkills = userData.skillId?.nonTechnicalSkill || [];
 
@@ -135,54 +149,42 @@ const Profiles = () => {
 
               {/* Right Side - Profile Image and Connection */}
               <div className="mt-6 md:mt-0 flex flex-col items-center md:ml-6 space-y-4">
-                <div className="w-32 h-32 rounded-full bg-indigo-100 dark:bg-indigo-900/30 border-2 border-indigo-300 dark:border-indigo-700 flex items-center justify-center overflow-hidden">
-                  <div className="text-indigo-600 dark:text-indigo-400">
-                    <svg
-                      className="w-28 h-28"
-                      viewBox="0 0 100 100"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <circle
-                        cx="50"
-                        cy="50"
-                        r="48"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        fill="none"
+                <div
+                  className="w-32 h-32 rounded-full bg-indigo-100 dark:bg-indigo-900/30 
+                border-2 border-indigo-300 dark:border-indigo-700 
+                flex items-center justify-center overflow-hidden"
+                >
+                  {(() => {
+                    console.log("🔍 userp in render:", userp);
+
+                    if (!userp) {
+                      return (
+                        <p className="text-sm text-gray-500">
+                          No user data yet...
+                        </p>
+                      );
+                    }
+
+                    const profileImg =
+                      userp?.profile_image || "/default-avatar.png";
+                    // 👆 put your default image path in public/ folder (e.g., public/default-avatar.png)
+
+                    return (
+                      <img
+                        src={profileImg}
+                        alt="Profile"
+                        className="w-full h-full object-cover"
                       />
-                      <path
-                        d="M50 30 C60 30, 65 40, 65 45 C65 55, 55 60, 50 60"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        fill="none"
-                      />
-                      <path
-                        d="M30 45 L40 50"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                      />
-                      <path
-                        d="M60 50 L70 45"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                      />
-                      <path
-                        d="M50 60 L50 75"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                      />
-                      <path
-                        d="M40 75 L60 75"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                      />
-                    </svg>
-                  </div>
+                    );
+                  })()}
                 </div>
+
                 <div className="px-4 py-2 rounded-lg bg-indigo-50 dark:bg-indigo-900/30 border border-indigo-100 dark:border-indigo-800/50">
                   <span className="text-indigo-700 dark:text-indigo-300">
-                    <ConnectionButton userId={userData?._id} connectionsCount={userData.connections.length}/>
+                    <ConnectionButton
+                      userId={userData?._id}
+                      connectionsCount={userData?.connections?.length || 0}
+                    />
                   </span>
                 </div>
               </div>
@@ -198,17 +200,18 @@ const Profiles = () => {
                 <FaBriefcase className="mr-2" />
                 Job History
               </h2>
-              <div className="flex gap-2">
-              </div>
+              <div className="flex gap-2"></div>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {/* Current Job */}
+              Current Job
               <div>
                 <h3 className="text-lg font-semibold text-indigo-600 dark:text-indigo-400 mb-3">
-                  Current Position
+                  {/* Current Position */}
                 </h3>
                 <div className="p-4 rounded-lg bg-white dark:bg-gray-700 shadow-sm border border-gray-100 dark:border-gray-600">
-                  <p className="font-medium">{userData.jobId?.position || "Not specified"}</p>
+                  <p className="font-medium">
+                    {userData.jobId?.position || "Not specified"}
+                  </p>
                   <p>{userData.jobId?.companyName || "Not specified"}</p>
                   <p className="flex items-center text-sm text-gray-600 dark:text-gray-400">
                     <FaMapMarkerAlt className="mr-1" size={12} />
@@ -220,7 +223,6 @@ const Profiles = () => {
                   </p>
                 </div>
               </div>
-
               {/* Previous Jobs */}
               <div>
                 <h3 className="text-lg font-semibold text-indigo-600 dark:text-indigo-400 mb-3">
@@ -240,7 +242,9 @@ const Profiles = () => {
                       </div>
                     ))
                   ) : (
-                    <p className="text-gray-500 dark:text-gray-400">No previous jobs listed</p>
+                    <p className="text-gray-500 dark:text-gray-400">
+                      No previous jobs listed
+                    </p>
                   )}
                 </div>
               </div>
@@ -256,8 +260,7 @@ const Profiles = () => {
                 <FaToolbox className="mr-2" />
                 Skills
               </h2>
-              <div className="flex gap-2">
-              </div>
+              <div className="flex gap-2"></div>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -281,7 +284,9 @@ const Profiles = () => {
                         </div>
                       ))
                     ) : (
-                      <p className="text-gray-500 dark:text-gray-400">No technical skills listed</p>
+                      <p className="text-gray-500 dark:text-gray-400">
+                        No technical skills listed
+                      </p>
                     )}
                   </div>
                 </div>
@@ -307,7 +312,9 @@ const Profiles = () => {
                         </div>
                       ))
                     ) : (
-                      <p className="text-gray-500 dark:text-gray-400">No non-technical skills listed</p>
+                      <p className="text-gray-500 dark:text-gray-400">
+                        No non-technical skills listed
+                      </p>
                     )}
                   </div>
                 </div>
@@ -349,7 +356,9 @@ const Profiles = () => {
                   ))
                 ) : (
                   <div className="p-3 rounded-lg bg-white dark:bg-gray-700 shadow-sm border border-gray-100 dark:border-gray-600 text-center">
-                    <p className="text-gray-500 dark:text-gray-400">No achievements listed</p>
+                    <p className="text-gray-500 dark:text-gray-400">
+                      No achievements listed
+                    </p>
                   </div>
                 )}
               </div>
@@ -390,7 +399,9 @@ const Profiles = () => {
                   ))
                 ) : (
                   <div className="p-3 rounded-lg bg-white dark:bg-gray-700 shadow-sm border border-gray-100 dark:border-gray-600 text-center">
-                    <p className="text-gray-500 dark:text-gray-400">No extracurricular activities listed</p>
+                    <p className="text-gray-500 dark:text-gray-400">
+                      No extracurricular activities listed
+                    </p>
                   </div>
                 )}
               </div>
@@ -406,7 +417,6 @@ const Profiles = () => {
                 <FaChartLine className="mr-2" />
                 Analytics
               </h2>
-              
             </div>
             <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
               <div className="p-4 rounded-lg bg-gradient-to-br from-green-50 to-blue-50 dark:from-green-900/20 dark:to-blue-900/20 shadow-sm border border-green-100 dark:border-green-800/50 text-center">

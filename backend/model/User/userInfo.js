@@ -6,6 +6,11 @@ const userInfo = new mongoose.Schema(
       type: String,
       required: true,
     },
+    profile_image: {
+      type: String,
+      default: "",
+    },
+    
     rollNumber: {
       type: Number,
       required: true,

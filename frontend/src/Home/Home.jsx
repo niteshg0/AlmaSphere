@@ -83,7 +83,7 @@ const Home = () => {
         lines.push(
           <motion.div
             key={`star-${line}-${star}`}
-            className="absolute w-1 h-1 rounded-full bg-gradient-to-r from-gray-800 to-black dark:from-gray-200 dark:to-white"
+            className="absolute w-1 h-1 rounded-full bg-gradient-to-r from-indigo-300 via-purple-200 to-pink-300 dark:from-gray-300 dark:via-white dark:to-gray-200"
             initial={{
               x: xStart,
               y: yStart,
@@ -224,6 +224,22 @@ const Home = () => {
 
   return (
     <main className="min-h-screen relative overflow-hidden bg-gradient-to-br from-white via-gray-100/80 to-gray-200/90 dark:from-black dark:via-gray-850/95 dark:to-black">
+      {/* Cursor glow effect */}
+      <motion.div
+        className="fixed pointer-events-none z-5"
+        animate={{
+          x: mousePosition.x - 100,
+          y: mousePosition.y - 100,
+        }}
+        transition={{
+          type: "spring",
+          damping: 30,
+          stiffness: 200,
+        }}
+      >
+        <div className="w-48 h-48 bg-gradient-to-r from-indigo-200/10 via-purple-100/15 to-pink-200/10 dark:from-gray-400/10 dark:via-gray-300/15 dark:to-gray-200/10 rounded-full blur-2xl opacity-60" />
+      </motion.div>
+
       {/* Multiple lines of falling stars */}
       <div className="fixed inset-0 pointer-events-none z-5">
         {generateStarLines()}
