@@ -30,7 +30,9 @@ import Network from "./Network/Network";
 import ConnectedUsers from "./Network/ConnectedUsers";
 import Campaign from "./Donation/campaign";
 import CampaignDetail from "./Donation/Campaign_Detail";
+import AlmaSearch from "./NetworkingPortal/AlmaSearch";
 import AlmaConnect from "./NetworkingPortal/AlmaConnect";
+import ConnectionsPage from "./NetworkingPortal/ConnectionsPage";
 import MemoryLane from "./MemoryLane/Memorylane";
 import MemoryForm from "./MemoryLane/Memoryform";
 import MemoryGallery from "./MemoryLane/MemoryGallary";
@@ -158,6 +160,8 @@ function App() {
         </Route>
 
         <Route path="/alma_connect" element={<AlmaConnect />} />
+        <Route path="/alma_search" element={<AlmaSearch />}/>
+        <Route path="/connect_info" element={<ConnectionsPage />}/>
 
         {/* Routes accessible by both Admin and Student/Alumni */}
         <Route
