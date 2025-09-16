@@ -6,12 +6,13 @@ import axios from "axios";
 import ProfileAvatar from "../Profile/ProfileAvatar.jsx";
 import UploadProfileImage from "../Profile/Photo.jsx";
 import { AnimatePresence, motion } from "framer-motion";
-import pranjal from "../../public/pranjal1.jpg";
-import sanskar from "../../public/sanskar.webp";
-import nitesh from "../../public/nitesh.webp";
-import khushi from "../../public/khushi1.jpg";
-import om from "../../public/om1.jpg";
-import dibyanshu from "../../public/dibyanshu1.jpg";
+
+const pranjal = "/pranjal1.jpg";
+const sanskar = "/sanskar.webp";
+const nitesh = "/nitesh.webp";
+const khushi = "/khushi1.jpg";
+const om = "/om1.jpg";
+const dibyanshu = "/dibyanshu1.jpg";
 
 import {
   FaUserCircle,
@@ -62,7 +63,6 @@ const FakeProfile = () => {
     console.log(`Opening modal: ${modalType}`);
     // Add your modal logic here
   };
-
 
   const jsonData = [
     {

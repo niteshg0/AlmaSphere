@@ -89,15 +89,11 @@ function App() {
           <Route path="/Research" element={<ResearchInnovation/>} />
 
 
-
-
-
-
-
           <Route index element={<Home />} />
           <Route path="/about" element={<AboutUs />} />
           <Route path="/contact" element={<ContactUs />} />
           <Route path="/profiles/:rollNumber" element={<Profiles />} />
+          <Route path="/fake_profile/:id" element={<FakeProfile />}/>
           {/* <Route
             path="/donation/verify"
             element={<VerifyDonation isDarkTheme={isDarkTheme} />}

@@ -1,15 +1,15 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import UserPostCard from "./UserPostCard";
-import pranjal from "../../../public/pranjal1.jpg";
-import sanskar from "../../../public/sanskar.webp";
-import nitesh from "../../../public/nitesh.webp";
-import khushi from "../../../public/khushi1.jpg";
-import om from "../../../public/om1.jpg";
-import dibyanshu from "../../../public/dibyanshu1.jpg";
-import sanskarbg from "../../../public/sanskarbg.png";
-import khushibg from "../../../public/khushibg.png";
-import ombg from "../../../public/ombg.png";
+const pranjal = "/pranjal1.jpg";
+const sanskar = "/sanskar.webp";
+const nitesh = "/nitesh.webp";
+const khushi = "/khushi1.jpg";
+const om = "/om1.jpg";
+const dibyanshu = "/dibyanshu1.jpg";
+const sanskarbg = "/sanskarbg.png";
+const khushibg = "/khushibg.png";
+const ombg = "/ombg.png";
 const AlmaConnectMainFeed = () => {
   const [isPostFocused, setIsPostFocused] = useState(false);
 

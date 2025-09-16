@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import UserCard from "./UserCard";
-import profile1 from "../../../public/pic2.webp";
-import profile2 from "../../../public/pic7.webp";
-import profile3 from "../../../public/pic3.webp";
-import profile5 from "../../../public/pic5.webp";
+const profile1 = "/pic2.webp";
+const profile2 = "/pic7.webp";
+const profile3 = "/pic3.webp";
+const profile5 = "/pic5.webp";
 import { useNavigate } from "react-router";
 
 const AlmaConnectRightSidebar = () => {

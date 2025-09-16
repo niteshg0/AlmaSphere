@@ -3,12 +3,6 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import FilterSidebar from "../components/AlmaConnectCards/FilterSideBar";
 import UserShownCard from "../components/AlmaConnectCards/UserShownCard";
 import SearchCard from "../components/AlmaConnectCards/SearchCard";
-import pranjal from "../../public/pranjal1.jpg";
-import sanskar from "../../public/sanskar.webp";
-import nitesh from "../../public/nitesh.webp";
-import khushi from "../../public/khushi1.jpg";
-import om from "../../public/om1.jpg";
-import dibyanshu from "../../public/dibyanshu1.jpg";
 
 // Sample alumni data (unchanged)
 
@@ -19,7 +13,7 @@ const alumniData = [
     batch: "2027",
     course: "Computer Science",
     connections: 11,
-    avatar: sanskar,
+    avatar: "/sanskar.webp",
   },
   {
     id: 2,
@@ -27,7 +21,7 @@ const alumniData = [
     batch: "2027",
     course: "Electronics Engineering",
     connections: 32,
-    avatar: pranjal,
+    avatar: "/pranjal1.jpg",
   },
   {
     id: 3,
@@ -35,7 +29,7 @@ const alumniData = [
     batch: "2027",
     course: "Information Technology",
     connections: 49,
-    avatar: nitesh,
+    avatar: "/nitesh.webp",
   },
   {
     id: 4,
@@ -43,7 +37,7 @@ const alumniData = [
     batch: "2027",
     course: "Information Technology",
     connections: 32,
-    avatar: dibyanshu,
+    avatar: "/dibyanshu1.jpg",
   },
   {
     id: 5,
@@ -51,7 +45,7 @@ const alumniData = [
     batch: "2027",
     course: "Information Technology",
     connections: 3,
-    avatar: om,
+    avatar: "/om1.jpg",
   },
   {
     id: 6,
@@ -59,7 +53,7 @@ const alumniData = [
     batch: "2027",
     course: "Information Technology",
     connections: 2,
-    avatar: khushi,
+    avatar: "/khushi1.jpg",
   },
   {
     id: 13,

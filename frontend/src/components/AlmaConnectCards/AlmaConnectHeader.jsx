@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Link,useNavigate } from "react-router-dom";
-import pranjal from "../../../public/pranjal1.jpg";
+const pranjal = "/pranjal1.jpg";
 
 const AlmaConnectHeader = () => {
   const [scrolled, setScrolled] = useState(false);

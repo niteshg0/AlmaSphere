@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-import pranjal from "../../../public/pranjal1.jpg";
+// import pranjal from "../../../public/pranjal1.jpg";
 import { useNavigate } from "react-router";
-
+const pranjal = "/pranjal1.jpg";
 const UserSideCard = () => {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const navigate = useNavigate();
