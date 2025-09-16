@@ -380,8 +380,9 @@ const Home = () => {
           <FeatureCard
             icon={GalleryIcon}
             title="Memory Lane"
-            link="/memorylane"
+            link="/Memorylane"
             description="Take a stroll down memory lane with our extensive collection of photos and videos. Relive your college days, celebrate achievements, and stay connected with classmates through our digital galleries."
+            // link="/memorylane"
             index={3}
           />
 
