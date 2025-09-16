@@ -30,7 +30,7 @@ app.use(
   cors({
     origin: [
       // process.env.VITE_FRONTEND_URL,
-      "https://alma-sphere-b.vercel.app"
+      "https://alma-sphere-b.vercel.app",
       `http://localhost:${process.env.VITE_PORT}`,
     ], // Allow your frontend domain
     credentials: true, // Allow cookies to be sent with requests
