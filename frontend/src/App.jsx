@@ -28,6 +28,8 @@ import AddStudent from "./admin/AddStudent";
 import Student from "./admin/Student";
 import Network from "./Network/Network";
 import ConnectedUsers from "./Network/ConnectedUsers";
+import AlumniEventsSection from "./Events/Events";
+import EventDetailsPage from "./Events/EventsDesc";
 import Campaign from "./Donation/campaign";
 import CampaignDetail from "./Donation/Campaign_Detail";
 import AlmaSearch from "./NetworkingPortal/AlmaSearch";
@@ -37,8 +39,13 @@ import MemoryLane from "./MemoryLane/Memorylane";
 import MemoryForm from "./MemoryLane/Memoryform";
 import MemoryGallery from "./MemoryLane/MemoryGallary";
 import UploadProfileImage from "./Profile/Photo";
+import CollegeLegacy from "./CollegeLegacy/Legacy"; 
+import PlacementStats from "./CollegeLegacy/PlacementStats";
+import ResearchInnovation from "./CollegeLegacy/Research";
 import FakeProfile from "./fakeProfile/Fakeprofile";
 
+import Register from "./Registration/Register"  
+import CreateEvent from "./CreateEvent/CreateEvent";
 function App() {
   const [isDarkTheme, setIsDarkTheme] = useState(() => {
     const savedTheme = localStorage.getItem("theme");
@@ -76,8 +83,17 @@ function App() {
           <Route path="/Memorylane" element={<MemoryLane />} />
           <Route path="/add-memory" element={<MemoryForm />} />
           <Route path="/memory/:id" element={<MemoryGallery />} />
-          <Route path="/photo" element={<UploadProfileImage />} />
-          <Route path="/fake_profile/:id" element={<FakeProfile />} />
+          <Route path="/photo" element={<UploadProfileImage/>} />
+          <Route path="/Legacy" element={<CollegeLegacy/>} />
+          <Route path="/Stats" element={<PlacementStats/>} />
+          <Route path="/Research" element={<ResearchInnovation/>} />
+
+
+
+
+
+
+
           <Route index element={<Home />} />
           <Route path="/about" element={<AboutUs />} />
           <Route path="/contact" element={<ContactUs />} />
@@ -88,6 +104,13 @@ function App() {
           /> */}
           <Route path="/login" element={<Login />} />
           <Route path="/verify/:email" element={<Verify />} />
+
+
+          <Route path="/create-event" element={<CreateEvent />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/events" element={<AlumniEventsSection />} />
+          <Route path="/events/:eventId" element={<EventDetailsPage />} />
+
           <Route path="/signup" element={<SignUp />} />
           <Route path="/query" element={<Query />} />
           <Route path="/query/askQuestion" element={<AskQuestion />} />
