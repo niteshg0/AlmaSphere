@@ -2,7 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import ConnectionSearch from "../components/AlmaConnectCards/ConnectsCards/ConnectionSearch"
 import ConnectionsList from "../components/AlmaConnectCards/ConnectsCards/ConnectionsList";
-
+import sanskar from "../../public/sanskar.webp";
+import nitesh from "../../public/nitesh.webp";
+import khushi from "../../public/khushi1.jpg";
+import om from "../../public/om1.jpg";
+import dibyanshu from "../../public/dibyanshu1.jpg";
+import pranjal from "../../public/pranjal1.jpg";
 const ConnectionsPage = () => {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [searchTerm, setSearchTerm] = useState('');
@@ -14,42 +19,42 @@ const ConnectionsPage = () => {
       username: 'Sanskar Singh',
       duration: '2023-2027',
       course: 'Computer Science...',
-      avatar: null,
+      avatar: sanskar,
     },
     {
       id: 2,
       username: 'Nitesh Gupta',
       duration: '2023-2027',
       course: 'information Tech...',
-      avatar: null,
+      avatar: nitesh,
     },
     {
       id: 3,
       username: 'Pranjal Shahi',
       duration: '2023-2027',
       course: 'Electronic Eng...',
-      avatar: null,
+      avatar: pranjal,
     },
     {
       id: 4,
       username: 'Dibyanshu Yadav',
       duration: '2023-2027',
       course: 'information Tech...',
-      avatar: null,
+      avatar: dibyanshu,
     },
     {
       id: 5,
       username: 'Om Vishwakarma',
       duration: '2023-2027',
       course: 'information Tech...',
-      avatar: null,
+      avatar: om,
     },
     {
       id: 6,
       username: 'Khushi Singh',
       duration: '2023-2027',
       course: 'information Tech...',
-      avatar: null,
+      avatar: khushi,
     },
   ];
 

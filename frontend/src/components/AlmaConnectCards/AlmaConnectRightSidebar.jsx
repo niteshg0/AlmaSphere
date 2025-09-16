@@ -1,15 +1,21 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import UserCard from "./UserCard";
+import profile1 from "../../../public/pic2.webp";
+import profile2 from "../../../public/pic7.webp";
+import profile3 from "../../../public/pic3.webp";
+import profile5 from "../../../public/pic5.webp";
+import { useNavigate } from "react-router";
 
 const AlmaConnectRightSidebar = () => {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const navigate = useNavigate()
 
   const suggestedUsers = [
-    { name: "UserName", mutualConnections: 5 },
-    { name: "UserName", mutualConnections: 8 },
-    { name: "UserName", mutualConnections: 3 },
-    { name: "UserName", mutualConnections: 12 },
+    { name: "Pravesh Kumar", mutualConnections: 5,image:profile3 },
+    { name: "Divyanshu Tripathi", mutualConnections: 8,image:profile2 },
+    { name: "Sakshi Shahi", mutualConnections: 3 ,image:profile1},
+    { name: "Manish Paityawal", mutualConnections: 12,image:profile5 },
   ];
 
   // Track mouse position for cursor glow
@@ -62,6 +68,7 @@ const AlmaConnectRightSidebar = () => {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               className="px-4 py-2 rounded-xl mt-5 text-sm font-medium transition-all duration-300 backdrop-blur-sm bg-gradient-to-r from-indigo-500/80 to-purple-500/80 hover:from-indigo-600/90 hover:to-purple-600/90 text-white shadow-lg shadow-indigo-500/20 border border-indigo-400/30 dark:from-gray-950 dark:to-gray-600 dark:hover:from-gray-700 dark:hover:to-gray-300 dark:hover:text-gray-800"
+              onClick={(e) => (navigate("/alma_search"))}
             >
               <span className="flex items-center gap-1">
                 View More

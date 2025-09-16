@@ -1,19 +1,19 @@
-import React, { useState } from 'react';
-import { motion } from 'framer-motion';
+import React, { useState } from "react";
+import { motion } from "framer-motion";
 
 const ConnectionCard = ({ connection, index, onMessageClick }) => {
   const [isHovered, setIsHovered] = useState(false);
 
   const itemVariants = {
     hidden: { opacity: 0, y: 20 },
-    visible: { 
-      opacity: 1, 
+    visible: {
+      opacity: 1,
       y: 0,
       transition: {
         duration: 0.5,
-        delay: index * 0.1
-      }
-    }
+        delay: index * 0.1,
+      },
+    },
   };
 
   return (
@@ -26,10 +26,10 @@ const ConnectionCard = ({ connection, index, onMessageClick }) => {
     >
       {/* Glassmorphism background */}
       <div className="absolute inset-0 bg-gradient-to-br from-white/40 via-gray-100/30 to-gray-200/40 dark:from-black/40 dark:via-gray-800/30 dark:to-gray-700/40 backdrop-blur-md" />
-      
+
       {/* Animated gradient border */}
       <div className="absolute inset-0 bg-gradient-to-r from-indigo-400/20 via-purple-400/20 to-indigo-400/20 dark:from-gray-500/15 dark:via-gray-300/20 dark:to-gray-500/15 opacity-0  transition-opacity duration-500 rounded-3xl" />
-      
+
       {/* Border */}
       <div className="absolute inset-0 rounded-3xl border border-gray-300/50 dark:border-gray-600/40 hover:border-indigo-300/60 dark:hover:border-gray-500/60 transition-colors duration-300" />
 
@@ -37,17 +37,21 @@ const ConnectionCard = ({ connection, index, onMessageClick }) => {
         {/* User Info Section */}
         <div className="flex items-center space-x-4 flex-1 min-w-0">
           {/* Avatar */}
-          <motion.div 
+          <motion.div
             whileHover={{ scale: 1.1, rotate: 3 }}
             transition={{ type: "spring", stiffness: 300, damping: 20 }}
             className="relative flex-shrink-0"
           >
             <div className="w-14 h-14 rounded-full bg-gradient-to-br from-indigo-500 via-purple-500 to-indigo-600 dark:from-gray-600 dark:via-gray-400 dark:to-gray-800 border-2 border-white/40 dark:border-gray-600/50 flex items-center justify-center shadow-lg shadow-indigo-500/20 dark:shadow-gray-500/20">
-              <span className="text-white font-bold text-lg">
-                {connection.username?.charAt(0) || 'U'}
-              </span>
+              {connection?.avatar ? (
+                <img src={connection.avatar} alt="user img" className="bg-cover rounded-full w-14 h-14"/>
+              ) : (
+                <span className="text-white font-bold text-lg">
+                  {connection.username?.charAt(0) || "U"}
+                </span>
+              )}
             </div>
-            
+
             {/* Glow effect */}
             <motion.div
               className="absolute inset-0 bg-gradient-to-br from-indigo-400/40 to-purple-400/40 dark:from-gray-400/30 dark:to-gray-600/30 rounded-full blur-md"

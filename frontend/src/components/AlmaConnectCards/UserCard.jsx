@@ -1,8 +1,16 @@
-import React, { useState } from 'react';
-import { motion } from 'framer-motion';
+import React, { useState } from "react";
+import { motion } from "framer-motion";
+import profile1 from "../../../public/pic2.webp";
+import profile2 from "../../../public/pic7.webp";
+import profile3 from "../../../public/pic3.webp";
+import profile5 from "../../../public/pic5.webp";
 
 const UserCard = ({ user }) => {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [btnText,setBtnText] = useState("Connect")
+  const handleButton = () => {
+    setBtnText("Pending")
+  }
 
   // Track mouse position for cursor glow
   React.useEffect(() => {
@@ -31,13 +39,13 @@ const UserCard = ({ user }) => {
         <div className="w-48 h-48 bg-gradient-to-r from-indigo-200/10 via-purple-100/15 to-pink-200/10 dark:from-gray-400/10 dark:via-gray-300/15 dark:to-gray-200/10 rounded-full blur-2xl opacity-60" />
       </motion.div>
 
-      <motion.div 
+      <motion.div
         whileHover={{ scale: 1.02, y: -2 }}
         className="group relative overflow-hidden rounded-3xl mb-4"
       >
         {/* Glassmorphism background */}
         <div className="absolute inset-0 bg-gradient-to-br from-white via-gray-50 to-gray-700/35 dark:from-black dark:via-black dark:to-gray-700/60 backdrop-blur-lg" />
-        
+
         {/* Border */}
         <div className="absolute inset-0 rounded-3xl border border-gray-300/60 dark:border-gray-700/40 group-hover:border-indigo-300/50 dark:group-hover:border-gray-600/50 transition-colors duration-300" />
 
@@ -46,29 +54,47 @@ const UserCard = ({ user }) => {
 
         <div className="relative p-4">
           <div className="flex items-center space-x-3 mb-3">
-            <div className="w-12 h-12 rounded-full bg-gradient-to-br from-indigo-500 via-purple-500 to-indigo-600 dark:from-gray-600 dark:via-gray-400 dark:to-gray-800 border-2 border-white/30 dark:border-gray-600/60" />
+            <div className="w-12 h-12 rounded-full bg-gradient-to-br from-indigo-500 via-purple-500 to-indigo-600 dark:from-gray-600 dark:via-gray-400 dark:to-gray-800 border border-white/30 dark:border-gray-600/60">
+              <img
+                src={user.image}
+                alt="userImage"
+                className="w-full h-full rounded-full bg-cover"
+              />
+            </div>
             <div className="flex-1">
-              <h4 className="font-semibold text-gray-800 dark:text-gray-200">{user.name}</h4>
-              <p className="text-sm text-gray-600 dark:text-gray-400">{user.mutualConnections} mutual Connections</p>
+              <h4 className="font-semibold text-gray-800 dark:text-gray-200">
+                {user.name}
+              </h4>
+              <p className="text-sm text-gray-600 dark:text-gray-400">
+                {user.mutualConnections} mutual Connections
+              </p>
             </div>
           </div>
-          
+
           <div className="flex items-center justify-between">
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               className="px-4 py-2 bg-gradient-to-r from-indigo-500/80 to-purple-500/80 hover:from-indigo-600/90 hover:to-purple-600/90 text-white rounded-full text-sm font-medium transition-all duration-300 dark:from-gray-950 dark:to-gray-600 dark:hover:from-gray-700 dark:hover:to-gray-300 dark:hover:text-gray-800"
+              onClick={handleButton}
             >
-              Connect
+              {btnText}
             </motion.button>
-            
+
             <div className="flex items-center space-x-1">
               <div className="flex -space-x-1">
-                {[...Array(Math.min(user.mutualConnections, 3))].map((_, i) => (
-                  <div key={i} className="w-6 h-6 bg-gradient-to-br from-gray-600 to-gray-700 dark:from-gray-600 dark:to-gray-800 rounded-full border-2 border-white dark:border-gray-900" />
+                {[profile1, profile2, profile3, profile5].map((idx, cont) => (
+                  <div
+                    key={idx}
+                    className="w-6 h-6 bg-gradient-to-br from-gray-600 to-gray-700 dark:from-gray-600 dark:to-gray-800 rounded-full border border-white dark:border-gray-900"
+                  >
+                    <img src={idx} alt="" className="bg-cover rounded-full" />
+                  </div>
                 ))}
               </div>
-              <span className="text-sm text-gray-600 dark:text-gray-400">+</span>
+              <span className="text-sm text-gray-600 dark:text-gray-400">
+                +
+              </span>
             </div>
           </div>
         </div>

@@ -1,7 +1,12 @@
 import React from "react";
 import { motion } from "framer-motion";
+import profile1 from "../../../public/pic2.webp";
+import profile2 from "../../../public/pic7.webp";
+import profile3 from "../../../public/pic3.webp";
+import profile5 from "../../../public/pic5.webp";
 
 const UserShownCard = ({ alumni, index }) => {
+  const profileArray = [profile1,profile2,profile3,profile5]
   return (
     <motion.div
       initial={{ opacity: 0, y: 30 }}
@@ -32,10 +37,12 @@ const UserShownCard = ({ alumni, index }) => {
             whileHover={{ scale: 1.05 }}
             transition={{ type: "spring", stiffness: 300, damping: 20 }}
           >
-            <div className="w-20 h-20 bg-gradient-to-br from-indigo-500 via-purple-500 to-indigo-600 dark:from-gray-600 dark:via-gray-400 dark:to-gray-800 rounded-full border-2 border-white/30 dark:border-gray-600/60 flex items-center justify-center">
-              <div className="w-16 h-16 bg-gradient-to-br rounded-full flex items-center justify-center text-white font-normal text-3xl">
+            <div className="w-20 h-20 bg-gradient-to-br from-indigo-500 via-purple-500 to-indigo-600 dark:from-gray-600 dark:via-gray-400 dark:to-gray-800 rounded-full border border-white/30 dark:border-gray-600/60 flex items-center justify-center">
+              {alumni?.avatar ? (<div className="w-20 h-20 bg-gradient-to-br rounded-full flex items-center justify-center font-normal">
+                <img src={alumni?.avatar} alt=""  className="w-20 h-20 bg-cover rounded-full"/>
+              </div>): (<div className="w-16 h-16 bg-gradient-to-br rounded-full flex items-center justify-center text-white font-normal text-3xl">
                 {alumni.username.charAt(0)}
-              </div>
+              </div>)}
             </div>
             <div className="absolute inset-0 bg-gradient-to-br from-gray-900/20 to-gray-100/20 dark:from-gray-400/20 dark:to-gray-600/20 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-md" />
           </motion.div>
@@ -66,11 +73,13 @@ const UserShownCard = ({ alumni, index }) => {
           <div className="flex items-center space-x-1">
             {/* Connection indicator circles */}
             <div className="flex -space-x-1">
-              {[...Array(Math.min(alumni.connections, 3))].map((_, i) => (
+              {[...Array(Math.min(alumni.connections, 3))].map((idx, i) => (
                 <div
                   key={i}
                   className="w-6 h-6 bg-gradient-to-br from-gray-600 to-gray-700 dark:from-gray-600 dark:to-gray-800 rounded-full border-2 border-white dark:border-gray-900"
-                />
+                >
+                  <img src={profileArray[i]} alt="userpic" className="w-full h-full rounded-full bg-cover"/>
+                </div>
               ))}
               {alumni.connections > 3 && (
                 <div className="w-6 h-6 bg-gradient-to-br from-gray-500 to-gray-700 dark:from-gray-700 dark:to-gray-900 rounded-full border-2 border-white dark:border-gray-900 flex items-center justify-center text-xs text-white font-bold">

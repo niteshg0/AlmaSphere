@@ -37,6 +37,7 @@ import MemoryLane from "./MemoryLane/Memorylane";
 import MemoryForm from "./MemoryLane/Memoryform";
 import MemoryGallery from "./MemoryLane/MemoryGallary";
 import UploadProfileImage from "./Profile/Photo";
+import FakeProfile from "./fakeProfile/Fakeprofile";
 
 function App() {
   const [isDarkTheme, setIsDarkTheme] = useState(() => {
@@ -70,40 +71,27 @@ function App() {
               // NavBar={""}
             />
           }
-        >           <Route path="/Memorylane" element = {<MemoryLane/>} />
-        
-           <Route path="/add-memory" element = {<MemoryForm/>} />
+        >
+          {" "}
+          <Route path="/Memorylane" element={<MemoryLane />} />
+          <Route path="/add-memory" element={<MemoryForm />} />
           <Route path="/memory/:id" element={<MemoryGallery />} />
-          <Route path="/photo" element={<UploadProfileImage/>} />
-
-
-
-
-
+          <Route path="/photo" element={<UploadProfileImage />} />
+          <Route path="/fake_profile/:id" element={<FakeProfile />} />
           <Route index element={<Home />} />
-
           <Route path="/about" element={<AboutUs />} />
-
           <Route path="/contact" element={<ContactUs />} />
-
           <Route path="/profiles/:rollNumber" element={<Profiles />} />
-
           {/* <Route
             path="/donation/verify"
             element={<VerifyDonation isDarkTheme={isDarkTheme} />}
           /> */}
-
           <Route path="/login" element={<Login />} />
-
           <Route path="/verify/:email" element={<Verify />} />
-
           <Route path="/signup" element={<SignUp />} />
-
           <Route path="/query" element={<Query />} />
-
           <Route path="/query/askQuestion" element={<AskQuestion />} />
           <Route path="/query/:questionId" element={<Question />} />
-
           {/* Moved from protected routes to public routes */}
           <Route path="/profile" element={<Profile />} />
           {/* <Route
@@ -130,10 +118,8 @@ function App() {
             path="/jobDetail/:jobId"
             element={<JobDetails isDarkTheme={isDarkTheme} />}
           />
-
           <Route path="/network" element={<Network />} />
           <Route path="/connectedUser" element={<ConnectedUsers />} />
-
           {/* Admin Protected Routes */}
           <Route element={<AdminRoute />}>
             <Route path="/admin/add-edit-Student" element={<AddStudent />} />
@@ -160,8 +146,8 @@ function App() {
         </Route>
 
         <Route path="/alma_connect" element={<AlmaConnect />} />
-        <Route path="/alma_search" element={<AlmaSearch />}/>
-        <Route path="/connect_info" element={<ConnectionsPage />}/>
+        <Route path="/alma_search" element={<AlmaSearch />} />
+        <Route path="/connect_info" element={<ConnectionsPage />} />
 
         {/* Routes accessible by both Admin and Student/Alumni */}
         <Route

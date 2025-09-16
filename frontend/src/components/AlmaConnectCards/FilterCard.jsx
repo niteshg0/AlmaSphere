@@ -4,9 +4,15 @@ import { motion, AnimatePresence } from "framer-motion";
 const FilterCard = ({ title, value, onChange, options }) => {
   const [rotate, setRotate] = useState(false);
 
-  const handleClick = (val) => {
+  // FIXED: Separate function for toggling dropdown
+  const handleToggle = () => {
     setRotate((p) => !p);
+  };
+
+  // FIXED: Separate function for selecting an option
+  const handleOptionSelect = (val) => {
     onChange(val);
+    setRotate(false); // Close dropdown when option is selected
   };
 
   return (
@@ -24,7 +30,7 @@ const FilterCard = ({ title, value, onChange, options }) => {
         <h3 className="text-xl font-bold text-gray-800 dark:text-gray-200 mb-4">{title}</h3>
         <div
           className="rounded-3xl text-gray-700 dark:text-gray-300 py-2 px-4 border flex cursor-pointer justify-between items-center border-gray-300/60 dark:border-gray-700/40 backdrop-blur-sm bg-white/30 dark:bg-black/30"
-          onClick={(e) => handleClick("")}
+          onClick={handleToggle} // FIXED: Now only toggles dropdown
         >
           <h2 className="">{value ? `${value}` : `Select ${title}`}</h2>
           <span className="bg-gradient-to-r from-indigo-500 to-purple-500 dark:from-gray-600 dark:to-gray-400 text-white rounded-full w-4 h-4 flex items-center justify-center">
@@ -48,11 +54,20 @@ const FilterCard = ({ title, value, onChange, options }) => {
               className="max-h-[200px] overflow-scroll"
             >
               <ul className="text-gray-700 dark:text-gray-300 flex flex-col my-3 justify-center text-center gap-3 items-center transition-all duration-300">
+                {/* ADDED: Clear option if there's a selected value */}
+                {value && (
+                  <li
+                    className="w-full border cursor-pointer border-red-300/60 dark:border-red-700/40 py-2 px-4 rounded-3xl bg-gradient-to-r from-red-50 via-red-50 to-red-100/50 dark:from-red-900/20 dark:via-red-900/20 dark:to-red-700/20 backdrop-blur-sm hover:bg-red-100/50 dark:hover:bg-red-800/40 text-red-600 dark:text-red-400"
+                    onClick={() => handleOptionSelect("")} // FIXED: Clear selection
+                  >
+                    Clear {title}
+                  </li>
+                )}
                 {options.map((p) => (
                   <li
                     className="w-full border cursor-pointer border-gray-300/60 dark:border-gray-700/40 py-2 px-4 rounded-3xl bg-gradient-to-r from-white via-gray-50 to-gray-100/50 dark:from-black dark:via-black dark:to-gray-700/50 backdrop-blur-sm hover:bg-indigo-50/30 dark:hover:bg-gray-700/40"
                     key={p}
-                    onClick={(e) => handleClick(p)}
+                    onClick={() => handleOptionSelect(p)} // FIXED: Select option and close dropdown
                   >
                     {p}
                   </li>
