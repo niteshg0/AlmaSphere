@@ -26,7 +26,7 @@ export const useRazorpayPayment = () => {
 
   const createOrder = async (paymentData) => {
     try {
-      const response = await fetch('/api/donation', {
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/donation`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -51,7 +51,7 @@ export const useRazorpayPayment = () => {
 
   const verifyPayment = async (paymentResponse) => {
     try {
-      const response = await fetch('/api/donation/verify', {
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/donation/verify`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

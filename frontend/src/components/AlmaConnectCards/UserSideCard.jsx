@@ -1,8 +1,11 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-
+// import pranjal from "../../../public/pranjal1.jpg";
+import { useNavigate } from "react-router";
+const pranjal = "/pranjal1.jpg";
 const UserSideCard = () => {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const navigate = useNavigate();
 
   const navigationItems = [
     { name: "All Posts", active: true },
@@ -51,24 +54,29 @@ const UserSideCard = () => {
           {/* User Profile Card */}
           <motion.div
             whileHover={{ scale: 1.02 }}
-            className="group relative overflow-hidden rounded-3xl mb-6"
+            className="group relative overflow-hidden rounded-3xl mb-6 cursor-pointer"
+            onClick={(e) => navigate("/fake_profile/5")}
           >
             {/* Profile card glassmorphism background */}
             <div className="absolute inset-0 bg-gradient-to-br from-white via-gray-50 to-gray-700/35 dark:from-black dark:via-black dark:to-gray-700/60 backdrop-blur-lg" />
-            
+
             {/* Border */}
             <div className="absolute inset-0 rounded-3xl border border-gray-300/60 dark:border-gray-700/40 group-hover:border-indigo-300/50 dark:group-hover:border-gray-600/50 transition-colors duration-300" />
 
             <div className="relative p-6">
               <div className="flex items-center space-x-4 mb-4">
-                <div className="w-16 h-16 rounded-full bg-gradient-to-br from-indigo-500 via-purple-500 to-indigo-600 dark:from-gray-600 dark:via-gray-400 dark:to-gray-800 border-2 border-white/30 dark:border-gray-600/60" />
+                <div className="w-16 h-16 rounded-full bg-gradient-to-br from-indigo-500 via-purple-500 to-indigo-600 dark:from-gray-600 dark:via-gray-400 dark:to-gray-800 border-2 border-white/30 dark:border-gray-600/60">
+                  <img src={pranjal} alt="image1" className="rounded-full" />
+                </div>
                 <div>
                   <h3 className="text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-gray-800 via-gray-600 to-gray-800 dark:from-gray-200 dark:via-gray-400 dark:to-gray-200">
-                    UserName
+                    Pranjal Shahi
                   </h3>
                 </div>
               </div>
-              <p className="text-gray-600 dark:text-gray-400">2023-2027 (Information Technology)</p>
+              <p className="text-gray-600 dark:text-gray-400">
+                2023-2027 (Electronics Engineering)
+              </p>
             </div>
           </motion.div>
 
@@ -79,13 +87,20 @@ const UserSideCard = () => {
           >
             {/* Connections card glassmorphism background */}
             <div className="absolute inset-0 bg-gradient-to-br from-white via-gray-50 to-gray-700/35 dark:from-black dark:via-black dark:to-gray-700/60 backdrop-blur-lg" />
-            
+
             {/* Border */}
             <div className="absolute inset-0 rounded-3xl border border-gray-300/60 dark:border-gray-700/40 group-hover:border-indigo-300/50 dark:group-hover:border-gray-600/50 transition-colors duration-300" />
 
-            <div className="relative p-6">
-              <h3 className="text-lg font-bold text-gray-800 dark:text-gray-200 mb-2">Connections</h3>
-              <p className="text-3xl font-bold text-indigo-600 dark:text-gray-100">180</p>
+            <div
+              className="relative p-6 cursor-pointer"
+              onClick={(e) => navigate("/connect_info")}
+            >
+              <h3 className="text-lg font-bold text-gray-800 dark:text-gray-200 mb-2">
+                Connections
+              </h3>
+              <p className="text-3xl font-bold text-indigo-600 dark:text-gray-100">
+                6
+              </p>
             </div>
           </motion.div>
 
