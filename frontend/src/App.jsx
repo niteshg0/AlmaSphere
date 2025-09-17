@@ -42,7 +42,7 @@ import UploadProfileImage from "./Profile/Photo";
 import CollegeLegacy from "./CollegeLegacy/Legacy"; 
 import PlacementStats from "./CollegeLegacy/PlacementStats";
 import ResearchInnovation from "./CollegeLegacy/Research";
-
+import CollegeSocietiesPage from "./CollegeLegacy/Societies";
 import Register from "./Registration/Register"  
 import CreateEvent from "./CreateEvent/CreateEvent";
 function App() {
@@ -85,7 +85,7 @@ function App() {
           <Route path="/Legacy" element={<CollegeLegacy/>} />
           <Route path="/Stats" element={<PlacementStats/>} />
           <Route path="/Research" element={<ResearchInnovation/>} />
-
+          <Route path="/societies" element={<CollegeSocietiesPage/>} />
 
 
 

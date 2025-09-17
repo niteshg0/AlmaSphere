@@ -79,9 +79,9 @@ const EventDetailsPage = () => {
         );
     }
     return (
-        <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+        <div className="min-h-screen bg-gray-50 dark:bg-gradient-to-br dark:from-black dark:via-gray-700 dark:to-black">
             {/* Navigation Bar */}
-            <nav className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-lg border-b border-gray-200 dark:border-gray-700 sticky top-0 z-40">
+            <nav className="bg-white/90 dark:bg-gradient-to-br dark:from-black dark:via-gray-700 dark:to-black backdrop-blur-lg border-b border-gray-200 dark:border-gray-700 sticky top-0 z-40">
                 <div className="w-full px-4 sm:px-6 lg:px-8">
                     <div className="flex w-full items-center justify-between h-16">
                         <Link to="/events">
@@ -113,9 +113,9 @@ const EventDetailsPage = () => {
                     alt={event.title}
                     className="w-full h-full object-cover"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent " />
                 <div className="absolute bottom-0 left-0 right-0 p-6 md:p-12">
-                    <div className="max-w-7xl mx-auto">
+                    <div className="max-w-7xl mx-auto ">
                         <div className="text-white">
                             <h1 className="text-4xl md:text-6xl font-bold mb-4 font-serif leading-tight">
                                 {event.title}
@@ -140,7 +140,7 @@ const EventDetailsPage = () => {
                     {/* Main Content */}
                     <div className="lg:col-span-2 space-y-12">
                         {/* Event Info Section */}
-                        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700 p-8">
+                        <div className="bg-white dark:bg-gradient-to-br dark:from-black dark:via-gray-700 dark:to-black rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700 p-8">
                             <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-6 mb-8">
                                 <div>
                                     <h2 className="text-3xl font-bold text-gray-900 dark:text-white font-serif mb-4">
@@ -187,7 +187,7 @@ const EventDetailsPage = () => {
                         </div>
 
                         {/* Description Section */}
-                        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700 p-8">
+                        <div className="bg-white dark:bg-gradient-to-br dark:from-black dark:via-gray-700 dark:to-black rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700 p-8">
                             <h2 className="text-3xl font-bold text-gray-900 dark:text-white font-serif mb-6">
                                 About This Event
                             </h2>
@@ -234,7 +234,7 @@ const EventDetailsPage = () => {
                     {/* Sidebar */}
                     <div className="flex flex-col space-y-8 ">
                         {/* Stats Section */}
-                        <div className="order-3 lg:order-2 mt-8 bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700 p-6">
+                        <div className="order-3 lg:order-2 mt-8 bg-white dark:bg-gradient-to-br dark:from-black dark:via-gray-700 dark:to-black rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700 p-6">
                             <h3 className="text-xl font-bold text-gray-900 dark:text-white font-serif mb-6">
                                 Event Statistics
                             </h3>
@@ -272,7 +272,7 @@ const EventDetailsPage = () => {
                         </div>
 
                         {/* Highlights */}
-                        <div className="order-2 lg:order-3 bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700 p-6">
+                        <div className="order-2 lg:order-3 bg-white dark:bg-gradient-to-br dark:from-black dark:via-gray-700 dark:to-black rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700 p-6">
                             <h3 className="text-xl font-bold text-gray-900 dark:text-white font-serif mb-6">
                                 Event Highlights
                             </h3>
@@ -287,7 +287,7 @@ const EventDetailsPage = () => {
                         </div>
 
                         {/* Call-to-Action Section */}
-                        <div className="order-3 lg:order-1 bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700 p-6">
+                        <div className="order-3 lg:order-1 bg-white dark:bg-gradient-to-br dark:from-black dark:via-gray-700 dark:to-black rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700 p-6">
                             <div className="text-center">
                                 {event.status === 'upcoming' ? (
                                     <>
