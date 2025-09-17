@@ -1,10 +1,12 @@
 import { useState } from 'react';
+import { useSelector } from 'react-redux';
 // import { toast } from 'react-toastify';
 
 
 
 export const useRazorpayPayment = () => {
   const [isProcessing, setIsProcessing] = useState(false);
+  const {user, token} = useSelector((state) => state.auth);
 
   const loadRazorpayScript = () => {
     return new Promise((resolve) => {
@@ -26,10 +28,11 @@ export const useRazorpayPayment = () => {
 
   const createOrder = async (paymentData) => {
     try {
-      const response = await fetch('/api/donation', {
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/donation`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(paymentData),
       });
@@ -51,10 +54,11 @@ export const useRazorpayPayment = () => {
 
   const verifyPayment = async (paymentResponse) => {
     try {
-      const response = await fetch('/api/donation/verify', {
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/donation/verify`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
           razorpay_order_id: paymentResponse.razorpay_order_id,
@@ -103,7 +107,7 @@ export const useRazorpayPayment = () => {
         key: orderData.keyId,
         amount: orderData.amount,
         currency: 'INR',
-        name: 'Alumni Association',
+        name: 'Alma Sphere',
         description: `${options.description || 'Donation'}`,
         order_id: orderData?.orderId,
         handler: async (response) => {
@@ -124,9 +128,9 @@ export const useRazorpayPayment = () => {
           }
         },
         prefill: {
-          name: 'User', // You can get this from user session
-          email: 'user@example.com', // You can get this from user session
-          contact: '9999999999', // You can get this from user session
+          name: user?.fullName || 'User', 
+          email: user?.email || 'user@example.com',
+          contact: '9999999999',
         },
         theme: {
           color: '#FF6600',

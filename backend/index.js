@@ -5,15 +5,15 @@ import jobPortalRouter from "./routes/jobPortalRout.js";
 
 import queryRouter from "./routes/queryRoute.js";
 import adminRouter from "./routes/adminRoute.js";
-import contactRouter from "./routes/contactRoute.js"
-import searchRouter from "./routes/searchRout.js"
+import contactRouter from "./routes/contactRoute.js";
+import searchRouter from "./routes/searchRout.js";
 import connectUserRouter from "./routes/connectUserRout.js";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import Razorpay from "razorpay";
 import cors from "cors";
-import Memoryrouter from "./routes/MemoryRoute.js"
+import Memoryrouter from "./routes/MemoryRoute.js";
 
 // db connection
 import connectDB from "./utils/DbConnection.js";
@@ -30,6 +30,7 @@ app.use(
   cors({
     origin: [
       process.env.VITE_FRONTEND_URL,
+      // "https://alma-sphere-b.vercel.app"
       `http://localhost:${process.env.VITE_PORT}`,
     ], // Allow your frontend domain
     credentials: true, // Allow cookies to be sent with requests
@@ -53,14 +54,14 @@ app.use("/api/users", router);
 app.use("/api/jobDetail", jobPortalRouter);
 app.use("/api/donation", donationRouter);
 app.use("/api/query", queryRouter);
-app.use("/api/admin", adminRouter)
+app.use("/api/admin", adminRouter);
 app.use("/memory", Memoryrouter);
-app.use("/api/search",searchRouter)
-app.use("/api/contactus", contactRouter)
-app.use("/api/connectUser",connectUserRouter)
+app.use("/api/search", searchRouter);
+app.use("/api/contactus", contactRouter);
+app.use("/api/connectUser", connectUserRouter);
 
 app.use("/", (req, res) => {
-  return res.status(200).json("Welcome to Backend");
+  return res.status(200).json("Welcome to Backend of Alma Sphere");
 });
 
 app.listen(PORT, () => console.log(`server started at PORT : ${PORT}...`));
