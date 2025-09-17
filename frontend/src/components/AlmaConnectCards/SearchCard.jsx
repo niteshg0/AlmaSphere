@@ -17,17 +17,11 @@ const SearchCard = ({ searchTerm, setSearchTerm }) => {
         {/* Border */}
         <div className="absolute inset-0 rounded-2xl border border-gray-300/60 dark:border-gray-700/40 group-hover:border-indigo-300/50 dark:group-hover:border-gray-600/50 transition-colors duration-300" />
 
-        {/* <input
-          type="text"
-          placeholder="Search By Roll Number, Name....."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="w-full text-lg bg-transparent rounded-2xl focus:outline-none focus:ring-2 focus:ring-indigo-400/50 dark:focus:ring-gray-500/40 transition-all duration-300 text-gray-700 dark:text-gray-300 placeholder-gray-500 dark:placeholder-gray-400"
-        /> */}
-
         <input
           type="text"
           placeholder="Search By Roll Number, Name....."
+          value={searchTerm} // ONLY ADDED
+          onChange={(e) => setSearchTerm(e.target.value)} // ONLY ADDED
           onFocus={() => setIsPostFocused(true)}
           onBlur={() => setIsPostFocused(false)}
           className={`flex-1 rounded-2xl w-full px-6 py-3  text-gray-700 dark:text-gray-300 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none transition-all duration-300 ${

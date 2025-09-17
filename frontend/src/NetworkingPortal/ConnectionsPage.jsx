@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import ConnectionSearch from "../components/AlmaConnectCards/ConnectsCards/ConnectionSearch"
 import ConnectionsList from "../components/AlmaConnectCards/ConnectsCards/ConnectionsList";
-
 const ConnectionsPage = () => {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [searchTerm, setSearchTerm] = useState('');
@@ -14,42 +13,42 @@ const ConnectionsPage = () => {
       username: 'Sanskar Singh',
       duration: '2023-2027',
       course: 'Computer Science...',
-      avatar: null,
+      avatar: "/sanskar.webp",
     },
     {
       id: 2,
       username: 'Nitesh Gupta',
       duration: '2023-2027',
       course: 'information Tech...',
-      avatar: null,
+      avatar: "/nitesh.webp",
     },
     {
       id: 3,
       username: 'Pranjal Shahi',
       duration: '2023-2027',
       course: 'Electronic Eng...',
-      avatar: null,
+      avatar: "/pranjal1.jpg",
     },
     {
       id: 4,
       username: 'Dibyanshu Yadav',
       duration: '2023-2027',
       course: 'information Tech...',
-      avatar: null,
+      avatar: "/dibyanshu1.jpg",
     },
     {
       id: 5,
       username: 'Om Vishwakarma',
       duration: '2023-2027',
       course: 'information Tech...',
-      avatar: null,
+      avatar: "/om1.jpg",
     },
     {
       id: 6,
       username: 'Khushi Singh',
       duration: '2023-2027',
       course: 'information Tech...',
-      avatar: null,
+      avatar: "/khushi1.jpg",
     },
   ];
 

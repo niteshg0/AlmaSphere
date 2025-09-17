@@ -24,7 +24,7 @@ const FilterSidebar = ({
         title="Year"
         value={selectedYear}
         onChange={setSelectedYear}
-        options={["2024", "3023", "2022", "2021", "2020", "2019", "2018"]}
+        options={["2024", "2023", "2022", "2021", "2020", "2019", "2018"]}
       />
       <FilterCard
         title="Course"

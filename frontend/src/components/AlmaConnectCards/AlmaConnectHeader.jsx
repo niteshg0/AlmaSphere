@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Link } from "react-router-dom";
+import { Link,useNavigate } from "react-router-dom";
+const pranjal = "/pranjal1.jpg";
 
 const AlmaConnectHeader = () => {
   const [scrolled, setScrolled] = useState(false);
   const [isSearchFocused, setIsSearchFocused] = useState(false);
+  const navigate = useNavigate()
 
   // Track scroll for enhanced transparency effects
   useEffect(() => {
@@ -115,8 +117,11 @@ const AlmaConnectHeader = () => {
               {/* Profile Circle */}
               <motion.div
                 whileHover={{ scale: 1.1 }}
-                className="w-10 h-10 rounded-full bg-gradient-to-br from-indigo-500 via-purple-500 to-indigo-600 dark:from-gray-600 dark:via-gray-400 dark:to-gray-800 border-2 border-white/30 dark:border-gray-600/60 cursor-pointer"
-              />
+                className="w-10 h-10 rounded-full bg-gradient-to-br from-indigo-500 via-purple-500 to-indigo-600 dark:from-gray-600 dark:via-gray-400 dark:to-gray-800 border border-white/30 dark:border-gray-600/60 cursor-pointer"
+                onClick={(e) => (navigate("/fake_profile/5"))}
+              >
+                <img src={pranjal} alt="userimg" className="rounded-full bg-cover"/>
+              </motion.div>
             </div>
           </div>
         </div>
