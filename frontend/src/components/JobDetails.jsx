@@ -145,6 +145,11 @@ const JobDetails = ({ isDarkTheme }) => {
                 </p>
               </div>
               <div className="flex flex-col items-start md:items-end gap-4">
+                <div className="flex flex-wrap gap-3">
+                  <button className="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-lg transition-colors duration-300 font-medium shadow-md hover:shadow-lg flex items-center">
+                    AI Analyzer
+                    
+                  </button>
                 <a
                   href={`${data?.applyLink}`}
                   target="_blank"
@@ -166,6 +171,7 @@ const JobDetails = ({ isDarkTheme }) => {
                     </svg>
                   </button>
                 </a>
+                </div>
                 <div className="text-gray-500 dark:text-gray-400 text-sm">
                   Application deadline:{" "}
                   <span className="font-medium">

@@ -79,15 +79,9 @@ const Header = ({ isDarkTheme, toggleTheme, NavBar }) => {
 
   const navItem = [
     {
-      name: "About Us",
-      id: 1,
-      link: "/about",
-      role: "user",
-    },
-    {
-      name: "Contact Us",
-      id: 2,
-      link: "/contact",
+      name: "Directory",
+      id: 3,
+      link: "/alma_search",
       role: "user",
     },
     {
@@ -102,6 +96,20 @@ const Header = ({ isDarkTheme, toggleTheme, NavBar }) => {
       link: "/jobs",
       role: "user",
     },
+    {
+      name: "About Us",
+      id: 1,
+      link: "/about",
+      role: "user",
+    },
+    {
+      name: "Contact Us",
+      id: 2,
+      link: "/contact",
+      role: "user",
+    },
+    
+    
   ];
 
   const navAdmin = [
@@ -237,7 +245,7 @@ const Header = ({ isDarkTheme, toggleTheme, NavBar }) => {
                 </button>
               </div>
 
-              {user?.role!= "Admin" && (
+              {/* {user?.role!= "Admin" && (
               <div className="relative w-full md:w-auto md:max-w-md">
                 <form
                   onSubmit={handleSearch}
@@ -288,7 +296,7 @@ const Header = ({ isDarkTheme, toggleTheme, NavBar }) => {
                   />
                 )}
               </div>
-              )}
+              )} */}
 
               {/* Navigation Links - Desktop */}
               <ul className="hidden md:flex gap-8 items-center">

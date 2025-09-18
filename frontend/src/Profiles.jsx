@@ -144,6 +144,10 @@ const Profiles = () => {
                     <FaFileAlt className="mr-2" />
                     Resume
                   </button>
+                  <button className="px-4 py-2 rounded-lg bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white shadow-sm transition-colors flex items-center">
+                    <FaFileAlt className="mr-2" />
+                    AI Compare
+                  </button>
                 </div>
               </div>
 
