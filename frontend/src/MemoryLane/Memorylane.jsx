@@ -36,7 +36,7 @@ const memories = [
   },
     {
     id: 4,
-    coming_soon: 1,
+    
     title: "Alumni Meet 2025",
     cover: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQifHcqJEbhKvh06Lgp0nhSgk4x_g-y1_c9Jg&s",
     date: "September 2025",
@@ -53,7 +53,7 @@ const MemoryLane = () => (
     {/* Header */}
     <div className="flex items-center justify-between max-w-6xl mx-auto py-6 px-4 sm:py-10 sm:px-6">
       <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-gray-900 dark:text-white">
-        MemoVault
+        AlmaVault
       </h1>
     </div>
 
@@ -74,14 +74,7 @@ const MemoryLane = () => (
           memory.coming_soon === 1 ? "pointer-events-none opacity-90" : ""
         }`}
       >
-        {/* Coming Soon Badge */}
-        {memory.coming_soon === 1 && (
-          <div className="absolute top-0 left-0 w-20 h-20 sm:w-24 sm:h-24 bg-green-600 rounded-br-full flex items-center justify-center">
-            <span className="text-[10px] sm:text-xs font-bold text-white -rotate-45">
-              Coming Soon
-            </span>
-          </div>
-        )}
+       
 
         {/* Left side: Image */}
         <div className="w-full md:w-1/3 h-48 md:h-64 overflow-hidden">

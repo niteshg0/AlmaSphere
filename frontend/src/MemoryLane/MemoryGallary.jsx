@@ -308,7 +308,7 @@ export default function MemoryGallery() {
     className="backdrop-blur-lg bg-white/30 dark:bg-gray-800/40 border border-white/20 dark:border-gray-700/40 shadow-lg rounded-2xl p-6 flex flex-col h-full"
   >
     {/* Title + Like */}
-    <div className="flex items-center justify-between mb-4">
+    <div className="flex items-center justify-between mb-4 ">
       <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
         {post.title}
       </h3>
@@ -334,7 +334,7 @@ export default function MemoryGallery() {
         )}
         <span>
           {Array.isArray(post.upvotes) ? post.upvotes.length : 0}{" "}
-          {likedPosts[post._id] ? "Liked" : "Likes"}
+          {/* {likedPosts[post._id] ? "Liked" : "Likes"} */}
         </span>
       </motion.button>
     </div>

@@ -90,6 +90,7 @@ function App() {
           <Route path="/Research" element={<ResearchInnovation/>} />
           <Route path="/societies" element={<CollegeSocietiesPage/>} />
 
+
           <Route index element={<Home />} />
           <Route path="/about" element={<AboutUs />} />
           <Route path="/contact" element={<ContactUs />} />
