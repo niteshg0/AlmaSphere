@@ -88,7 +88,7 @@ function App() {
           <Route path="/Legacy" element={<CollegeLegacy/>} />
           <Route path="/Stats" element={<PlacementStats/>} />
           <Route path="/Research" element={<ResearchInnovation/>} />
-
+          <Route path="/societies" element={<CollegeSocietiesPage/>} />
 
 
 
