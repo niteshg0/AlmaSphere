@@ -197,7 +197,7 @@ const AlmaSearch = () => {
             className="flex items-center justify-between mb-8"
           >
             <h1 className="text-3xl sm:text-5xl font-bold bg-gradient-to-r from-indigo-700 via-purple-600 to-indigo-700 dark:from-gray-600 dark:via-white dark:to-gray-600 bg-clip-text text-transparent">
-              AlmaSearch
+              AlmaDirectory
             </h1>
             <SearchCard searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
           </motion.div>

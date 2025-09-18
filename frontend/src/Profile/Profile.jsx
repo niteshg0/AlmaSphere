@@ -102,7 +102,7 @@ const Profile = () => {
       try {
         const token = localStorage.getItem("token");
         const res = await axios.get(
-          "http://localhost:8000/api/users/getPhoto",
+          `${import.meta.env.VITE_BACKEND_URL}/api/users/getPhoto`,
           {
             headers: { Authorization: `Bearer ${token}` },
           }

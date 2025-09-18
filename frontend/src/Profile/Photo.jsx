@@ -41,7 +41,7 @@ const UploadProfileImage = ({ onSuccess }) => {
       const token = localStorage.getItem("token");
 
       const backendRes = await fetch(
-        "http://localhost:8000/api/users/updateimage",
+        `${import.meta.env.VITE_BACKEND_URL}/api/users/updateimage`,
         {
           method: "POST",
           credentials: "include",
