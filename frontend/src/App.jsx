@@ -14,8 +14,8 @@ import Profile from "./Profile/Profile";
 import JobPortal from "./JobPortal/JobPortal";
 import CreateJob from "./JobPortal/CreateJob";
 import Verify from "./components/Verify";
-import Donation from "./Donation/Donation";
-import VerifyDonation from "./Donation/verifyDonation";
+// import Donation from "./Donation/Donation";
+// import VerifyDonation from "./Donation/verifyDonation";
 import JobDetails from "./components/JobDetails";
 import Layout from "./components/Layout";
 import Query from "./Query/Query";
@@ -88,12 +88,7 @@ function App() {
           <Route path="/Legacy" element={<CollegeLegacy/>} />
           <Route path="/Stats" element={<PlacementStats/>} />
           <Route path="/Research" element={<ResearchInnovation/>} />
-
-
-
-
-
-
+          <Route path="/societies" element={<CollegeSocietiesPage/>} />
 
           <Route index element={<Home />} />
           <Route path="/about" element={<AboutUs />} />

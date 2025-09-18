@@ -304,7 +304,7 @@ const Home = () => {
                 to="/alma_connect"
                 className="px-6 sm:px-8 py-3 rounded-full font-medium transition-all duration-300 bg-gradient-to-r from-gray-200 to-gray-400 hover:from-gray-300 hover:to-gray-700 hover:text-black text-gray-800 shadow-lg hover:shadow-xl hover:shadow-gray-600/25 dark:bg-gradient-to-r dark:from-gray-950 dark:to-gray-600 dark:hover:from-gray-700 dark:hover:to-gray-300 dark:hover:text-gray-800 dark:hover:shadow-gray-500/25 dark:text-white"
               >
-                Explore AlumniHub
+                Explore AlmaEngage
               </Link>
             </motion.div>
             <motion.button
@@ -355,7 +355,7 @@ const Home = () => {
         >
           <FeatureCard
             icon={EventIcon}
-            title="Alumni Events & Meetups"
+            title="AlmaConnect"
             description="Experience unforgettable moments at our exclusive events. From intimate networking dinners to grand reunions, create memories that last a lifetime while expanding your professional circle."
             index={0}
             link="/events"
@@ -363,7 +363,7 @@ const Home = () => {
 
           <FeatureCard
             icon={JobsIcon}
-            title="Career Opportunities"
+            title="AlmaLink"
             description="Access a curated selection of career opportunities from our trusted network of employers. Whether you're seeking a career change or your next big role, our job board connects you with exclusive opportunities."
             link="/jobs"
             index={1}
@@ -371,7 +371,7 @@ const Home = () => {
 
           <FeatureCard
             icon={DonationIcon}
-            title="Support Your Alma Mater"
+            title="AlmaFund"
             description="Make a meaningful impact on future generations. Your contributions help fund scholarships, enhance campus facilities, and support innovative programs that shape the next generation of leaders."
             link="/donation"
             index={2}
@@ -379,7 +379,7 @@ const Home = () => {
 
           <FeatureCard
             icon={GalleryIcon}
-            title="Memory Lane"
+            title="AlmaMoments"
             link="/Memorylane"
             description="Take a stroll down memory lane with our extensive collection of photos and videos. Relive your college days, celebrate achievements, and stay connected with classmates through our digital galleries."
             // link="/memorylane"
@@ -388,7 +388,7 @@ const Home = () => {
 
           <FeatureCard
             icon={CollegeIcon}
-            title="College Legacy"
+            title="AlmaVault"
             description="Stay connected with your alma mater's journey. Learn about groundbreaking research, student achievements, and how your college continues to innovate and shape the future of education."
             link="/Legacy"
             index={4}
@@ -396,7 +396,7 @@ const Home = () => {
 
           <FeatureCard
             icon={QueryIcon}
-            title="Alumni Support Hub"
+            title="AlmaHelp"
             description="Have questions? Need guidance? Our dedicated support team is here to help. From career advice to alumni benefits, we're committed to ensuring you get the most out of your alumni experience."
             link="/query"
             index={5}

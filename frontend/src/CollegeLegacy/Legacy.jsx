@@ -28,7 +28,7 @@ const handleContact = ()=>{
     route: "/Stats"
   },
     { id: 2, title: "Research & Innovation", icon: <FlaskConical className="w-6 h-6" />, desc: "Breakthrough patents, labs & startups.", stats: "200+ Patents Filed" ,     route: "/Research"},
-    { id: 3, title: "Student Success", icon: <GraduationCap className="w-6 h-6" />, desc: "Holistic growth & excellence worldwide.", stats: "95% Success Rate" , route:"/societies" }
+    { id: 3, title: "Societies", icon: <GraduationCap className="w-6 h-6" />, desc: "College Societies & Clubs", stats: "15+ Socities" , route:"/societies" }
   ];
 
   const recruiters = [
