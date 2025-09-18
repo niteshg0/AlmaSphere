@@ -59,7 +59,7 @@ export default function MemoryForm({ onUpload }) {
       const imageUrls = await Promise.all(uploadPromises);
 
       // Send to your backend
-      await fetch("http://localhost:8000/memory/post", {
+      await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/memory/post`, {
         method: "POST",
         credentials: "include",
         headers: {

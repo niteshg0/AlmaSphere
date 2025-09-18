@@ -201,7 +201,7 @@ const Header = ({ isDarkTheme, toggleTheme, NavBar }) => {
                   className="font-bold font-serif cursor-pointer text-xl sm:text-2xl bg-clip-text text-transparent bg-gradient-to-r from-indigo-700 via-purple-600 to-indigo-700 dark:from-gray-600 dark:via-white dark:to-gray-600 hover:from-indigo-600 hover:via-purple-500 hover:to-indigo-600 dark:hover:from-gray-500 dark:hover:via-gray-200 dark:hover:to-gray-500 transition-all duration-300"
                   onClick={handleClick}
                 >
-                  AlumniHub
+                  AlmaSphere
                 </h2>
 
                 {/* Mobile Menu Button */}

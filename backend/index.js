@@ -55,7 +55,7 @@ app.use("/api/jobDetail", jobPortalRouter);
 app.use("/api/donation", donationRouter);
 app.use("/api/query", queryRouter);
 app.use("/api/admin", adminRouter);
-app.use("/memory", Memoryrouter);
+app.use("/api/memory", Memoryrouter);
 app.use("/api/search", searchRouter);
 app.use("/api/contactus", contactRouter);
 app.use("/api/connectUser", connectUserRouter);

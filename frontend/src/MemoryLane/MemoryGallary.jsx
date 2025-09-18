@@ -31,7 +31,7 @@ export default function MemoryGallery() {
 
   const fetchImages = useCallback(async () => {
     try {
-      const response = await fetch("http://localhost:8000/memory", {
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/memory`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
@@ -118,7 +118,7 @@ export default function MemoryGallery() {
       setLikeLoading((prev) => ({ ...prev, [postId]: true }));
 
       const response = await fetch(
-        `http://localhost:8000/memory/photo/${postId}/upvote`,
+        `${import.meta.env.VITE_BACKEND_URL}/api/memory/photo/${postId}/upvote`,
         {
           method: "POST",
           headers: {
